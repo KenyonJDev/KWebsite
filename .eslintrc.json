@@ -1,0 +1,75 @@
+
+{
+  "env": {
+    "es6": true,
+    "jasmine": true,
+    "node": true,
+    "browser": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "rules": {
+    "arrow-body-style": 2,
+    "arrow-parens": ["error", "as-needed"],
+    "arrow-spacing": ["warn", {"before": true, "after": true}],
+    "brace-style": 2,
+    "camelcase": [2, {"properties": "never"}],
+    "complexity": ["warn", 4],
+    "eol-last": "warn",
+    "eqeqeq": "error",
+    "func-call-spacing": ["error", "never"],
+    "global-require": "error",
+    "handle-callback-err": "warn",
+    "indent": [1, "tab", {"SwitchCase": 1}],
+    "key-spacing": ["error", {"beforeColon": false, "afterColon": true}],
+    "linebreak-style": ["warn", "unix"],
+    "max-depth": ["warn", 3],
+    "max-len": ["warn", { "code": 120, "tabWidth": 4 }],
+    "max-lines": ["warn", 100],
+    "max-lines-per-function": ["warn", 15],
+    "max-nested-callbacks": ["warn", 4],
+    "max-params": ["warn", 5],
+    "max-statements": ["warn", 10],
+    "no-cond-assign": 2,
+    "no-dupe-args": "error",
+    "no-dupe-keys": "error",
+    "no-duplicate-case": "error",
+    "no-empty": "warn",
+    "no-empty-function": 2,
+    "no-multiple-empty-lines": "warn",
+    "no-extra-parens": 2,
+    "no-func-assign": 2,
+    "no-irregular-whitespace": 2,
+    "no-magic-numbers": [1, {"ignore": [-1, 0, 1]}],
+    "no-multi-spaces": 1,
+    "no-multi-str": 1,
+    "no-unexpected-multiline": 2,
+    "no-unreachable": 2,
+    "no-self-assign": 2,
+    "no-trailing-spaces": 1,
+    "no-undef": 2,
+    "no-unused-vars": 1,
+    "no-var": 2,
+    "prefer-arrow-callback": 1,
+    "prefer-const": 2,
+    "prefer-template": "error",
+    "quotes": [1, "single"],
+    "semi": [1, "never"],
+    "space-before-blocks": ["error", { "functions": "always", "keywords": "always", "classes": "never" }],
+    "space-before-function-paren": [2, "never"],
+    "strict": [2, "global"],
+    "yoda": 2
+	},
+	"overrides": [{
+		"files": [ "*.test.js", "*.spec.js", "sqlite-async.js" ],
+		"rules": {
+      "global-require": "off",
+			"max-lines-per-function": "off",
+			"max-lines": "off",
+			"max-statements": "off",
+			"no-magic-numbers": "off"
+		}
+	}]
+}
