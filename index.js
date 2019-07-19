@@ -33,7 +33,8 @@ app.use(bodyParser())
 app.use(session(app))
 app.use(views(`${__dirname}/views`, { extension: 'handlebars' }, {map: { handlebars: 'handlebars' }}))
 
-const port = 8080
+const defaultPort = 8080
+const port = process.env.PORT || defaultPort
 const saltRounds = 10
 
 /**
