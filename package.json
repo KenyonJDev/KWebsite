@@ -15,18 +15,9 @@
     "unit": "node_modules/.bin/jest --coverage --runInBand tests/unit/"
   },
   "jest": {
-    "testEnvironment": "node",
-    "verbose": true,
-    "collectCoverage": true,
-    "coverageDirectory": "docs/coverage/",
-    "coverageThreshold": {
-      "global": {
-        "branches": 0,
-        "functions": 0,
-        "lines": 0,
-        "statements": 0
-      }
-    }
+    "projects": [
+      "<rootDir>/jest-test.config.js"
+    ]
   },
   "author": "",
   "license": "ISC",

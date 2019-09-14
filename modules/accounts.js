@@ -1,51 +1,53 @@
-#!/usr/bin/env node
-
-/**
- * Accounts module
- * @module modules/accounts
- */
 
 'use strict'
 
-var sqlite = require('sqlite-async');
-let bcrypt = require('bcrypt-promise');
+const fs = require('fs-extra')
+const mime = require('mime-types')
+const sqlite = require('sqlite-async')
+const saltRounds = 10
 
-/**
- * This is a generic function that opens the database, executes a query,
- * closes the database connection and returns the data.  
- * @param {String} query - The SQL statement to execute.
- * @returns {Object} - the date returned by the query.
- */
-async function runSQL(query) {
-    try {
-		console.log(query)
-		let DBName = "./website.db";
-		const db = await sqlite.open(DBName);	
-		const data = await db.all(query);  
-		await db.close();
-		if(data.length === 1) return data[0]
-		return data;
-	} catch(err) {
-		throw err
+module.exports = class Accounts {
+
+	constructor(dbName = ':memory:') {
+		return (async() => {
+			this.db = await sqlite.open(dbName)
+			// we need this table to store the user accounts
+			const sql = 'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT);'
+			await this.db.run(sql)
+			return this
+		})()
 	}
-}
 
-module.exports.checkCredentials = async(username, password)=> {
-	try {
-	    var records = await runSQL(`SELECT count(id) AS count FROM users WHERE user="${username}";`);
+	async register(username, password, filename, filetype) {
+		const fileExtension = mime.extension(filetype)
+		await fs.copy(path, `public/avatars/${username}.${fileExtension}`)
+		password = await bcrypt.hash(password, saltRounds)
+		const sql = `INSERT INTO users(user, pass) VALUES("${username}", "${password}")`
+		await this.db.run(sql)
+		return true
+	}
+
+	async login(username, password) {
+		let sql = `SELECT count(id) AS count FROM users WHERE user="${body.user}";`
+		const records = await this.db.get(sql)
+		if(!records.count) throw new Error(`username "${username}" not found`)
+		sql = `SELECT pass FROM users WHERE user = "${body.user}";`
+		const record = await db.get(sql)
+		const valid = await bcrypt.compare(body.pass, record.pass)
+		if(valid == false) throw new Error(`invalid password for account "${username}"`)
+		return true
+	}
+
+	async checkCredentials(username, password) {
+		let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
+		const records = await this.db.all(sql)
 		if(!records.count) throw new Error("invalid username")
-		const record = await runSQL(`SELECT pass FROM users WHERE user = "${username}";`)
+		sql = `SELECT pass FROM users WHERE user = "${username}";`
+		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if(valid == false) throw new Error(`invalid password`)
 		return true
-	} catch(err) {
-	throw err
 	}
-}
-
-
-
-/* ----------------------------- STUB FUNCTIONS ----------------------------- */
 
 /**
  * This function checks the database to see if a username already exists in
@@ -54,9 +56,9 @@ module.exports.checkCredentials = async(username, password)=> {
  * @returns {boolean} - returns true if the username does not exist.
  * @throws {Error} - throws an error if the username already exists.
  */
-async function checkNoDuplicateUsername (username) {
-	return true
-}
+	async checkNoDuplicateUsername(username) {
+		return true
+	}
 
 /**
  * This function takes data from an uploaded image and saves it to the `avatars` directory. The file name will be the username.
@@ -65,9 +67,9 @@ async function checkNoDuplicateUsername (username) {
  * @returns {boolean} - returns true if the image is valid and is saved.
  * @throws {TypeError} - throws an error if the file is not a png or jpg image.
  */
-async function saveImage(path, mimetype) {
-	return true
-}
+	async saveImage(path, mimetype) {
+		return true
+	}
 
 /**
  * This function adds new users to the database.
@@ -76,6 +78,8 @@ async function saveImage(path, mimetype) {
  * @returns {boolean} - returns true if the username does not exist.
  * @throws {Error} - throws an error if the new user account has been created.
  */
-module.exports.addUser = async(username, password) => {
-    return true;  
+	async addUser(username, password) {
+		return true
+	}
+	
 }
