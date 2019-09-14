@@ -38,48 +38,4 @@ module.exports = class User {
 		return true
 	}
 
-	async checkCredentials(username, password) {
-		let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
-		const records = await this.db.all(sql)
-		if(!records.count) throw new Error("invalid username")
-		sql = `SELECT pass FROM users WHERE user = "${username}";`
-		const record = await this.db.get(sql)
-		const valid = await bcrypt.compare(password, record.pass)
-		if(valid == false) throw new Error(`invalid password`)
-		return true
-	}
-
-/**
- * This function checks the database to see if a username already exists in
- * the database. If it detects a duplicate it throws an exception.
- * @param {String} username - The username to check.
- * @returns {boolean} - returns true if the username does not exist.
- * @throws {Error} - throws an error if the username already exists.
- */
-	async checkNoDuplicateUsername(username) {
-		return true
-	}
-
-/**
- * This function takes data from an uploaded image and saves it to the `avatars` directory. The file name will be the username.
- * @param {String} path - the location of the uploaded image
- * @param {String} mimeType - the mime type of the uploaded file.
- * @returns {boolean} - returns true if the image is valid and is saved.
- * @throws {TypeError} - throws an error if the file is not a png or jpg image.
- */
-	async saveImage(path, mimetype) {
-		return true
-	}
-
-/**
- * This function adds new users to the database.
- * @param {String} username - The username to to add.
- * @param {String} password - The password to add.
- * @returns {boolean} - returns true if the username does not exist.
- * @throws {Error} - throws an error if the new user account has been created.
- */
-	async addUser(username, password) {
-		return true
-	}
-	
 }

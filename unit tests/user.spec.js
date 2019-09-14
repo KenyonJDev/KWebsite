@@ -30,17 +30,3 @@ describe('login()', () => {
 		}
 	})
 })
-
-describe('checkCredentials()', () => {
-	test('check valid credentials', done => {
-		expect.assertions(1)
-		try {
-			const account = await new Accounts()
-			// test goes here
-		} catch(err) {
-			done.fail(err)
-		} finally {
-			done()
-		}
-	})
-})
