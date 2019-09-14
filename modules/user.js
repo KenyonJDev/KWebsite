@@ -6,7 +6,7 @@ const mime = require('mime-types')
 const sqlite = require('sqlite-async')
 const saltRounds = 10
 
-module.exports = class Accounts {
+module.exports = class User {
 
 	constructor(dbName = ':memory:') {
 		return (async() => {
