@@ -10,9 +10,9 @@ describe('register()', () => {
 			const account = await new Accounts()
 			// test goes here
 		} catch(err) {
-
+			done.fail(err)
 		} finally {
-
+			done()
 		}
 	})
 })
@@ -24,9 +24,9 @@ describe('login()', () => {
 			const account = await new Accounts()
 			// test goes here
 		} catch(err) {
-
+			done.fail(err)
 		} finally {
-
+			done()
 		}
 	})
 })
@@ -38,9 +38,9 @@ describe('checkCredentials()', () => {
 			const account = await new Accounts()
 			// test goes here
 		} catch(err) {
-
+			done.fail(err)
 		} finally {
-
+			done()
 		}
 	})
 })
