@@ -7,15 +7,10 @@ describe('register()', () => {
 
 	test('register a valid account', async done => {
 		expect.assertions(1)
-		try {
-			const account = await new Accounts()
-			const register = await account.register('doej', 'password')
-			expect(register).toBe(true)
-		} catch(err) {
-			done.fail(err)
-		} finally {
-			done()
-		}
+		const account = await new Accounts()
+		const register = await account.register('doej', 'password')
+		expect(register).toBe(true)
+		done()
 	})
 
 	test('register a duplicate username', async done => {
