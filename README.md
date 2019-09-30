@@ -6,7 +6,7 @@ Temporarily clone this repository to your development computer:
 
 `git clone https://github.coventry.ac.uk/web/template-dynamic-websites.git`
 
-Create a new **private** repository in the module organisation on the GitHub server and copy the _clone url_ to the clipboard (the one that begins with `https://` and ends in `.git`.
+Create a new **private** repository in the module organisation on the GitHub server and copy the _clone url_ to the clipboard (the one that begins with `https://` and ends in `.git`. The repository name should be your username (the one you use to log into the University computers).
 
 Mirror Push to this new repository, replacing xxx with the url from the clipboard:
 
