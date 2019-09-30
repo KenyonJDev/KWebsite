@@ -13,3 +13,5 @@ Mirror Push to this new repository, replacing xxx with the url from the clipboar
 `cd temp/ && git push --mirror xxx`
 
 Once you are sure the code is in your new repository, delete the temporary local repository.
+
+`cd .. && rm -rf temp/`
