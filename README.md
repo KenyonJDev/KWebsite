@@ -15,3 +15,11 @@ Mirror Push to this new repository, replacing xxx with the url from the clipboar
 Once you are sure the code is in your new repository, delete the temporary local repository.
 
 `cd .. && rm -rf temp/`
+
+Your private repository on GitHub will now contain a complete copy of this template including the commits that were already made. You can now start your assignment by carrying out the following steps:
+
+Clone your private repository
+
+Change your **local config settings**. This is a vital step otherwise your commits won't show on the GitHub _graph_ and your grade will be affected.
+
+Start working on the assignment.
