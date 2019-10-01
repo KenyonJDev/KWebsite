@@ -20,6 +20,6 @@ Your private repository on GitHub will now contain a complete copy of this templ
 
 Clone your private repository
 
-Change your **local config settings**. This is a vital step otherwise your commits won't show on the GitHub _graph_ and your grade will be affected.
+Change your [local config settings](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup). This is a vital step otherwise your commits won't show on the GitHub _graph_ and your grade will be affected.
 
 Start working on the assignment.
