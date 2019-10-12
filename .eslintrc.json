@@ -53,6 +53,7 @@
     "no-var": 2,
     "prefer-arrow-callback": 1,
     "prefer-const": 2,
+    "prefer-template": "error",
     "quotes": [1, "single"],
     "semi": [1, "never"],
     "space-before-blocks": ["error", { "functions": "always", "keywords": "always", "classes": "always" }],
