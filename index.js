@@ -17,6 +17,8 @@ const session = require('koa-session')
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
 
+
+
 const app = new Koa()
 const router = new Router()
 
@@ -28,8 +30,8 @@ app.use(session(app))
 app.use(views(`${__dirname}/views`, { extension: 'handlebars' }, {map: { handlebars: 'handlebars' }}))
 
 const defaultPort = 8080
-const port = process.env.PORT || defaultPort
-const dbName = 'website.db'
+const port = process.env.PORT || defaultPort 
+const dbName = 'website.db'	
 
 /**
  * The secure home page.
