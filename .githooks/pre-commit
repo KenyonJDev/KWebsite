@@ -1,4 +1,3 @@
 #!/bin/sh
 
 ./node_modules/.bin/eslint .
-./node_modules/.bin/markdownlint  --ignore node_modules .
