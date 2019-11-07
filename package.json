@@ -48,7 +48,7 @@
     "tunnel-agent": "^0.6.0"
   },
   "devDependencies": {
-    "eslint": "^5.15.2",
+    "eslint": "^5.16.0",
     "handlebars-validate": "^0.1.2",
     "http-status-codes": "^1.4.0",
     "jest": "^24.9.0",
