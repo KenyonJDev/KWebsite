@@ -5,7 +5,7 @@
 'use strict'
 
 /* MODULE IMPORTS */
-const Koa = require('koa');
+const Koa = require('koa')
 const Router = require('koa-router')
 const views = require('koa-views')
 const staticDir = require('koa-static')
@@ -16,7 +16,6 @@ const session = require('koa-session')
 
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
-
 
 
 const app = new Koa()
@@ -30,8 +29,8 @@ app.use(session(app))
 app.use(views(`${__dirname}/views`, { extension: 'handlebars' }, {map: { handlebars: 'handlebars' }}))
 
 const defaultPort = 8080
-const port = process.env.PORT || defaultPort 
-const dbName = 'website.db'	
+const port = process.env.PORT || defaultPort
+const dbName = 'website.db'
 
 /**
  * The secure home page.
