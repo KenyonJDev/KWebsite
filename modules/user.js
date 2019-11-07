@@ -11,15 +11,15 @@ module.exports = class User {
 
 	constructor(dbName = ':memory:') {
 		return (async() => {
-			this.db = await sqlite.open(users.db)
+			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
-			const sql = 'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, user text, pass text);'
+			const sql = 'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT);'
 			await this.db.run(sql)
 			return this
 		})()
 	}
 
-	async register(user, password) {
+	async register(user, pass) {
 		try {
 			if(user.length === 0) throw new Error('missing username')
 			if(pass.length === 0) throw new Error('missing password')
