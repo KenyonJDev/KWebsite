@@ -1,7 +1,7 @@
 
-### Sense
-A transparent music hosting platform!  
+# Sense
+>A transparent music hosting platform!  
 
-Required libaries:  
+Required libaries:<br/> 
 [Library](link)
 
