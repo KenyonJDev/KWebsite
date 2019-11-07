@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Upload</title>
+</head>
+
+<body>
+    <h1><a href="/">Sense</a></h1>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="songs">Songs</a></li>
+            <li><a href="playlists">Playlists</a></li>
+            <li><a href="upload">Upload</a></li>
+            <li><a href="login">Login/Signup</a></li>
+        </ul>
+        <form>
+            <input type="text">
+            <input type="submit" value="Search">
+        </form>
+    </nav>
+    <h2>Upload</h2>
+    <form action="myform.cgi">
+        <input type="file" name="fileupload" value="fileupload">
+        <button type="button" onclick="alert('upload not working yet')">Upload</button><br>
+    </form>
+    <br> 
+    <hr>
+    <img src="\images\OhWonderUltralife.jpg" width="250" height="250" alt="Song Cover">
+    <table>
+        <tbody>
+            <tr>
+                <td>Title </td>
+                <td><input type="text"  name="songTitle" value="Heavy"></td>
+            </tr>
+            <tr>
+                <td>Artist </td>
+                <td><input type="text"  name="songArtist" value="Oh Wonder"></td>
+            </tr>
+            <tr>
+                <td>Album </td>
+                <td><input type="text"  name="songAlbum" value="Ultralife"></td>
+            </tr>
+            <tr>
+                <td>Release Year </td>
+                <td><input type="text"  name="songRelease" value="2017"></td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" onclick="alert('submitting changes is not implemented yet')">Submit</button>
+    <hr>
+    <footer>
+        <p>Copyright &copy; 2019 Sense. All rights reserved. </p>
+    </footer>
+</body>
+
+</html>
