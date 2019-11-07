@@ -11,23 +11,23 @@ module.exports = class User {
 
 	constructor(dbName = ':memory:') {
 		return (async() => {
-			this.db = await sqlite.open(dbName)
+			this.db = await sqlite.open(users.db)
 			// we need this table to store the user accounts
-			const sql = 'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT);'
+			const sql = 'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR, password VARCHAR);'
 			await this.db.run(sql)
 			return this
 		})()
 	}
 
-	async register(user, pass) {
+	async register(user, password) {
 		try {
 			if(user.length === 0) throw new Error('missing username')
 			if(pass.length === 0) throw new Error('missing password')
 			let sql = `SELECT COUNT(id) as records FROM users WHERE user="${user}";`
 			const data = await this.db.get(sql)
 			if(data.records !== 0) throw new Error(`username "${user}" already in use`)
-			pass = await bcrypt.hash(pass, saltRounds)
-			sql = `INSERT INTO users(user, pass) VALUES("${user}", "${pass}")`
+			pass = await bcrypt.hash(password, saltRounds)
+			sql = `INSERT INTO users(user, pass) VALUES("${user}", "${password}")`
 			await this.db.run(sql)
 			return true
 		} catch(err) {
