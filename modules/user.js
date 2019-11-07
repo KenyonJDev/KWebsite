@@ -11,7 +11,7 @@ module.exports = class User {
 
 	constructor(dbName = ':memory:') {
 		return (async() => {
-			this.db = await sqlite.open(dbName)
+			this.db = await sqlite.open(users)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT);'
 			await this.db.run(sql)
@@ -55,6 +55,19 @@ module.exports = class User {
 		} catch(err) {
 			throw err
 		}
+	}
+
+}
+module.exports = class User_songs {
+
+	constructor(dbName = ':memory:') {
+		return (async() => {
+			this.db = await sqlite.open(user_songs)
+			// we need this table to store the user accounts
+			const sql = 'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT);'
+			await this.db.run(sql)
+			return this
+		})()
 	}
 
 }
