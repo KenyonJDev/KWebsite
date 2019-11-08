@@ -1,7 +1,7 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const metadata = require('music-metadata')
+const ID3 = require('node-id3')
 
 const musicPath = 'public\\music\\'
 
@@ -19,8 +19,8 @@ module.exports = class Song {
 	async add(fileName) {
 		try {
 			const path = `${musicPath}${fileName}`
-			const data = await metadata.parseFile(path)
-			console.log(data)
+			const data = await ID3.read(path)
+			return data
 		} catch(err) {
 			console.error(err)
 		}
