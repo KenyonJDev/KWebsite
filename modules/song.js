@@ -10,7 +10,7 @@ module.exports = class Song {
 		return (async() => {
 			this.db = await sqlite.open(dbname)
 			// eslint-disable-next-line max-len
-			const sql = 'CREATE TABLE IF NOT EXISTS songs(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, artist TEXT, publisher TEXT, year INTEGER)'
+			const sql = 'CREATE TABLE IF NOT EXISTS songs(song_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, artist TEXT, publisher TEXT, year INTEGER)'
 			await this.db.run(sql)
 			return this
 		})()
