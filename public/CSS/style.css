@@ -1,0 +1,23 @@
+* {
+    padding: none;
+    margin: none;
+}
+
+body {
+    background-color: lightgray;
+}
+
+#wrapper {
+    border: 1px solid gray;
+    margin: 1em auto;
+    padding: 0 1em;
+    max-width: 960px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: white;
+}
+
+h1:first-child {
+    text-align: center;
+    font-size: 50pt;
+    margin: 16px;
+}
