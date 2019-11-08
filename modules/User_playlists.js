@@ -1,5 +1,7 @@
 'use strict'
 
+const sqlite = require('sqlite-async')
+
 module.exports = class UserPlaylist {
 
 	constructor(dbName = ':memory:') {
