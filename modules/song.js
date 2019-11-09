@@ -1,9 +1,8 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const ID3 = require('node-id3')
-
-const musicPath = 'public\\music\\'
+const mm = require('music-metadata')
+const fs = require('fs')
 
 module.exports = class Song {
 	constructor(dbname = ':memory:') {
@@ -16,13 +15,13 @@ module.exports = class Song {
 		})()
 	}
 
-	async add(fileName) {
+	async add(filePath) {
 		try {
-			const path = `${musicPath}${fileName}`
-			const data = await ID3.read(path)
+			if(!fs.existsSync(filePath)) throw new Error(`file '${filePath}' does not exist`)
+			const data = await mm.parseFile(filePath)
 			return data
 		} catch(err) {
-			console.error(err)
+			throw err
 		}
 	}
 }
