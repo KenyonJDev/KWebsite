@@ -2,24 +2,11 @@
 
 const Song = require('../modules/song')
 const mock = require('mock-fs')
-const ID3 = require('node-id3')
+const fs = require('fs')
 
 beforeAll( () => {
-	mock({
-		'public': {
-			'music': {
-				'song.mp3': ''
-			}
-		}
-	})
-	const tags = {
-		title: 'Hyori Ittai',
-		artist: 'Yuzu',
-		album: 'Shinsekai'
-	}
-	const success = ID3.update(tags, 'public/music/song.mp3')
-	if(!success) throw new Error('tag insertion not successful')
-	console.log(ID3.read('public/music/song.mp3'))
+	const songBuffer = fs.readFileSync('public/music/song.mp3')
+	mock({'public/music/song.mp3': songBuffer})
 })
 
 afterAll( () => {
@@ -27,16 +14,21 @@ afterAll( () => {
 })
 
 describe('add()', () => {
-	test('reading song', async done => {
+
+	test('reading valid song', async done => {
 		expect.assertions(1)
-		try {
-			const song = await new Song()
-			const tags = await song.add('song.mp3')
-			expect(tags).not(undefined)
-		} catch(err) {
-			done.fail('no data returned')
-		} finally {
-			done()
-		}
+		const song = await new Song()
+		const data = await song.add('public/music/song.mp3')
+		await expect(data.common.album).toBe('test album title')
+		done()
+	})
+
+	test('reading invalid song', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		const invalidPath = 'public/music/invalid_song.mp3'
+		await expect(song.add('public/music/invalid_song.mp3'))
+			.rejects.toEqual(Error(`file '${invalidPath}' does not exist`))
+		done()
 	})
 })
