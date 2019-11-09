@@ -5,7 +5,7 @@ const mock = require('mock-fs')
 const fs = require('fs')
 
 beforeAll( () => {
-	const songBuffer = fs.readFileSync('public/music/song.mp3')
+	const songBuffer = fs.readFileSync('unit\ tests/sample.mp3')
 	mock({'public/music/song.mp3': songBuffer})
 })
 
