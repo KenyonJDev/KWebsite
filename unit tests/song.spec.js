@@ -6,7 +6,10 @@ const fs = require('fs')
 
 beforeAll( () => {
 	const songBuffer = fs.readFileSync('unit\ tests/sample.mp3')
-	mock({'public/music/song.mp3': songBuffer})
+	mock({
+		'music/': {'song.mp3': songBuffer},
+		'files/': {'text.txt': ''}
+	})
 })
 
 afterAll( () => {
@@ -18,8 +21,21 @@ describe('add()', () => {
 	test('reading valid song', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		const data = await song.add('public/music/song.mp3')
-		await expect(data.common.album).toBe('test album title')
+		const tags = await song.add('music/song.mp3')
+		await expect(tags).toEqual({
+			title: 'test title',
+			artist: 'test artist',
+			year: 2010
+		})
+		done()
+	})
+
+	test('reading a valid mp3 file', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		const invalidFile = 'files/text.txt'
+		await expect(song.add(invalidFile))
+			.rejects.toEqual(Error(`file '${invalidFile}' is not an .mp3 file`))
 		done()
 	})
 
@@ -29,6 +45,24 @@ describe('add()', () => {
 		const invalidPath = 'public/music/invalid_song.mp3'
 		await expect(song.add('public/music/invalid_song.mp3'))
 			.rejects.toEqual(Error(`file '${invalidPath}' does not exist`))
+		done()
+	})
+})
+
+describe('get()', () => {
+	test('retrieving a valid song', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		const path = 'music/song.mp3'
+		await song.add(path)
+		const data = await song.get(1)
+		await expect(data).toEqual({
+			id: 1,
+			file: 'song.mp3',
+			title: 'test title',
+			artist: 'test artist',
+			year: 2010
+		})
 		done()
 	})
 })
