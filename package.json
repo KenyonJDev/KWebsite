@@ -1,7 +1,7 @@
 {
-  "name": "10_auth",
+  "name": "sense",
   "version": "1.0.0",
-  "description": "",
+  "description": "A music sharing website",
   "main": "index.js",
   "engines": {
     "node": "12.x"
