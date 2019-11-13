@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.play_bar {
+    background-color: #4f4d42;
+    color: #ffffff;
+    font-weight: bold;
+    list-style: none;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 40px 0 40px 0;
+    margin: 0 0 0 0;
+
+}
+
+.play_bar > li {
+    display: inline-block;
+}
+
+.menu {
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    list-style: none;
+    text-align: right;
+    position: fixed;
+    right: 0;
+    width: 20%;
+    height: 100%;
+    padding: 100px 10px 0 0;
+    margin: 0;
+    float: right;
+
+}
+
+.menu > li {
+    padding-bottom: 20px;
+}
+
+.menu > li > a:hover {
+    color: grey;
+}
