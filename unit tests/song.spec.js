@@ -77,7 +77,7 @@ describe('add', () => {
 		done()
 	})
 
-	test('passing empty object', async done =>{
+	test('passing empty object', async done => {
 		expect.assertions(1)
 		const song = await new Song()
 		const emptyObj = {}
