@@ -87,6 +87,12 @@ router.get('/login', async ctx => {
 	await ctx.render('login', data)
 })
 
+router.get('/songs', async ctx => await ctx.render('songs'))
+
+router.get('/homepage', async ctx => await ctx.render('homepage'))
+
+router.get('/browse', async ctx => await ctx.render('browse'))
+
 router.post('/login', async ctx => {
 	try {
 		const body = ctx.request.body
