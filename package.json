@@ -10,7 +10,7 @@
     "start": "node index.js",
     "acceptance": "jest --coverage --detectOpenHandles",
     "jsdoc": "node_modules/.bin/jsdoc -c jsdoc.conf",
-    "linter": "node_modules/.bin/eslint .",
+    "linter": "node_modules/.bin/eslint --fix .",
     "test": "jest --coverage --detectOpenHandles",
     "unit": "node_modules/.bin/jest --coverage --runInBand tests/unit/"
   },
