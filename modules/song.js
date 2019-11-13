@@ -2,8 +2,13 @@
 
 const sqlite = require('sqlite-async')
 const mm = require('music-metadata')
-const fs = require('fs')
 const path = require('path')
+const check = require('./songChecks')
+
+/**
+ * @fileoverview The file where the Song class resides.
+ * @author Bartlomiej Wlodarski
+ */
 
 /**
  * Class representing a song.
@@ -27,45 +32,41 @@ class Song {
 	}
 
 	/**
-	 * A song's ID3 tags.
-	 * @typedef {Object} Tags
-	 * @property {string} title - The title.
-	 * @property {string} artist - The artist.
-	 * @property {number} year - The release year.
-	 */
-
-	/**
-	 * Adds a song's ID3 tags to the database.
+	 * Extracts a song's ID3 tags.
 	 * @async
 	 * @param {string} filePath - The song file path.
-	 * @returns {Promise<Tags>} The song's ID3 Tags.
+	 * @returns {Promise<Tags>} The song's ID3 tags.
 	 */
-	async add(filePath) {
+	async extractTags(filePath) {
 		try {
-			if(filePath === undefined) throw new Error('no arguments passed')
-			if(!fs.existsSync(filePath)) throw new Error(`file '${filePath}' does not exist`)
-			if(path.extname(filePath) !== '.mp3') throw new Error(`file '${filePath}' is not an .mp3 file`)
+			await check.file(filePath)
 			const data = await mm.parseFile(filePath)
 			const tags = data.common // 'common' contains the metadata.
-			const file = path.parse(filePath).base // base contanis the file name with extension.
-			const sql = `INSERT INTO songs(file, title, artist, year) \
-						VALUES("${file}", "${tags.title}", "${tags.artist}", "${Number(tags.year)}")`
-			await this.db.run(sql)
-			return {title: tags.title, artist: tags.artist, year: tags.year}
+			const file = await path.parse(filePath).base // base contanis the file name with extension.
+			return {file: file, title: tags.title, artist: tags.artist, year: tags.year}
 		} catch(err) {
 			throw err
 		}
 	}
 
 	/**
-	 * A song's data retrieved from the database.
-	 * @typedef {Object} dbData
-	 * @property {number} id - The ID of the song in the database.
-	 * @property {string} file - The name of the song file.
-	 * @property {string} title - The title of the song.
-	 * @property {string} artist - The song's artist.
-	 * @property {number} year - The song's release year.
+	 * Adds song file path and ID3 tags to the database.
+	 * @async
+	 * @param {string} filePath - The song file path.
+	 * @param {Tags} tags - The song's ID3 tags.
+	 * @returns {Promise<dbData>} The data added to the database.
 	 */
+	async add(tags) {
+		try {
+			await check.tags(tags)
+			const sql = `INSERT INTO songs(file, title, artist, year) \
+						VALUES("${tags.file}", "${tags.title}", "${tags.artist}", "${tags.year}")`
+			await this.db.run(sql)
+			return {file: tags.file, title: tags.title, artist: tags.artist, year: tags.year}
+		} catch(err) {
+			throw err
+		}
+	}
 
 	/**
 	 * Retrieves a song's data from the database.
@@ -75,11 +76,10 @@ class Song {
 	 */
 	async get(key) {
 		try {
-			if(key === undefined) throw new Error('no arguments passed')
-			const id = Number(key)
-			if(isNaN(id)) throw new Error(`'${key}' is not a number`)
-			const sql = `SELECT * FROM songs WHERE id="${id}"`
+			await check.key(key)
+			const sql = `SELECT * FROM songs WHERE id="${key}"`
 			const data = await this.db.get(sql)
+			if(data === undefined) throw new Error(`record for key ${key} does not exist`)
 			return data
 		} catch(err) {
 			throw err
