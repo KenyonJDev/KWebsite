@@ -54,7 +54,7 @@ class Song {
 	 * @async
 	 * @param {string} filePath - The song file path.
 	 * @param {Tags} tags - The song's ID3 tags.
-	 * @returns {Promise<dbData>} The data added to the database.
+	 * @returns {Promise<Tags>} The data added to the database.
 	 */
 	async add(tags) {
 		try {
@@ -72,7 +72,7 @@ class Song {
 	 * Retrieves a song's data from the database.
 	 * @async
 	 * @param {number} key - The song's ID in the database.
-	 * @returns {Promise<dbData>} The song's data from the database.
+	 * @returns {Promise<Tags>} The song's tags from the database.
 	 */
 	async get(key) {
 		try {
@@ -89,7 +89,7 @@ class Song {
 	/**
 	 * Retrieves all songs from the database.
 	 * @async
-	 * @returns {Promise<Array<dbData>>} An array of song data from the database.
+	 * @returns {Promise<Array<Tags>>} An array of song tags from the database.
 	 */
 	async getAll() {
 		try {
