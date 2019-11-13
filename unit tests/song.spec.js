@@ -56,13 +56,17 @@ describe('get()', () => {
 		const path = 'music/song.mp3'
 		await song.add(path)
 		const data = await song.get(1)
-		await expect(data).toEqual({
-			id: 1,
-			file: 'song.mp3',
-			title: 'test title',
-			artist: 'test artist',
-			year: 2010
-		})
+		await expect(data.file).toBe('song.mp3')
+		done()
+	})
+	test('retrieving invalid key', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		const path = 'music/song.mp3'
+		await song.add(path)
+		const key = 2
+		await expect(song.get(key))
+			.rejects.toEqual(Error(`record for key ${key} does not exist`))
 		done()
 	})
 })
