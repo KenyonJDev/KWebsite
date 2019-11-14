@@ -77,7 +77,7 @@ class Song {
 	async get(key) {
 		try {
 			await check.key(key)
-			const sql = `SELECT * FROM songs WHERE id="${key}"`
+			const sql = `SELECT file, title, artist, year FROM songs WHERE id="${key}"`
 			const data = await this.db.get(sql)
 			if(data === undefined) throw new Error(`record for key ${key} does not exist`)
 			return data
@@ -92,13 +92,9 @@ class Song {
 	 * @returns {Promise<Array<Tags>>} An array of song tags from the database.
 	 */
 	async getAll() {
-		try {
-			const sql = 'SELECT * FROM songs'
-			const data = await this.db.all(sql)
-			return data
-		} catch(err) {
-			throw err
-		}
+		const sql = 'SELECT file, title, artist, year FROM songs'
+		const data = await this.db.all(sql)
+		return data
 	}
 
 }

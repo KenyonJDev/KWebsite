@@ -73,15 +73,16 @@ const checkArtist = async artist => {
  */
 const checkYear = async year => {
 	if(year === undefined) throw new Error('no year in tags object')
-	year = Number(year)
+	year = parseInt(year)
 	if(isNaN(year)) throw new Error('the year in the tags object is not a number')
 }
 
 const key = async key => {
 	try {
 		if(key === undefined) throw new Error('key is undefined')
-		const id = Number(key)
+		const id = parseInt(key)
 		if(isNaN(id)) throw new Error(`'${key}' is not a number`)
+		if(key < 1) throw new Error('key must be greater than zero')
 	} catch(err) {
 		throw err
 	}
