@@ -1,7 +1,7 @@
 {
-  "name": "10_auth",
+  "name": "sense",
   "version": "1.0.0",
-  "description": "",
+  "description": "A music sharing website",
   "main": "index.js",
   "engines": {
     "node": "12.x"
@@ -10,7 +10,7 @@
     "start": "node index.js",
     "acceptance": "jest --coverage --detectOpenHandles",
     "jsdoc": "node_modules/.bin/jsdoc -c jsdoc.conf",
-    "linter": "node_modules/.bin/eslint .",
+    "linter": "node_modules/.bin/eslint --fix .",
     "test": "jest --coverage --detectOpenHandles",
     "unit": "node_modules/.bin/jest --coverage --runInBand tests/unit/"
   },
@@ -54,6 +54,7 @@
     "jest": "^24.9.0",
     "jsdoc": "^3.6.3",
     "jsdoc-route-plugin": "^0.1.0",
-    "markdownlint": "^0.17.2"
+    "markdownlint": "^0.17.2",
+    "mock-fs": "^4.10.3"
   }
 }

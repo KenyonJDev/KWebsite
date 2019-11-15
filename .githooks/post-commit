@@ -2,3 +2,4 @@
 
 echo "running the 'post-commit' script"
 ./node_modules/.bin/markdownlint  --ignore node_modules .
+./node_modules/.bin/jsdoc -c jsdoc.conf
