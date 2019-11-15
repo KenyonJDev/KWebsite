@@ -54,10 +54,12 @@ class Song {
 	 */
 	async add(tags) {
 		await check.tags(tags)
-		const sql = `INSERT INTO songs(file, title, artist, year) \
+		let sql = `INSERT INTO songs(file, title, artist, year) \
 					VALUES("${tags.file}", "${tags.title}", "${tags.artist}", "${tags.year}")`
 		await this.db.run(sql)
-		return true
+		sql = 'SELECT last_insert_rowid() AS id'
+		const key = await this.db.get(sql)
+		return key.id
 	}
 
 	/**
