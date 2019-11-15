@@ -13,6 +13,7 @@ const bodyParser = require('koa-bodyparser')
 const koaBody = require('koa-body')({multipart: true, uploadDir: '.'})
 const session = require('koa-session')
 const fs = require('fs-extra')
+const mime = require('mime-types')
 //const jimp = require('jimp')
 
 /* IMPORT CUSTOM MODULES */
@@ -113,17 +114,14 @@ router.get('/upload', async ctx => {
 	await ctx.render('upload', data)
 })
 
-router.post('/upload', async ctx => {
+router.post('/upload', koaBody, async ctx => {
 	try {
-		const body = ctx.request.body
-		console.log(body)
-		const file = ctx.request.files.song
-		const song = await new Song(dbName)
-		const tags = await song.extractTags(file)
-		await fs.copy(file, '')
-		await song.add(tags)
+		const {path, type} = ctx.request.files.song
+		const extension = mime.extension(type)
+		if(extension !== 'mp3') throw new Error('the file uploaded is not MP3')
 		await ctx.redirect('/?msg="File%20uploaded!"')
 	} catch(err) {
+		// console.log(err)
 		await ctx.render('upload', {msg: err.message, tags: ctx.request.body})
 	}
 })

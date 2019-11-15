@@ -28,9 +28,9 @@
     <section>
         <h2>Upload</h2>
         {{#if msg}}
-            <p class="msg">Error:{{msg}}</p>
+            <p class="msg">Error: {{msg}}</p>
         {{/if}}
-        <form action="/upload", method="POST">
+        <form action="/upload" enctype="multipart/form-data" method="POST">
             {{#if tags}}
                 <p>Please enter the missing data.</p>
                 <p>Song title:<br><input type="text" name="title" value="{{tags.title}}"></p>
