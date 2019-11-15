@@ -13,6 +13,7 @@ const check = require('./songChecks')
 /**
  * Class representing a song.
  * Interacts with the database.
+ * @namespace
  */
 class Song {
 	/**
@@ -38,15 +39,11 @@ class Song {
 	 * @returns {Promise<Tags>} The song's ID3 tags.
 	 */
 	async extractTags(filePath) {
-		try {
-			await check.file(filePath)
-			const data = await mm.parseFile(filePath)
-			const tags = data.common // 'common' contains the metadata.
-			const file = await path.parse(filePath).base // base contanis the file name with extension.
-			return {file: file, title: tags.title, artist: tags.artist, year: tags.year}
-		} catch(err) {
-			throw err
-		}
+		await check.file(filePath)
+		const data = await mm.parseFile(filePath)
+		const tags = data.common // 'common' contains the metadata.
+		const file = await path.parse(filePath).base // base contanis the file name with extension.
+		return {file: file, title: tags.title, artist: tags.artist, year: tags.year}
 	}
 
 	/**
@@ -54,18 +51,14 @@ class Song {
 	 * @async
 	 * @param {string} filePath - The song file path.
 	 * @param {Tags} tags - The song's ID3 tags.
-	 * @returns {Promise<Tags>} The data added to the database.
+	 * @returns {Promise<true>} A confirmation of insertion to the database.
 	 */
 	async add(tags) {
-		try {
-			await check.tags(tags)
-			const sql = `INSERT INTO songs(file, title, artist, year) \
-						VALUES("${tags.file}", "${tags.title}", "${tags.artist}", "${tags.year}")`
-			await this.db.run(sql)
-			return {file: tags.file, title: tags.title, artist: tags.artist, year: tags.year}
-		} catch(err) {
-			throw err
-		}
+		await check.tags(tags)
+		const sql = `INSERT INTO songs(file, title, artist, year) \
+					VALUES("${tags.file}", "${tags.title}", "${tags.artist}", "${tags.year}")`
+		await this.db.run(sql)
+		return true
 	}
 
 	/**
@@ -75,15 +68,11 @@ class Song {
 	 * @returns {Promise<Tags>} The song's tags from the database.
 	 */
 	async get(key) {
-		try {
-			await check.key(key)
-			const sql = `SELECT file, title, artist, year FROM songs WHERE id="${key}"`
-			const data = await this.db.get(sql)
-			if(data === undefined) throw new Error(`record for key ${key} does not exist`)
-			return data
-		} catch(err) {
-			throw err
-		}
+		await check.key(key)
+		const sql = `SELECT file, title, artist, year FROM songs WHERE id="${key}"`
+		const data = await this.db.get(sql)
+		if(data === undefined) throw new Error(`record for key ${key} does not exist`)
+		return data
 	}
 
 	/**
@@ -95,6 +84,22 @@ class Song {
 		const sql = 'SELECT file, title, artist, year FROM songs'
 		const data = await this.db.all(sql)
 		return data
+	}
+
+	/**
+	 * Deletes a song record from the database.
+	 * @async
+	 * @param {number} key - The ID of the record in the database.
+	 * @returns {Promise<true>} A confirmation of deletion.
+	 */
+	async delete(key) {
+		await check.key(key)
+		let sql = `SELECT COUNT(id) AS num FROM songs WHERE id=${key}`
+		const count = await this.db.get(sql)
+		if(count.num === 0) throw new Error(`record for key ${key} does not exist`)
+		sql = `DELETE FROM songs WHERE id=${key}`
+		await this.db.run(sql)
+		return true
 	}
 
 }

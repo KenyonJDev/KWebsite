@@ -61,8 +61,8 @@ describe('add', () => {
 		expect.assertions(1)
 		const song = await new Song()
 		const tags = await song.extractTags(validFile)
-		const data = await song.add(tags)
-		await expect(data.file).toBe('song.mp3')
+		const confirm = await song.add(tags)
+		await expect(confirm).toEqual(true)
 		done()
 	})
 
@@ -122,7 +122,8 @@ describe('get()', () => {
 	test('getting valid record', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		const tags = await song.add(await song.extractTags(validFile))
+		const tags = await song.extractTags(validFile)
+		await song.add(tags)
 		const newTags = await song.get(1)
 		await expect(newTags).toEqual(tags)
 		done()
@@ -169,10 +170,31 @@ describe('getAll()', () => {
 	test('expecting one object in list', async done => {
 		expect.assertions(2)
 		const song = await new Song()
-		const tags = await song.add(await song.extractTags(validFile))
+		const tags = await song.extractTags(validFile)
+		await song.add(tags)
 		const list = await song.getAll()
 		await expect(list.length).toEqual(1)
 		await expect(list[0]).toEqual(tags)
+		done()
+	})
+})
+
+describe('delete()', () => {
+	test('deleting a valid key', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		await song.add(await song.extractTags(validFile))
+		const key = 1
+		await expect(await song.delete(key)).toEqual(true)
+		done()
+	})
+
+	test('deleting invalid key', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		const key = 1
+		await expect(song.delete(key))
+			.rejects.toEqual(Error(`record for key ${key} does not exist`))
 		done()
 	})
 })
