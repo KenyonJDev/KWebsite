@@ -62,7 +62,7 @@ describe('add', () => {
 		const song = await new Song()
 		const tags = await song.extractTags(validFile)
 		const confirm = await song.add(tags)
-		await expect(confirm).toEqual(true)
+		await expect(confirm).toEqual(1)
 		done()
 	})
 
@@ -195,6 +195,22 @@ describe('delete()', () => {
 		const key = 1
 		await expect(song.delete(key))
 			.rejects.toEqual(Error(`record for key ${key} does not exist`))
+		done()
+	})
+
+	test('deleting middle key', async done => {
+		expect.assertions(4)
+		const song = await new Song()
+		for(let i = 0; i < 3; i++) {
+			await song.add(await song.extractTags(validFile))
+		}
+		const success = await song.delete(2)
+		await expect(success).toEqual(true)
+		const list = await song.getAll()
+		await expect(list.length).toEqual(2)
+		await expect(list[1].id).toEqual(3)
+		const returnID = await song.add(await song.extractTags(validFile))
+		await expect(returnID).toEqual(4)
 		done()
 	})
 })
