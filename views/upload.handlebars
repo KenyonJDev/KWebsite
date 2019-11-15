@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Upload | Sense</title>
+	<meta name="description" content="The upload page for Sense.">
+	<meta name="author" content="Bartek Wlodarski">
+    <link href="css/global.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    <h1 class="webTitle"><a href="/">Sense</a></h1>
+    <nav>
+        <ul class="nav">
+            <li><a href="#">Home</a></li>
+            <li><a href="songs">Songs</a></li>
+            <li><a href="playlists">Playlists</a></li>
+            <li><a href="upload">Upload</a></li>
+            <li><a href="login">Login/Signup</a></li>
+            <form>
+                <input type="text" placeholder="Search...">
+				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
+            </form>
+        </ul>
+    </nav>
+    <section>
+        <h2>Upload</h2>
+        {{#if msg}}
+            <p class="msg">Error:{{msg}}</p>
+        {{/if}}
+        <form action="/upload", method="POST">
+            {{#if tags}}
+                <p>Please enter the missing data.</p>
+                <p>Song title:<br><input type="text" name="title" value="{{tags.title}}"></p>
+                <p>Song artist:<br><input type="text" name="artist" value="{{tags.artist}}"></p>
+                <p>Release year:<br><input type="text" name="year" value="{{tags.year}}"></p>
+                <p><input type="submit" value="Upload"></p>
+            {{else}}
+                <p>Please upload an MP3 file.</p>
+                <p>File:<br><input type="file" name="song"></p>
+                <p><input type="submit" value="Upload"></p>
+            {{/if}}
+        </form>
+    </section>
+
+    <hr>
+    <footer>
+        <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
+    </footer>
+</body>
+
+
+</html>

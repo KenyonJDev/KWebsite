@@ -12,10 +12,12 @@ const staticDir = require('koa-static')
 const bodyParser = require('koa-bodyparser')
 const koaBody = require('koa-body')({multipart: true, uploadDir: '.'})
 const session = require('koa-session')
+const fs = require('fs-extra')
 //const jimp = require('jimp')
 
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
+const Song = require('./modules/song')
 
 
 const app = new Koa()
@@ -102,6 +104,27 @@ router.post('/login', async ctx => {
 		return ctx.redirect('/?msg=you are now logged in...')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
+	}
+})
+
+router.get('/upload', async ctx => {
+	const data = {}
+	if(ctx.query.msg) data.msg = ctx.query.msg
+	await ctx.render('upload', data)
+})
+
+router.post('/upload', async ctx => {
+	try {
+		const body = ctx.request.body
+		console.log(body)
+		const file = ctx.request.files.song
+		const song = await new Song(dbName)
+		const tags = await song.extractTags(file)
+		await fs.copy(file, ``)
+		await song.add(tags)
+		await ctx.redirect('/?msg="File%20uploaded!"')
+	} catch(err) {
+		await ctx.render('upload', {msg: err.message, tags: ctx.request.body})
 	}
 })
 
