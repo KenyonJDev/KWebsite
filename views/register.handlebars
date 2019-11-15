@@ -9,9 +9,24 @@
 		<link href="css/login.css" type="text/css" rel="stylesheet">
 	</head>
 	<body>
-		<h1>Create an Account</h1>
+		<h1 class="webTitle"><a href="/">Sense</a></h1>
+		<nav>
+			<ul class="nav">
+				<li><a href="#">Home</a></li>
+				<li><a href="songs">Songs</a></li>
+				<li><a href="playlists">Playlists</a></li>
+				<li><a href="upload">Upload</a></li>
+				<li><a href="login">Login/Signup</a></li>
+				<form>
+					<input type="text" placeholder="Search...">
+					<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
+				</form>
+			</ul>
+			
+		</nav>
 		<section>
-			<form action="/register" enctype="multipart/form-data" method="post">
+			<h2>Create an Account</h2>
+			<form action="/register" enctype="multipart/form-data" method="post" class="loginRegister">
 				<p>Username:<br /><input type="text" name="user" placeholder="Your preferred username (No Spaces)" value=""></p>
 				<p>Password:<br /><input type="password" name="pass" placeholder="Your chosen password" value=""></p>
 				<p>Profile Picture:<br /><input type="file" name="avatar"></p>

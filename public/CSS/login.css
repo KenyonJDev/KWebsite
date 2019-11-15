@@ -19,13 +19,14 @@ body {
     background-color:   white;
 }
 
-h1:first-child {
-    text-align:         center;
-    font-size:          50pt;
+h2 {
+    text-align:         left;
+    font-size:          30pt;
     margin:             16px;
+    margin-left:        0px;
 }
 
-input[type=text], input[type=password] {
+form.loginRegister input[type=text], input[type=password] {
     background:         none;
     height:             30px;
     min-width:          250px;

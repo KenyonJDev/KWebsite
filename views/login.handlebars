@@ -9,14 +9,29 @@
 		<link href="css/login.css" type="text/css" rel="stylesheet">
 	</head>
 	<body>
-		<h1>Log In</h1>
+		<h1 class="webTitle"><a href="/">Sense</a></h1>
+		<nav>
+			<ul class="nav">
+				<li><a href="#">Home</a></li>
+				<li><a href="songs">Songs</a></li>
+				<li><a href="playlists">Playlists</a></li>
+				<li><a href="upload">Upload</a></li>
+				<li><a href="login">Login/Signup</a></li>
+				<form>
+					<input type="text" placeholder="Search...">
+					<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
+				</form>
+			</ul>
+			
+		</nav>
 		<section>
+			<h2>Log In</h2>
 			{{#if msg}}
 				<p class="msg">{{msg}}</p>
 			{{/if}}
-			<form action="/login" method="post">
-				<p>Username:<br /><input type="text" name="user" placeholder="your username" value="{{user}}" autofocus></p>
-				<p>Password:<br /><input type="password" name="pass" placeholder="your password" value=""></p>
+			<form action="/login" method="post" class="loginRegister">
+				<p>Username:<br /><input type="text" name="user" placeholder="Your username..." value="{{user}}" autofocus></p>
+				<p>Password:<br /><input type="password" name="pass" placeholder="Your password..." value=""></p>
 				<p><input type="submit" value="Log in"></p>
 			</form>
 			<p><a href="/register">Don't have an account? Register here!</a></p>
