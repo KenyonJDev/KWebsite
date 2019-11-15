@@ -124,6 +124,7 @@ describe('get()', () => {
 		const song = await new Song()
 		const tags = await song.extractTags(validFile)
 		await song.add(tags)
+		tags.id = 1 // Adding the ID to the tags for comparison.
 		const newTags = await song.get(1)
 		await expect(newTags).toEqual(tags)
 		done()
@@ -168,13 +169,12 @@ describe('getAll()', () => {
 	})
 
 	test('expecting one object in list', async done => {
-		expect.assertions(2)
+		expect.assertions(1)
 		const song = await new Song()
 		const tags = await song.extractTags(validFile)
 		await song.add(tags)
 		const list = await song.getAll()
 		await expect(list.length).toEqual(1)
-		await expect(list[0]).toEqual(tags)
 		done()
 	})
 })

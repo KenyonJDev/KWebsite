@@ -49,7 +49,6 @@ class Song {
 	/**
 	 * Adds song file path and ID3 tags to the database.
 	 * @async
-	 * @param {string} filePath - The song file path.
 	 * @param {Tags} tags - The song's ID3 tags.
 	 * @returns {Promise<true>} A confirmation of insertion to the database.
 	 */
@@ -65,11 +64,11 @@ class Song {
 	 * Retrieves a song's data from the database.
 	 * @async
 	 * @param {number} key - The song's ID in the database.
-	 * @returns {Promise<Tags>} The song's tags from the database.
+	 * @returns {Promise<dbData>} The song's data from the database.
 	 */
 	async get(key) {
 		await check.key(key)
-		const sql = `SELECT file, title, artist, year FROM songs WHERE id="${key}"`
+		const sql = `SELECT * FROM songs WHERE id="${key}"`
 		const data = await this.db.get(sql)
 		if(data === undefined) throw new Error(`record for key ${key} does not exist`)
 		return data
@@ -78,10 +77,10 @@ class Song {
 	/**
 	 * Retrieves all songs from the database.
 	 * @async
-	 * @returns {Promise<Array<Tags>>} An array of song tags from the database.
+	 * @returns {Promise<Array<dbData>>} An array of song data from the database.
 	 */
 	async getAll() {
-		const sql = 'SELECT file, title, artist, year FROM songs'
+		const sql = 'SELECT * FROM songs'
 		const data = await this.db.all(sql)
 		return data
 	}
