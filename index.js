@@ -120,7 +120,7 @@ router.post('/upload', async ctx => {
 		const file = ctx.request.files.song
 		const song = await new Song(dbName)
 		const tags = await song.extractTags(file)
-		await fs.copy(file, ``)
+		await fs.copy(file, '')
 		await song.add(tags)
 		await ctx.redirect('/?msg="File%20uploaded!"')
 	} catch(err) {
