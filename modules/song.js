@@ -60,7 +60,6 @@ class Song {
 		sql = 'SELECT last_insert_rowid() AS id' // retrieves the last autoincremented ID.
 		let key = await this.db.get(sql)
 		key = key.id
-		console.log(key)
 		sql = `UPDATE songs SET file="${key}.mp3" WHERE file="${tags.file}"`
 		await this.db.run(sql)
 		return key
