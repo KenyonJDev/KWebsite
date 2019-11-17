@@ -44,7 +44,6 @@ const dbName = 'website.db'
  */
 router.get('/', async ctx => {
 	try {
-		if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
 		await ctx.render('index')
@@ -113,6 +112,7 @@ router.post('/login', async ctx => {
 })
 
 router.get('/upload', async ctx => {
+	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = {}
 	if(ctx.query.msg) data.msg = ctx.query.msg
 	await ctx.render('upload', data)
