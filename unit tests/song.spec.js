@@ -126,7 +126,7 @@ describe('get()', () => {
 		await song.add(tags)
 		tags.id = 1 // Adding the ID to the tags for comparison.
 		const newTags = await song.get(1)
-		await expect(newTags).toEqual(tags)
+		await expect(newTags.file).toEqual('1.mp3')
 		done()
 	})
 
