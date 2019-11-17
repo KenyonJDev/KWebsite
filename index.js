@@ -90,7 +90,11 @@ router.get('/login', async ctx => {
 	await ctx.render('login', data)
 })
 
-router.get('/songs', async ctx => await ctx.render('songs'))
+router.get('/songs', async ctx => {
+	const song = await new Song(dbName)
+	const data = await song.getAll()
+	await ctx.render('songs', {songs: data})
+})
 
 router.get('/homepage', async ctx => await ctx.render('homepage'))
 
@@ -116,13 +120,27 @@ router.get('/upload', async ctx => {
 
 router.post('/upload', koaBody, async ctx => {
 	try {
+		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
-		const extension = mime.extension(type)
-		if(extension !== 'mp3') throw new Error('the file uploaded is not MP3')
-		await ctx.redirect('/?msg="File%20uploaded!"')
+		if(type !== 'audio/mp3') throw new Error('incorrect extension')
+		const newPath = `${path}.mp3`
+		await fs.renameSync(path, newPath)
+		const id = await song.add(await song.extractTags(newPath))
+		await fs.copySync(newPath, `public/music/${id}.mp3`)
+		await ctx.redirect(`/song/${id}`)
 	} catch(err) {
-		// console.log(err)
-		await ctx.render('upload', {msg: err.message, tags: ctx.request.body})
+		console.log(err)
+		await ctx.render('upload', {msg: err.message})
+	}
+})
+
+router.get('/song/:id', async ctx => {
+	try {
+		const song = await new Song(dbName)
+		const data = await song.get(ctx.params.id)
+		await ctx.render('play', data)
+	} catch(err) {
+		await ctx.render('error', err.message)
 	}
 })
 
