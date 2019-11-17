@@ -57,9 +57,13 @@ class Song {
 		let sql = `INSERT INTO songs(file, title, artist, year) \
 					VALUES("${tags.file}", "${tags.title}", "${tags.artist}", "${tags.year}")`
 		await this.db.run(sql)
-		sql = 'SELECT last_insert_rowid() AS id'
-		const key = await this.db.get(sql)
-		return key.id
+		sql = 'SELECT last_insert_rowid() AS id' // retrieves the last autoincremented ID.
+		let key = await this.db.get(sql)
+		key = key.id
+		console.log(key)
+		sql = `UPDATE songs SET file="${key}.mp3" WHERE file="${tags.file}"`
+		await this.db.run(sql)
+		return key
 	}
 
 	/**
