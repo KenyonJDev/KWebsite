@@ -9,6 +9,22 @@
     </head>
     <body>
         <h1>Songs</h1>
+        <table>
+            <tr>
+                <th>File</th>
+                <th>Song Name</th>
+                <th>Artist</th>
+                <th>Year</th>
+            </tr>
+            {{#each songs}}
+            <tr>
+                <td>{{this.file}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.artist}}</td>
+                <td>{{this.year}}</td>
+            </tr>
+            {{/each}}
+        </table>
         <footer>
             <p>Copyright &copy; 2019 Sense. All rights reserved</p>
         </footer>
