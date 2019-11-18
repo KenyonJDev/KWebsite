@@ -23,11 +23,12 @@ class Rating {
 	 * @param {string} [dbName=:memory:] - The database filename.
 	 */
     constructor(dbName = ':memory:') {
-		return (async() => {
-			this.db = await sqlite.open(dbName)
-			const sql = 'CREATE TABLE IF NOT EXISTS songs' +
-						'(id INTEGER PRIMARY KEY AUTOINCREMENT, file TEXT, title TEXT, artist TEXT, year INTEGER)'
-			await this.db.run(sql)
-			return this
-		})()
+        return (async() => {
+            this.db = await sqlite.open(dbName)
+            const sql = 'CREATE TABLE IF NOT EXISTS ratings' +
+                        '(id INTEGER PRIMARY KEY AUTOINCREMENT, score INTEGER NOT NULL)'
+            await this.db.run(sql)
+            return this
+        })
+    }
 }
