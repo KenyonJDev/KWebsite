@@ -6,6 +6,8 @@
 		<meta name="description" content="form to add and search songs">
 		<meta name="author" content="Tiago Ferreira">
 		<link href="style.css" type="text/css" rel="stylesheet" />
+        <link href="css/global.css" type="text/css" rel="stylesheet">
+		<link href="css/login.css" type="text/css" rel="stylesheet">
     </head>
     <body>
         <h1>Songs</h1>
@@ -18,6 +20,10 @@
             </tr>
             {{#each songs}}
             <tr>
+                <td><audio controls>
+                    <source src="/music/{{this.file}}" type ="audio/mpeg">
+                    Your browser does not support the MP3 file type.
+                </audio></td>
                 <td>{{this.file}}</td>
                 <td>{{this.title}}</td>
                 <td>{{this.artist}}</td>
