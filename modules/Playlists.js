@@ -1,6 +1,7 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
+const playlistSong = require('./Playlist_songs')
 
 module.exports = class Playlists {
 
