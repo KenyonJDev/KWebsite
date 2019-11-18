@@ -42,7 +42,7 @@ const dbName = 'website.db'
  * @route {GET} /
  * @authentication This route requires cookie-based authentication.
  */
-router.get('/', async ctx => {
+/*router.get('/', async ctx => {
 	try {
 		if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 		const data = {}
@@ -51,7 +51,7 @@ router.get('/', async ctx => {
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
-})
+})*/
 
 /**
  * The user registration page.
@@ -59,6 +59,8 @@ router.get('/', async ctx => {
  * @name Register Page
  * @route {GET} /register
  */
+router.get('/', async ctx => await ctx.render('homepage'))
+
 router.get('/register', async ctx => await ctx.render('register'))
 
 /**
@@ -95,8 +97,6 @@ router.get('/songs', async ctx => {
 	const data = await song.getAll()
 	await ctx.render('songs', {songs: data})
 })
-
-router.get('/homepage', async ctx => await ctx.render('homepage'))
 
 router.get('/browse', async ctx => await ctx.render('browse'))
 
