@@ -1,6 +1,5 @@
 'use strict'
 
-const path = require('path')
 const fs = require('fs')
 
 /**
@@ -16,7 +15,11 @@ const fs = require('fs')
 const file = async filePath => {
 	if(filePath === undefined) throw new Error('no arguments passed')
 	if(!fs.existsSync(filePath)) throw new Error(`file '${filePath}' does not exist`)
-	if(path.extname(filePath) !== '.mp3') throw new Error(`file '${filePath}' is not an .mp3 file`)
+}
+
+const type = async fileType => {
+	if(fileType === undefined) throw new Error('no file type passed')
+	if(fileType !== 'audio/mp3') throw new Error('incorrect extension')
 }
 
 /**
@@ -27,20 +30,9 @@ const file = async filePath => {
  */
 const tags = async tags => {
 	if(tags === undefined) throw new Error('no tags argument passed')
-	await checkFile(tags.file)
 	await checkTitle(tags.title)
 	await checkArtist(tags.artist)
 	await checkYear(tags.year)
-}
-
-/**
- * Checks the filename.
- * @param {*} file - The filename to check.
- * @memberof Song
- */
-const checkFile = async file => {
-	if(file === undefined) throw new Error('no filename in tags object')
-	if(file === '') throw new Error('filename is empty')
 }
 
 /**
@@ -87,4 +79,4 @@ const key = async key => {
 	if(key < 1) throw new Error('key must be greater than zero')
 }
 
-module.exports = {file, tags, key}
+module.exports = {file, type, tags, key}
