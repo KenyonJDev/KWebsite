@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 //Routes File
 
 'use strict'
@@ -13,12 +11,11 @@ const bodyParser = require('koa-bodyparser')
 const koaBody = require('koa-body')({multipart: true, uploadDir: '.'})
 const session = require('koa-session')
 const fs = require('fs-extra')
-const mime = require('mime-types')
-//const jimp = require('jimp')
 
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
 const Song = require('./modules/song')
+const UserSong = require('./modules/userSong')
 
 
 const app = new Koa()
@@ -44,7 +41,6 @@ const dbName = 'website.db'
  */
 router.get('/', async ctx => {
 	try {
-		if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
 		await ctx.render('index')
@@ -69,14 +65,10 @@ router.get('/register', async ctx => await ctx.render('register'))
  */
 router.post('/register', koaBody, async ctx => {
 	try {
-		// extract the data from the request
 		const body = ctx.request.body
 		console.log(body)
-		// call the functions in the module
 		const user = await new User(dbName)
 		await user.register(body.user, body.pass)
-		// await user.uploadPicture(path, type)
-		// redirect to the home page
 		ctx.redirect(`/?msg=new user "${body.name}" added`)
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
@@ -106,6 +98,7 @@ router.post('/login', async ctx => {
 		const user = await new User(dbName)
 		await user.login(body.user, body.pass)
 		ctx.session.authorised = true
+		ctx.session.user = user
 		return ctx.redirect('/?msg=you are now logged in...')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
@@ -113,6 +106,7 @@ router.post('/login', async ctx => {
 })
 
 router.get('/upload', async ctx => {
+	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = {}
 	if(ctx.query.msg) data.msg = ctx.query.msg
 	await ctx.render('upload', data)
@@ -122,24 +116,29 @@ router.post('/upload', koaBody, async ctx => {
 	try {
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
-		if(type !== 'audio/mp3') throw new Error('incorrect extension')
-		const newPath = `${path}.mp3`
-		await fs.renameSync(path, newPath)
-		const id = await song.add(await song.extractTags(newPath))
-		await fs.copySync(newPath, `public/music/${id}.mp3`)
-		await ctx.redirect(`/song/${id}`)
+		const id = await song.add(await song.extractTags(path, type))
+		console.log(id)
+		await fs.copySync(path, `public/music/${id}.mp3`)
+		const userSong = await new UserSong(dbName)
+		await userSong.link(ctx.session.user, id)
+		await ctx.redirect(`/songs/${id}`)
 	} catch(err) {
 		console.log(err)
 		await ctx.render('upload', {msg: err.message})
 	}
 })
 
-router.get('/song/:id', async ctx => {
+router.get('/songs/:id', async ctx => {
 	try {
 		const song = await new Song(dbName)
 		const data = await song.get(ctx.params.id)
+		const userSong = await new UserSong(dbName)
+		const owner = await userSong.check(ctx.params.id)
+		console.log(owner)
+		if(owner === ctx.session.user) data.owner = true
 		await ctx.render('play', data)
 	} catch(err) {
+		console.log(err)
 		await ctx.render('error', err.message)
 	}
 })
