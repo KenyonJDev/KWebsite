@@ -26,16 +26,32 @@ describe('extractTags()', () => {
 	test('reading valid song', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		const tags = await song.extractTags(validFile)
+		const tags = await song.extractTags(validFile, 'audio/mp3')
 		await expect(tags.title).toEqual('test title')
 		done()
 	})
 
-	test('reading an invalid mp3 file', async done => {
+/* 	test('reading an invalid file', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		await expect(song.extractTags(invalidFile))
+		await expect(song.extractTags(invalidFile, 'audio/mp3'))
 			.rejects.toEqual(Error(`file '${invalidFile}' is not an .mp3 file`))
+		done()
+	}) */
+
+	test('passing no file type', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		await expect(song.extractTags(validFile))
+			.rejects.toEqual(Error('no file type passed'))
+		done()
+	})
+
+	test('passing incorrect file type', async done => {
+		expect.assertions(1)
+		const song = await new Song()
+		await expect(song.extractTags(validFile, 'text/txt'))
+			.rejects.toEqual(Error('incorrect extension'))
 		done()
 	})
 
@@ -60,7 +76,7 @@ describe('add', () => {
 	test('adding valid tags', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		const tags = await song.extractTags(validFile)
+		const tags = await song.extractTags(validFile, 'audio/mp3')
 		const confirm = await song.add(tags)
 		await expect(confirm).toEqual(1)
 		done()
@@ -79,18 +95,17 @@ describe('add', () => {
 		const song = await new Song()
 		const emptyObj = {}
 		await expect(song.add(emptyObj))
-			.rejects.toEqual(Error('no filename in tags object'))
+			.rejects.toEqual(Error('no title in tags object'))
 		done()
 	})
 
 	test('passing object with missing tags', async done => {
-		expect.assertions(4)
+		expect.assertions(3)
 		const song = await new Song()
 		const objects = [
-			{tags: {title: 'a', artist: 'b', year: 1}, err: 'filename'}, // missing filename
-			{tags: {file: 'a', artist: 'b', year: 1}, err: 'title'}, // missing title
-			{tags: {file: 'a', title: 'b', year: 1}, err: 'artist'}, // missing artist
-			{tags: {file: 'a', title: 'b', artist: 'c'}, err: 'year'} // missing year
+			{tags: {artist: 'b', year: 1}, err: 'title'}, // missing title
+			{tags: {title: 'b', year: 1}, err: 'artist'}, // missing artist
+			{tags: {title: 'b', artist: 'c'}, err: 'year'} // missing year
 		]
 		for(const obj of objects) {
 			await expect(song.add(obj.tags))
@@ -100,12 +115,11 @@ describe('add', () => {
 	})
 
 	test('passing object with empty tags', async done => {
-		expect.assertions(4)
+		expect.assertions(3)
 		const song = await new Song()
 		const objects = [
-			{tags: {file: '', title: 'a', artist: 'b', year: 1}, err: 'filename'}, // empty filename
-			{tags: {file: 'a', title: '', artist: 'b', year: 1}, err: 'title'}, // empty title
-			{tags: {file: 'a', title: 'b', artist: '', year: 1}, err: 'artist'}, // empty artist
+			{tags: {title: '', artist: 'b', year: 1}, err: 'title'}, // empty title
+			{tags: {title: 'b', artist: '', year: 1}, err: 'artist'}, // empty artist
 		]
 		for(const obj of objects) {
 			await expect(song.add(obj.tags))
@@ -122,11 +136,11 @@ describe('get()', () => {
 	test('getting valid record', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		const tags = await song.extractTags(validFile)
+		const tags = await song.extractTags(validFile, 'audio/mp3')
 		await song.add(tags)
 		tags.id = 1 // Adding the ID to the tags for comparison.
 		const newTags = await song.get(1)
-		await expect(newTags.file).toEqual('1.mp3')
+		await expect(newTags.title).toEqual('test title')
 		done()
 	})
 
@@ -171,7 +185,7 @@ describe('getAll()', () => {
 	test('expecting one object in list', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		const tags = await song.extractTags(validFile)
+		const tags = await song.extractTags(validFile, 'audio/mp3')
 		await song.add(tags)
 		const list = await song.getAll()
 		await expect(list.length).toEqual(1)
@@ -183,7 +197,7 @@ describe('delete()', () => {
 	test('deleting a valid key', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		await song.add(await song.extractTags(validFile))
+		await song.add(await song.extractTags(validFile, 'audio/mp3'))
 		const key = 1
 		await expect(await song.delete(key)).toEqual(true)
 		done()
@@ -202,14 +216,14 @@ describe('delete()', () => {
 		expect.assertions(4)
 		const song = await new Song()
 		for(let i = 0; i < 3; i++) {
-			await song.add(await song.extractTags(validFile))
+			await song.add(await song.extractTags(validFile, 'audio/mp3'))
 		}
 		const success = await song.delete(2)
 		await expect(success).toEqual(true)
 		const list = await song.getAll()
 		await expect(list.length).toEqual(2)
 		await expect(list[1].id).toEqual(3)
-		const returnID = await song.add(await song.extractTags(validFile))
+		const returnID = await song.add(await song.extractTags(validFile, 'audio/mp3'))
 		await expect(returnID).toEqual(4)
 		done()
 	})
