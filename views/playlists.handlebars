@@ -31,11 +31,12 @@
         {{#if msg}}
             <p class="msg">Error: {{msg}}</p>
         {{/if}}
-        <form action="/playlists" enctype="multipart/form-data" method="POST">
+        <form action="/playlists" enctype="multipart/form-data" method="post">
             <p>Please name your playlist.</p>
             <input type="text" name ="playlist" placeholder="Name of playlist" value="">
             <p>Description.</p>
             <input type="text" name ="playlist_description" placeholder="Description of playlist" value="">
+            <p><input type="submit" value="Create"></p>
         </form>
     </section>
 

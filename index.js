@@ -19,6 +19,7 @@ const mime = require('mime-types')
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
 const Song = require('./modules/song')
+const Playlists = require('./modules/playlists')
 
 
 const app = new Koa()
@@ -97,6 +98,40 @@ router.get('/songs', async ctx => {
 })
 
 router.get('/playlists', async ctx => await ctx.render('playlists'))
+
+/**
+ * The script to process new playlist creations.
+ *
+ * @name Playlist Script
+ * @route {POST} /playlists
+ */
+router.post('/playlists', koaBody, async ctx => {
+	try{
+		const body = ctx.request.body
+		console.log(body)
+		const playlist = await new Playlists(dbName)
+		await playlist.create(body.name, body.description)
+		ctx.redirect(`/?msg=new playlist "${body.name}" created`)
+	}catch(err) {
+		await ctx.render('error', {message: err})
+	}
+})
+
+/*router.post('/upload', koaBody, async ctx => {
+	try {
+		const song = await new Song(dbName)
+		const {path, type} = ctx.request.files.song
+		if(type !== 'audio/mp3') throw new Error('incorrect extension')
+		const newPath = `${path}.mp3`
+		await fs.renameSync(path, newPath)
+		const id = await song.add(await song.extractTags(newPath))
+		await fs.copySync(newPath, `public/music/${id}.mp3`)
+		await ctx.redirect(`/song/${id}`)
+	} catch(err) {
+		console.log(err)
+		await ctx.render('upload', {msg: err.message})
+	}
+})*/
 
 router.get('/browse', async ctx => await ctx.render('browse'))
 
