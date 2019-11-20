@@ -66,7 +66,7 @@ router.get('/register', async ctx => await ctx.render('register'))
 router.post('/register', koaBody, async ctx => {
 	try {
 		const body = ctx.request.body
-		console.log(body)
+		console.log(`[register] body: ${body}`)
 		const user = await new User(dbName)
 		await user.register(body.user, body.pass)
 		ctx.redirect(`/?msg=new user "${body.name}" added`)
@@ -96,10 +96,10 @@ router.post('/login', async ctx => {
 	try {
 		const body = ctx.request.body
 		const user = await new User(dbName)
-		await user.login(body.user, body.pass)
+		const id = await user.login(body.user, body.pass)
 		ctx.session.authorised = true
-		ctx.session.user = user
-		return ctx.redirect('/?msg=you are now logged in...')
+		ctx.session.id = id
+		return await ctx.redirect('/?msg=you are now logged in...')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
@@ -117,10 +117,11 @@ router.post('/upload', koaBody, async ctx => {
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
 		const id = await song.add(await song.extractTags(path, type))
-		console.log(id)
+		console.log(`[upload] id: ${id}`)
 		await fs.copySync(path, `public/music/${id}.mp3`)
 		const userSong = await new UserSong(dbName)
-		await userSong.link(ctx.session.user, id)
+		console.log(`[upload] ctx.session.id: ${ctx.session.id}`)
+		await userSong.link(ctx.session.id, id)
 		await ctx.redirect(`/songs/${id}`)
 	} catch(err) {
 		console.log(err)
@@ -134,8 +135,8 @@ router.get('/songs/:id', async ctx => {
 		const data = await song.get(ctx.params.id)
 		const userSong = await new UserSong(dbName)
 		const owner = await userSong.check(ctx.params.id)
-		console.log(owner)
-		if(owner === ctx.session.user) data.owner = true
+		console.log(`[songs][${ctx.params.id}] owner: ${owner}`)
+		if(owner === ctx.session.id) data.owner = true
 		await ctx.render('play', data)
 	} catch(err) {
 		console.log(err)
@@ -145,6 +146,7 @@ router.get('/songs/:id', async ctx => {
 
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
+	ctx.session.id = null
 	ctx.redirect('/?msg=you are now logged out')
 })
 

@@ -34,10 +34,9 @@ class UserSong {
 
 	async check(song) {
 		if(song === undefined) throw new Error('song ID is undefined')
-		const sql = `SELECT userID AS id FROM userSongs WHERE songID=${song}`
+		const sql = `SELECT userID FROM userSongs WHERE songID=${song}`
 		let user = await this.db.get(sql)
-		console.log(user)
-		user = user.id
+		user = user.userID
 		return user
 	}
 
