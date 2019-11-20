@@ -31,7 +31,7 @@ describe('extractTags()', () => {
 		done()
 	})
 
-/* 	test('reading an invalid file', async done => {
+	/* 	test('reading an invalid file', async done => {
 		expect.assertions(1)
 		const song = await new Song()
 		await expect(song.extractTags(invalidFile, 'audio/mp3'))
