@@ -96,7 +96,7 @@ router.get('/songs', async ctx => {
 	await ctx.render('songs', {songs: data})
 })
 
-
+router.get('/playlists', async ctx => await ctx.render('playlists'))
 
 router.get('/browse', async ctx => await ctx.render('browse'))
 
