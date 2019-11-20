@@ -1,8 +1,6 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const mm = require('music-metadata')
-const path = require('path')
 
 /**
  * @fileoverview The file where the Rating class exists.
