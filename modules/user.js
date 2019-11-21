@@ -36,7 +36,7 @@ module.exports = class User {
 	}
 
 	async getuserID(user) {
-		let sql = `SELECT id FROM users WHERE user="${user}"`
+		const sql = `SELECT id FROM users WHERE user="${user}"`
 		const id = await this.db.get(sql)
 		return id
 	}

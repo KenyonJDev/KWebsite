@@ -16,8 +16,8 @@ class Playlists {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user songs
-			const sql = 'CREATE TABLE IF NOT EXISTS playlists' + 
-						'(playlist_id INTEGER PRIMARY KEY AUTOINCREMENT,' + 
+			const sql = 'CREATE TABLE IF NOT EXISTS playlists' +
+						'(playlist_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
 						'name TEXT NOT NULL, description TEXT NOT NULL);'
 			await this.db.run(sql)
 			return this
@@ -28,16 +28,16 @@ class Playlists {
 			if(name.length === 0) throw new Error('missing name')
 			if(description.length === 0) throw new Error('missing description')
 			//let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			let sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}");`
+			const sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}");`
 			await this.db.run(sql)
 			return true
 		} catch(err) {
 			throw err
 		}
 	}
-	
+
 	async getplaylistID(name) {
-		let sql = `SELECT playlist_id FROM playlists WHERE name="${name}"`
+		const sql = `SELECT playlist_id FROM playlists WHERE name="${name}"`
 		const playlistID = await this.db.run(sql)
 		return playlistID
 	}

@@ -20,8 +20,8 @@ const mime = require('mime-types')
 const User = require('./modules/user')
 const Song = require('./modules/song')
 const Playlists = require('./modules/playlists')
-const User_Playlists = require('./modules/User_playlists')
-let user_id = ''
+const userPlaylists = require('./modules/User_playlists')
+let userID = ''
 
 
 const app = new Koa()
@@ -46,7 +46,7 @@ const dbName = 'website.db'
  * @authentication This route requires cookie-based authentication.
  */
 router.get('/', async ctx => await ctx.render('homepage'))
-	/*try {
+/*try {
 		if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
@@ -98,8 +98,7 @@ router.post('/login', async ctx => {
 		const body = ctx.request.body
 		const user = await new User(dbName)
 		await user.login(body.user, body.pass)
-		let id = await user.getuserID(body.user)
-		user_id = id
+		const id = await user.getuserID(body.user)
 		console.log(id)
 		ctx.session.authorised = true
 		return ctx.redirect('/?msg=you are now logged in...')
@@ -136,13 +135,15 @@ router.post('/playlists', koaBody, async ctx => {
 		console.log(body)
 		//creates new instance of class Playlist
 		const playlist = await new Playlists(dbName)
+		const userPlaylist = await new userPlaylists(dbName)
 		await playlist.create(body.name, body.description)
 		//gets id of created playlist
-		let playlist_id = await playlist.getplaylistID(body.name)
+		const playlistID = await playlist.getplaylistID(body.name)
+		await userPlaylist.create(userID, playlistID)
 		//prints id of created playlist
-		console.log(playlist_id)
+		console.log(playlistID)
 		//prints id of user who created the playlist
-		console.log(user_id)
+		console.log(userID)
 		ctx.redirect(`/playlists?msg=new playlist "${body.name}" created`)
 	}catch(err) {
 		await ctx.render('error', {message: err})
@@ -168,9 +169,14 @@ router.post('/playlists', koaBody, async ctx => {
 router.get('/browse', async ctx => await ctx.render('browse'))
 
 router.get('/upload', async ctx => {
-	const data = {}
-	if(ctx.query.msg) data.msg = ctx.query.msg
-	await ctx.render('upload', data)
+	try{
+		if(ctx.session.authorised === null) await ctx.redirect('/login?msg=you need to login')
+		const data = {}
+		if(ctx.query.msg) data.msg = ctx.query.msg
+		await ctx.render('upload', data)
+	} catch(err) {
+		await ctx.render('error', {message: err.message})
+	}
 })
 
 router.post('/upload', koaBody, async ctx => {
@@ -201,6 +207,7 @@ router.get('/song/:id', async ctx => {
 
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
+	userID = ''
 	ctx.redirect('/?msg=you are now logged out')
 })
 
