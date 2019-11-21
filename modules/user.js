@@ -35,6 +35,12 @@ module.exports = class User {
 		}
 	}
 
+	async getuserID(user) {
+		let sql = `SELECT id FROM users WHERE user="${user}"`
+		const id = await this.db.get(sql)
+		return id
+	}
+
 	async uploadPicture(path, mimeType) {
 		const extension = mime.extension(mimeType)
 		console.log(`path: ${path}`)
