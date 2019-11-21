@@ -1,6 +1,8 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
+const userPlaylists = require('./User_playlists')
+const user = require('./user')
 //const playlistSong = require('./Playlist_songs')
 
 class Playlists {
@@ -26,12 +28,18 @@ class Playlists {
 			if(name.length === 0) throw new Error('missing name')
 			if(description.length === 0) throw new Error('missing description')
 			//let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			let sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}")`
+			let sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}");`
 			await this.db.run(sql)
 			return true
 		} catch(err) {
 			throw err
 		}
+	}
+	
+	async getplaylistID(name) {
+		let sql = `SELECT playlist_id FROM playlists WHERE name="${name}"`
+		const playlistID = await this.db.run(sql)
+		return playlistID
 	}
 
 	async delete(name, description) {
