@@ -5,7 +5,7 @@
 		<title>Sense</title>
 		<meta name="description" content="form to add and search songs">
 		<meta name="author" content="Tiago Ferreira">
-		<link href="style.css" type="text/css" rel="stylesheet" />
+		<link href="css/style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
         <h1>Songs</h1>
@@ -19,7 +19,7 @@
             {{#each songs}}
             <tr>
                 <td>{{this.file}}</td>
-                <td>{{this.title}}</td>
+                <td><a href="/songs/{{id}}">{{this.title}}</a></td>
                 <td>{{this.artist}}</td>
                 <td>{{this.year}}</td>
             </tr>

@@ -1,18 +1,24 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const playlistSong = require('./Playlist_songs')
+const userPlaylists = require('./User_playlists')
+const user = require('./user')
+//const playlistSong = require('./Playlist_songs')
 
-module.exports = class Playlists {
-
+class Playlists {
+	/**
+	 * Playlist class constructor.
+	 * Leave parameter empty to create db in memory.
+	 * @constructor
+	 * @param {string} [dbName=:memory:] - The database filename.
+	 */
 	constructor(dbName = ':memory:') {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user songs
-			const sql = `CREATE TABLE IF NOT EXISTS playlists(
-				playlist_id INTEGER PRIMARY KEY AUTOINCREMENT,
-				name TEXT,
-				description TEXT;`
+			const sql = 'CREATE TABLE IF NOT EXISTS playlists' +
+						'(playlist_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+						'name TEXT NOT NULL, description TEXT NOT NULL);'
 			await this.db.run(sql)
 			return this
 		})()
@@ -21,13 +27,19 @@ module.exports = class Playlists {
 		try {
 			if(name.length === 0) throw new Error('missing name')
 			if(description.length === 0) throw new Error('missing description')
-			let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}")`
+			//let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
+			const sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}");`
 			await this.db.run(sql)
 			return true
 		} catch(err) {
 			throw err
 		}
+	}
+
+	async getplaylistID(name) {
+		const sql = `SELECT playlist_id FROM playlists WHERE name="${name}"`
+		const playlistID = await this.db.run(sql)
+		return playlistID
 	}
 
 	async delete(name, description) {
@@ -41,3 +53,5 @@ module.exports = class Playlists {
 		}
 	}
 }
+
+module.exports = Playlists

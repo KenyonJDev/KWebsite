@@ -16,7 +16,7 @@ module.exports = class PlaylistSong {
 			await this.db.run(sql)
 			return this
 		})()
-	
+
 	}
 
 }

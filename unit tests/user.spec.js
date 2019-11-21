@@ -40,18 +40,13 @@ describe('register()', () => {
 
 })
 
-describe('uploadPicture()', () => {
-	// this would have to be done by mocking the file system
-	// perhaps using mock-fs?
-})
-
 describe('login()', () => {
 	test('log in with valid credentials', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
 		await account.register('doej', 'password')
-		const valid = await account.login('doej', 'password')
-		expect(valid).toBe(true)
+		const id = await account.login('doej', 'password')
+		expect(id).toBe(1)
 		done()
 	})
 

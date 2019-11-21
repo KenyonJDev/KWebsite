@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 //Routes File
 
 'use strict'
@@ -13,12 +11,14 @@ const bodyParser = require('koa-bodyparser')
 const koaBody = require('koa-body')({multipart: true, uploadDir: '.'})
 const session = require('koa-session')
 const fs = require('fs-extra')
-const mime = require('mime-types')
-//const jimp = require('jimp')
 
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
 const Song = require('./modules/song')
+const UserSong = require('./modules/userSong')
+const Playlists = require('./modules/playlists')
+const userPlaylists = require('./modules/User_playlists')
+let userID = ''
 
 
 const app = new Koa()
@@ -44,14 +44,13 @@ const dbName = 'website.db'
  */
 router.get('/', async ctx => {
 	try {
-		if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
 		await ctx.render('index')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
-})
+})*/
 
 /**
  * The user registration page.
@@ -69,14 +68,10 @@ router.get('/register', async ctx => await ctx.render('register'))
  */
 router.post('/register', koaBody, async ctx => {
 	try {
-		// extract the data from the request
 		const body = ctx.request.body
-		console.log(body)
-		// call the functions in the module
+		console.log(`[register] body: ${body}`)
 		const user = await new User(dbName)
 		await user.register(body.user, body.pass)
-		// await user.uploadPicture(path, type)
-		// redirect to the home page
 		ctx.redirect(`/?msg=new user "${body.name}" added`)
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
@@ -90,35 +85,63 @@ router.get('/login', async ctx => {
 	await ctx.render('login', data)
 })
 
+router.post('/login', async ctx => {
+	try {
+		const body = ctx.request.body
+		const user = await new User(dbName)
+		const id = await user.login(body.user, body.pass)
+		ctx.session.authorised = true
+		ctx.session.id = id
+		return await ctx.redirect('/?msg=you are now logged in...')
+	} catch(err) {
+		await ctx.render('error', {message: err.message})
+	}
+})
+
 router.get('/songs', async ctx => {
 	const song = await new Song(dbName)
 	const data = await song.getAll()
 	await ctx.render('songs', {songs: data})
 })
 
-router.get('/homepage', async ctx => await ctx.render('homepage'))
-
-router.get('/browse', async ctx => await ctx.render('browse'))
-
-router.post('/login', async ctx => {
+router.get('/playlists', async ctx => {
 	try {
-		const body = ctx.request.body
-		const user = await new User(dbName)
-		await user.login(body.user, body.pass)
-		ctx.session.authorised = true
-		return ctx.redirect('/?msg=you are now logged in...')
+		if(ctx.session.authorised === null) await ctx.redirect('/login?msg=you need to login')
+		const data = {}
+		if(ctx.query.msg) data.msg = ctx.query.msg
+		await ctx.render('playlists')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
 })
-
-router.get('/upload', async ctx => {
-	const data = {}
-	if(ctx.query.msg) data.msg = ctx.query.msg
-	await ctx.render('upload', data)
+/**
+ * The script to process new playlist creations.
+ *
+ * @name Playlist Script
+ * @route {POST} /playlists
+ */
+router.post('/playlists', koaBody, async ctx => {
+	try{
+		const body = ctx.request.body
+		console.log(body)
+		//creates new instance of class Playlist
+		const playlist = await new Playlists(dbName)
+		const userPlaylist = await new userPlaylists(dbName)
+		await playlist.create(body.name, body.description)
+		//gets id of created playlist
+		const playlistID = await playlist.getplaylistID(body.name)
+		await userPlaylist.create(userID, playlistID)
+		//prints id of created playlist
+		console.log(playlistID)
+		//prints id of user who created the playlist
+		console.log(userID)
+		ctx.redirect(`/playlists?msg=new playlist "${body.name}" created`)
+	}catch(err) {
+		await ctx.render('error', {message: err})
+	}
 })
 
-router.post('/upload', koaBody, async ctx => {
+/*router.post('/upload', koaBody, async ctx => {
 	try {
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
@@ -132,20 +155,52 @@ router.post('/upload', koaBody, async ctx => {
 		console.log(err)
 		await ctx.render('upload', {msg: err.message})
 	}
+})*/
+
+router.get('/browse', async ctx => await ctx.render('browse'))
+
+router.get('/upload', async ctx => {
+	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
+	const data = {}
+	if(ctx.query.msg) data.msg = ctx.query.msg
+	await ctx.render('upload', data)
 })
 
-router.get('/song/:id', async ctx => {
+router.post('/upload', koaBody, async ctx => {
+	try {
+		const song = await new Song(dbName)
+		const {path, type} = ctx.request.files.song
+		const id = await song.add(await song.extractTags(path, type))
+		console.log(`[upload] id: ${id}`)
+		await fs.copySync(path, `public/music/${id}.mp3`)
+		const userSong = await new UserSong(dbName)
+		console.log(`[upload] ctx.session.id: ${ctx.session.id}`)
+		await userSong.link(ctx.session.id, id)
+		await ctx.redirect(`/songs/${id}`)
+	} catch(err) {
+		console.log(err)
+		await ctx.render('upload', {msg: err.message})
+	}
+})
+
+router.get('/songs/:id', async ctx => {
 	try {
 		const song = await new Song(dbName)
 		const data = await song.get(ctx.params.id)
+		const userSong = await new UserSong(dbName)
+		const owner = await userSong.check(ctx.params.id)
+		console.log(`[songs][${ctx.params.id}] owner: ${owner}`)
+		if(owner === ctx.session.id) data.owner = true
 		await ctx.render('play', data)
 	} catch(err) {
+		console.log(err)
 		await ctx.render('error', err.message)
 	}
 })
 
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
+	ctx.session.id = null
 	ctx.redirect('/?msg=you are now logged out')
 })
 
