@@ -8,7 +8,7 @@
 	<meta name="description" content="{{title}} by {{artist}}">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
-	<link href="css/index.css" type="text/css" rel="stylesheet">
+	<link href="css/style.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
@@ -16,10 +16,10 @@
     <nav>
         <ul class="nav">
             <li><a href="/">Home</a></li>
-            <li><a href="songs">Songs</a></li>
-            <li><a href="playlists">Playlists</a></li>
-            <li><a href="upload">Upload</a></li>
-            <li><a href="login">Login/Signup</a></li>
+            <li><a href="/songs">Songs</a></li>
+            <li><a href="/playlists">Playlists</a></li>
+            <li><a href="/upload">Upload</a></li>
+            <li><a href="/login">Login/Signup</a></li>
             <form>
                 <input type="text" placeholder="Search...">
 				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
@@ -32,9 +32,12 @@
         <h2>{{title}}</h2>
         <h3>{{artist}} | {{year}}</h3>
         <audio controls>
-            <source src="/music/{{file}}" type ="audio/mpeg">
+            <source src="/music/{{id}}.mp3" type ="audio/mpeg">
             Your browser does not support the MP3 file type.
         </audio>
+        {{#if owner}}
+            <a href="/delete/{{id}}">Delete</a>
+        {{/if}}
     </section>
 
     <hr>

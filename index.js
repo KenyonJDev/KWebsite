@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 //Routes File
 
 'use strict'
@@ -13,12 +11,11 @@ const bodyParser = require('koa-bodyparser')
 const koaBody = require('koa-body')({multipart: true, uploadDir: '.'})
 const session = require('koa-session')
 const fs = require('fs-extra')
-const mime = require('mime-types')
-//const jimp = require('jimp')
 
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
 const Song = require('./modules/song')
+const UserSong = require('./modules/userSong')
 const Playlists = require('./modules/playlists')
 const userPlaylists = require('./modules/User_playlists')
 let userID = ''
@@ -45,9 +42,8 @@ const dbName = 'website.db'
  * @route {GET} /
  * @authentication This route requires cookie-based authentication.
  */
-router.get('/', async ctx => await ctx.render('homepage'))
-/*try {
-		if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
+router.get('/', async ctx => {
+	try {
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
 		await ctx.render('index')
@@ -72,14 +68,10 @@ router.get('/register', async ctx => await ctx.render('register'))
  */
 router.post('/register', koaBody, async ctx => {
 	try {
-		// extract the data from the request
 		const body = ctx.request.body
-		console.log(body)
-		// call the functions in the module
+		console.log(`[register] body: ${body}`)
 		const user = await new User(dbName)
 		await user.register(body.user, body.pass)
-		// await user.uploadPicture(path, type)
-		// redirect to the home page
 		ctx.redirect(`/?msg=new user "${body.name}" added`)
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
@@ -97,11 +89,10 @@ router.post('/login', async ctx => {
 	try {
 		const body = ctx.request.body
 		const user = await new User(dbName)
-		await user.login(body.user, body.pass)
-		const id = await user.getuserID(body.user)
-		console.log(id)
+		const id = await user.login(body.user, body.pass)
 		ctx.session.authorised = true
-		return ctx.redirect('/?msg=you are now logged in...')
+		ctx.session.id = id
+		return await ctx.redirect('/?msg=you are now logged in...')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
@@ -169,45 +160,47 @@ router.post('/playlists', koaBody, async ctx => {
 router.get('/browse', async ctx => await ctx.render('browse'))
 
 router.get('/upload', async ctx => {
-	try{
-		if(ctx.session.authorised === null) await ctx.redirect('/login?msg=you need to login')
-		const data = {}
-		if(ctx.query.msg) data.msg = ctx.query.msg
-		await ctx.render('upload', data)
-	} catch(err) {
-		await ctx.render('error', {message: err.message})
-	}
+	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
+	const data = {}
+	if(ctx.query.msg) data.msg = ctx.query.msg
+	await ctx.render('upload', data)
 })
 
 router.post('/upload', koaBody, async ctx => {
 	try {
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
-		if(type !== 'audio/mp3') throw new Error('incorrect extension')
-		const newPath = `${path}.mp3`
-		await fs.renameSync(path, newPath)
-		const id = await song.add(await song.extractTags(newPath))
-		await fs.copySync(newPath, `public/music/${id}.mp3`)
-		await ctx.redirect(`/song/${id}`)
+		const id = await song.add(await song.extractTags(path, type))
+		console.log(`[upload] id: ${id}`)
+		await fs.copySync(path, `public/music/${id}.mp3`)
+		const userSong = await new UserSong(dbName)
+		console.log(`[upload] ctx.session.id: ${ctx.session.id}`)
+		await userSong.link(ctx.session.id, id)
+		await ctx.redirect(`/songs/${id}`)
 	} catch(err) {
 		console.log(err)
 		await ctx.render('upload', {msg: err.message})
 	}
 })
 
-router.get('/song/:id', async ctx => {
+router.get('/songs/:id', async ctx => {
 	try {
 		const song = await new Song(dbName)
 		const data = await song.get(ctx.params.id)
+		const userSong = await new UserSong(dbName)
+		const owner = await userSong.check(ctx.params.id)
+		console.log(`[songs][${ctx.params.id}] owner: ${owner}`)
+		if(owner === ctx.session.id) data.owner = true
 		await ctx.render('play', data)
 	} catch(err) {
+		console.log(err)
 		await ctx.render('error', err.message)
 	}
 })
 
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
-	userID = ''
+	ctx.session.id = null
 	ctx.redirect('/?msg=you are now logged out')
 })
 

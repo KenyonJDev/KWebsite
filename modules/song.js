@@ -26,7 +26,7 @@ class Song {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
 			const sql = 'CREATE TABLE IF NOT EXISTS songs' +
-						'(id INTEGER PRIMARY KEY AUTOINCREMENT, file TEXT, title TEXT, artist TEXT, year INTEGER)'
+						'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, artist TEXT, year INTEGER)'
 			await this.db.run(sql)
 			return this
 		})()
@@ -38,12 +38,12 @@ class Song {
 	 * @param {string} filePath - The song file path.
 	 * @returns {Promise<Tags>} The song's ID3 tags.
 	 */
-	async extractTags(filePath) {
-		await check.file(filePath)
-		const data = await mm.parseFile(filePath)
+	async extractTags(path, type) {
+		await check.file(path)
+		await check.type(type)
+		const data = await mm.parseFile(path)
 		const tags = data.common // 'common' contains the metadata.
-		const file = await path.parse(filePath).base // base contanis the file name with extension.
-		return {file: file, title: tags.title, artist: tags.artist, year: tags.year}
+		return {title: tags.title, artist: tags.artist, year: tags.year}
 	}
 
 	/**
@@ -54,15 +54,12 @@ class Song {
 	 */
 	async add(tags) {
 		await check.tags(tags)
-		let sql = `INSERT INTO songs(file, title, artist, year) \
-					VALUES("${tags.file}", "${tags.title}", "${tags.artist}", "${tags.year}")`
+		let sql = `INSERT INTO songs(title, artist, year) \
+					VALUES("${tags.title}", "${tags.artist}", "${tags.year}")`
 		await this.db.run(sql)
 		sql = 'SELECT last_insert_rowid() AS id' // retrieves the last autoincremented ID.
 		let key = await this.db.get(sql)
 		key = key.id
-		console.log(key)
-		sql = `UPDATE songs SET file="${key}.mp3" WHERE file="${tags.file}"`
-		await this.db.run(sql)
 		return key
 	}
 
