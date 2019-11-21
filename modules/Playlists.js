@@ -61,7 +61,7 @@ class Playlists {
 		return playlistID
 	}
 	/**
-	 * Extracts a song's ID3 tags.
+	 * Deletes playlist record.
 	 * @async
 	 * @param {string} filePath - The playlistfile path.
 	 * @returns {null} Deletion of record.
