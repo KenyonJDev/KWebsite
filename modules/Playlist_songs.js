@@ -2,12 +2,27 @@
 
 const sqlite = require('sqlite-async')
 
-module.exports = class PlaylistSong {
+/**
+ * @fileoverview The file where the PlaylistSong class resides.
+ * @author Joshua Kenyon <KenyonJ@uni.coventry.ac.uk>
+ */
 
+/**
+ * Interacts with the database.
+ * @namespace
+ */
+
+module.exports = class PlaylistSong {
+/**
+	 * PlaylistSong class constructor.
+	 * Leave parameter empty to create db in memory.
+	 * @constructor
+	 * @param {string} [dbName=:memory:] - The database filename.
+	 */
 	constructor(dbName = ':memory:') {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
-			// we need this table to store the user songs
+			//Creates Playlist_songs table
 			const sql = `CREATE TABLE IF NOT EXISTS playlist_songs (
 				playlist_id INTEGER PRIMARY KEY, 
 				Song_id INTEGER,

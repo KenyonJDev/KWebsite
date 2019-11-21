@@ -5,6 +5,12 @@ const user_ID = require('./user')
 const playlist_ID = require('./Playlists')
 
 module.exports = class UserPlaylist {
+	/**
+	 * UserPlaylist class constructor.
+	 * Leave parameter empty to create db in memory.
+	 * @constructor
+	 * @param {string} [dbName=:memory:] - The database filename.
+	 */
 
 	constructor(dbName = ':memory:') {
 		return (async() => {
