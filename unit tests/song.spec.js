@@ -31,13 +31,13 @@ describe('extractTags()', () => {
 		done()
 	})
 
-	/* 	test('reading an invalid file', async done => {
+	test('reading an invalid file', async done => {
 		expect.assertions(1)
 		const song = await new Song()
-		await expect(song.extractTags(invalidFile, 'audio/mp3'))
-			.rejects.toEqual(Error(`file '${invalidFile}' is not an .mp3 file`))
+		await expect(song.extractTags(invalidPath, 'audio/mp3'))
+			.rejects.toEqual(Error(`file '${invalidPath}' does not exist`))
 		done()
-	}) */
+	})
 
 	test('passing no file type', async done => {
 		expect.assertions(1)
