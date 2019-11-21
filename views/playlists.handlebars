@@ -4,28 +4,30 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Upload | Sense</title>
+    <title>Create Playlist | Sense</title>
 	<meta name="description" content="The playlist page for Sense.">
 	<meta name="author" content="Tiago Ferreira">
     <link href="css/global.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
-
+    
     <h1 class="webTitle"><a href="/">Sense</a></h1>
     <nav>
-        <ul class="nav">
-            <li><a href="#">Home</a></li>
-            <li><a href="songs">Songs</a></li>
-            <li><a href="playlists">Playlists</a></li>
-            <li><a href="upload">Upload</a></li>
-            <li><a href="login">Login/Signup</a></li>
-            <form>
-                <input type="text" placeholder="Search...">
-				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
-            </form>
-        </ul>
+    <ul class="nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="songs">Songs</a></li>
+        <li><a href="playlists">Playlists</a></li>
+        <li><a href="upload">Upload</a></li>
+        <li><a href="login">Login/Signup</a></li>
+        <li><a href="logout">Logout</a></li>
+        <form>
+            <input type="text" placeholder="Search...">
+            <input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
+     </form>
+    </ul>
     </nav>
+
     <section>
         <h2>Create Playlist</h2>
         {{#if msg}}
@@ -33,9 +35,9 @@
         {{/if}}
         <form action="/playlists" enctype="multipart/form-data" method="post">
             <p>Please name your playlist.</p>
-            <input type="text" name ="playlist" placeholder="Name of playlist" value="">
+            <input type="text" name="name" placeholder="Name of playlist" value="">
             <p>Description.</p>
-            <input type="text" name ="playlist_description" placeholder="Description of playlist" value="">
+            <input type="text" name="description" placeholder="Description of playlist" value="">
             <p><input type="submit" value="Create"></p>
         </form>
     </section>
