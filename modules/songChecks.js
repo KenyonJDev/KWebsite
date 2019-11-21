@@ -22,6 +22,18 @@ const type = async fileType => {
 	if(fileType !== 'audio/mp3') throw new Error('incorrect extension')
 }
 
+const user = async userID => {
+	if(userID === undefined) throw new Error('user ID is undefined')
+	const id = await parseInt(userID)
+	if(isNaN(id)) throw new Error(`provided user ID '${userID}' is not a number`)
+}
+
+const song = async songID => {
+	if(songID === undefined) throw new Error('song ID is undefined')
+	const id = await parseInt(songID)
+	if(isNaN(id)) throw new Error(`provided song ID '${songID}' is not a number`)
+}
+
 /**
  * Checks if passed tags are formatted correctly.
  * @async
@@ -62,7 +74,7 @@ const checkArtist = async artist => {
  */
 const checkYear = async year => {
 	if(year === undefined) throw new Error('no year in tags object')
-	year = parseInt(year)
+	year = await parseInt(year)
 	if(isNaN(year)) throw new Error('the year in the tags object is not a number')
 }
 
@@ -74,9 +86,9 @@ const checkYear = async year => {
  */
 const key = async key => {
 	if(key === undefined) throw new Error('key is undefined')
-	const id = parseInt(key)
+	const id = await parseInt(key)
 	if(isNaN(id)) throw new Error(`'${key}' is not a number`)
 	if(key < 1) throw new Error('key must be greater than zero')
 }
 
-module.exports = {file, type, tags, key}
+module.exports = {file, type, tags, key, song, user}
