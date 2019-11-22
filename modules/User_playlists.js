@@ -31,7 +31,7 @@ module.exports = class UserPlaylist {
 	}
 
 	async check(playlist) {
-		const sql = `SELECT userID FROM userPlaylists WHERE playlistID=${playlist}`
+		const sql = `SELECT userID AS id FROM userPlaylists WHERE playlistID=${playlist}`
 		let user = await this.db.get(sql)
 		if(user === undefined) throw new Error(`playlist ID ${playlist} does not exist`)
 		user = user.id

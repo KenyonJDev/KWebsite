@@ -144,12 +144,13 @@ router.post('/playlists', koaBody, async ctx => {
 router.get('/library/:id', async ctx => {
 	try {
 		const playlist = await new Playlists(dbName)
-		const data = await playlist.getplaylistID(playlist)
+		const data = await playlist.get(ctx.params.id)
 		const userPlaylist = await new UserPlaylist(dbName)
 		const owner = await userPlaylist.check(ctx.params.id)
 		console.log(`[playlists][${ctx.params.id}] owner: ${owner}`)
 		if(owner === ctx.session.id) data.owner = true
-		await ctx.render(`library/${data}`)
+		await ctx.render('library', data)
+		//await ctx.render(`library/${ctx.params.id}`)
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', err.message)

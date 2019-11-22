@@ -39,15 +39,9 @@ class Playlists {
 		}
 	}
 
-	async getplaylistID(id) {
-		const sql = `SELECT * FROM playlists WHERE id="${id}"`
-		const playlistID = await this.db.get(sql)
-		return playlistID
-	}
-
 	async get(playlistID) {
-		const sql = `SELECT * FROM playlists WHERE playlistID="${playlistID}"`
-		const data = await this.db.run(sql)
+		const sql = `SELECT * FROM playlists WHERE id="${playlistID}"`
+		const data = await this.db.get(sql)
 		return data
 	}
 
