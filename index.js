@@ -17,8 +17,7 @@ const User = require('./modules/user')
 const Song = require('./modules/song')
 const UserSong = require('./modules/userSong')
 const Playlists = require('./modules/playlists')
-const userPlaylists = require('./modules/User_playlists')
-let userID = ''
+const UserPlaylist = require('./modules/User_playlists')
 
 
 const app = new Koa()
@@ -50,7 +49,7 @@ router.get('/', async ctx => {
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
-})*/
+})
 
 /**
  * The user registration page.
@@ -126,18 +125,34 @@ router.post('/playlists', koaBody, async ctx => {
 		console.log(body)
 		//creates new instance of class Playlist
 		const playlist = await new Playlists(dbName)
-		const userPlaylist = await new userPlaylists(dbName)
-		await playlist.create(body.name, body.description)
+		const playlistID = await playlist.create(body.name, body.description)
 		//gets id of created playlist
-		const playlistID = await playlist.getplaylistID(body.name)
-		await userPlaylist.create(userID, playlistID)
+		const userPlaylist = await new UserPlaylist(dbName)
+		await userPlaylist.create(ctx.session.id, playlistID)
 		//prints id of created playlist
 		console.log(playlistID)
 		//prints id of user who created the playlist
-		console.log(userID)
-		ctx.redirect(`/playlists?msg=new playlist "${body.name}" created`)
+		console.log(ctx.session.id)
+		await ctx.redirect(`/library/${playlistID}`)
+		//ctx.redirect(`/playlists?msg=new playlist "${body.name}" created`)
 	}catch(err) {
+		console.log(err)
 		await ctx.render('error', {message: err})
+	}
+})
+
+router.get('/library/:id', async ctx => {
+	try {
+		const playlist = await new Playlists(dbName)
+		const data = await playlist.getplaylistID(playlist)
+		const userPlaylist = await new UserPlaylist(dbName)
+		const owner = await userPlaylist.check(ctx.params.id)
+		console.log(`[playlists][${ctx.params.id}] owner: ${owner}`)
+		if(owner === ctx.session.id) data.owner = true
+		await ctx.render(`library/${data}`)
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', err.message)
 	}
 })
 

@@ -1,8 +1,6 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const user_ID = require('./user')
-const playlist_ID = require('./Playlists')
 
 module.exports = class UserPlaylist {
 
@@ -10,20 +8,21 @@ module.exports = class UserPlaylist {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user songs
-			const sql = `CREATE TABLE IF NOT EXISTS user_playlists(
-				playlist_id INTEGER, 
-				user_id INTEGER, 
-				FOREIGN KEY(playlist_id) REFERENCES Playlists(playlist_id), 
-				FOREIGN KEY(user_id) REFERENCES Users(id));`
+			const sql = `CREATE TABLE IF NOT EXISTS userPlaylists(
+				userID INTEGER, 
+				playlistID INTEGER, 
+				FOREIGN KEY(playlistID) REFERENCES playlists(id), 
+				FOREIGN KEY(userID) REFERENCES users(id),
+				PRIMARY KEY(userID, playlistID));`
 			await this.db.run(sql)
 			return this
 		})()
 	}
 
-	async create(user_ID, playlist_ID) {
+	async create(userID, playlistID) {
 		try {
 			//let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			const sql = `INSERT INTO user_playlists(playlist_id, user_id) VALUES("${user_ID}", "${playlist_ID}");`
+			const sql = `INSERT INTO userPlaylists(userID, playlistID) VALUES("${userID}", "${playlistID}");`
 			await this.db.run(sql)
 			return true
 		} catch(err) {
@@ -31,9 +30,11 @@ module.exports = class UserPlaylist {
 		}
 	}
 
-	async add(user) {
-		// Use SQLite to add the song ID to the relevant playlist
-
+	async check(playlist) {
+		const sql = `SELECT userID FROM userPlaylists WHERE playlistID=${playlist}`
+		let user = await this.db.get(sql)
+		if(user === undefined) throw new Error(`playlist ID ${playlist} does not exist`)
+		user = user.id
+		return user
 	}
-
 }

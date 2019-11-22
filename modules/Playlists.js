@@ -17,8 +17,8 @@ class Playlists {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user songs
 			const sql = 'CREATE TABLE IF NOT EXISTS playlists' +
-						'(playlist_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
-						'name TEXT NOT NULL, description TEXT NOT NULL);'
+						'(id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+						'playlistName TEXT NOT NULL, description TEXT NOT NULL);'
 			await this.db.run(sql)
 			return this
 		})()
@@ -28,24 +28,33 @@ class Playlists {
 			if(name.length === 0) throw new Error('missing name')
 			if(description.length === 0) throw new Error('missing description')
 			//let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			const sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}");`
+			let sql = `INSERT INTO playlists(playlistName, description) VALUES("${name}", "${description}");`
 			await this.db.run(sql)
-			return true
+			sql = 'SELECT last_insert_rowid() AS id'
+			let playlist = await this.db.get(sql)
+			playlist = playlist.id
+			return playlist
 		} catch(err) {
 			throw err
 		}
 	}
 
-	async getplaylistID(name) {
-		const sql = `SELECT playlist_id FROM playlists WHERE name="${name}"`
-		const playlistID = await this.db.run(sql)
+	async getplaylistID(id) {
+		const sql = `SELECT * FROM playlists WHERE id="${id}"`
+		const playlistID = await this.db.get(sql)
 		return playlistID
+	}
+
+	async get(playlistID) {
+		const sql = `SELECT * FROM playlists WHERE playlistID="${playlistID}"`
+		const data = await this.db.run(sql)
+		return data
 	}
 
 	async delete(name, description) {
 		try {
-			let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			sql = `DELETE FROM playlists(name, description) VALUES("${name}", "${description}")`
+			let sql = `SELECT COUNT(id) as records FROM playlists WHERE playlistName="${name}";`
+			sql = `DELETE FROM playlists(playlistName, description) VALUES("${name}", "${description}")`
 			await this.db.run(sql)
 			return true
 		} catch(err) {
