@@ -68,10 +68,10 @@ router.get('/register', async ctx => await ctx.render('register'))
 router.post('/register', koaBody, async ctx => {
 	try {
 		const body = ctx.request.body
-		console.log(`[register] body: ${body}`)
+		console.log(`[register] body: ${body.user}`)
 		const user = await new User(dbName)
 		await user.register(body.user, body.pass)
-		ctx.redirect(`/?msg=new user "${body.name}" added`)
+		ctx.redirect(`/?msg=new user "${body.user}" added`)
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
@@ -177,9 +177,19 @@ router.get('/browse', async ctx => await ctx.render('browse'))
 
 router.get('/upload', async ctx => {
 	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
-	const data = {}
-	if(ctx.query.msg) data.msg = ctx.query.msg
-	await ctx.render('upload', data)
+	//const data = []
+	//if(ctx.query.msg) data.msg = ctx.query.msg
+	const userPlaylist = await new UserPlaylist(dbName)
+	const playlist = await new Playlists(dbName)
+	//const playlists = await playlist.getAll()
+	const playlists = await userPlaylist.getAllPlaylists(ctx.session.id)
+	//need loop to insert every playlist a user has in order to show it
+	console.log(playlists)
+	//const data = await playlist.get(playlists)
+	//console.log(data)
+	//data = data.playlists
+	//console.log({userPlaylist: playlists})
+	await ctx.render('upload', playlists)
 })
 
 router.post('/upload', koaBody, async ctx => {
