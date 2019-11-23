@@ -35,6 +35,12 @@
             <input type="hidden" name ="upload" value="file">
             <p>File:<br><input type="file" name="song"></p>
             <p><input type="submit" value="Upload"></p>
+            <select name="Playlists">
+                <option value="Hello">Hello</option>
+                {{#each playlists}}
+                <option value="{{this.playlistName}}">{{this.playlistName}}</option>
+                {{/each}}
+            </select>
         </form>
     </section>
 
