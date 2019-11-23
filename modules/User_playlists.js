@@ -37,4 +37,20 @@ module.exports = class UserPlaylist {
 		user = user.id
 		return user
 	}
+
+	async getPlaylists(userID) {
+		const sql = `SELECT * FROM userPlaylists WHERE userID=${userID}`
+		const playlists = await this.db.all(sql)
+		const total = []
+		playlists.forEach(playlist => total.push(playlist.playlistID))
+		//playlists = playlists.playlistID
+		return total
+	}
+
+	async getAllPlaylists(userID) {
+		const sql = `SELECT * FROM playlists WHERE id IN (\
+						SELECT playlistID FROM userPlaylists WHERE userID=${userID})`
+		const playlists = await this.db.all(sql)
+		return playlists
+	}
 }
