@@ -41,19 +41,21 @@ class Playlists {
 
 	async get(playlistID) {
 		const sql = `SELECT * FROM playlists WHERE id="${playlistID}"`
-		const data = await this.db.get(sql)
+		const data = await this.db.all(sql)
 		return data
 	}
 
-	async delete(name, description) {
-		try {
-			let sql = `SELECT COUNT(id) as records FROM playlists WHERE playlistName="${name}";`
-			sql = `DELETE FROM playlists(playlistName, description) VALUES("${name}", "${description}")`
-			await this.db.run(sql)
-			return true
-		} catch(err) {
-			throw err
-		}
+	async getAll() {
+		const sql = 'SELECT * FROM playlists'
+		const data = await this.db.all(sql)
+		return data
+	}
+
+	async delete(id) {
+		let sql = `SELECT COUNT(id) as records FROM playlists WHERE id="${id}";`
+		sql = `DELETE FROM playlists(id) VALUES("${id}")`
+		await this.db.run(sql)
+		return true
 	}
 }
 
