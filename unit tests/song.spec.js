@@ -6,7 +6,6 @@ const fs = require('fs')
 
 // Constants used in tests
 const validFile = 'music/song.mp3'
-const invalidFile = 'files/text.txt'
 const invalidPath = 'music/invalid.mp3'
 
 beforeAll( () => {
