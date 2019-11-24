@@ -9,6 +9,7 @@ const fs = require('fs')
 
 /**
  * Checks if file path has been passed correctly.
+ * @async
  * @param {string} filePath - The song file path.
  * @memberof Song
  */
@@ -17,6 +18,12 @@ const file = async filePath => {
 	if(!fs.existsSync(filePath)) throw new Error(`file '${filePath}' does not exist`)
 }
 
+/**
+ * Checks if the file type is correct.
+ * @async
+ * @param {string} fileType - The file type string.
+ * @memberof Song
+ */
 const type = async fileType => {
 	if(fileType === undefined) throw new Error('no file type passed')
 	if(fileType !== 'audio/mp3') throw new Error('incorrect extension')
@@ -26,6 +33,19 @@ const user = async userID => {
 	if(userID === undefined) throw new Error('user ID is undefined')
 	const id = await parseInt(userID)
 	if(isNaN(id)) throw new Error(`provided user ID '${userID}' is not a number`)
+}
+
+/**
+ * Checks the song key.
+ * @async
+ * @param {number} key - ID of the song record in the database.
+ * @memberof Song
+ */
+const key = async key => {
+	if(key === undefined) throw new Error('key is undefined')
+	const id = await parseInt(key)
+	if(isNaN(id)) throw new Error(`'${key}' is not a number`)
+	if(key < 1) throw new Error('key must be greater than zero')
 }
 
 const song = async songID => {
@@ -46,6 +66,8 @@ const tags = async tags => {
 	await checkArtist(tags.artist)
 	await checkYear(tags.year)
 }
+
+/* ---------- Internal functions ---------- */
 
 /**
  * Checks the title.
@@ -78,17 +100,5 @@ const checkYear = async year => {
 	if(isNaN(year)) throw new Error('the year in the tags object is not a number')
 }
 
-/**
- * Checks the song key.
- * @async
- * @param {number} key - ID of the song record in the database.
- * @memberof Song
- */
-const key = async key => {
-	if(key === undefined) throw new Error('key is undefined')
-	const id = await parseInt(key)
-	if(isNaN(id)) throw new Error(`'${key}' is not a number`)
-	if(key < 1) throw new Error('key must be greater than zero')
-}
 
 module.exports = {file, type, tags, key, song, user}
