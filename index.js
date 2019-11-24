@@ -189,7 +189,7 @@ router.get('/upload', async ctx => {
 	//console.log(data)
 	//data = data.playlists
 	//console.log({userPlaylist: playlists})
-	await ctx.render('upload', playlists)
+	await ctx.render('upload', {playlists: playlists})
 })
 
 router.post('/upload', koaBody, async ctx => {
