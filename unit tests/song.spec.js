@@ -1,6 +1,6 @@
 'use strict'
 
-const Song = require('../modules/song')
+const Song = require('../modules/song.js')
 const mock = require('mock-fs')
 const fs = require('fs')
 

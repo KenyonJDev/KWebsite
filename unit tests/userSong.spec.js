@@ -1,6 +1,6 @@
 'use strict'
 
-const UserSong = require('../modules/userSong')
+const UserSong = require('../modules/userSong.js')
 
 describe('linkSong()', () => {
 	test('adding valid user and song', async done => {
