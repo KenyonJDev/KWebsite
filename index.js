@@ -18,7 +18,7 @@ const Song = require('./modules/song')
 const UserSong = require('./modules/userSong')
 const Playlists = require('./modules/playlists')
 const userPlaylists = require('./modules/User_playlists')
-let userID = ''
+const userID = ''
 
 
 const app = new Koa()
@@ -37,7 +37,6 @@ const dbName = 'website.db'
 
 /**
  * The secure home page.
- *
  * @name Home Page
  * @route {GET} /
  * @authentication This route requires cookie-based authentication.
@@ -50,11 +49,10 @@ router.get('/', async ctx => {
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
-})*/
+})
 
 /**
  * The user registration page.
- *
  * @name Register Page
  * @route {GET} /register
  */
@@ -62,7 +60,6 @@ router.get('/register', async ctx => await ctx.render('register'))
 
 /**
  * The script to process new user registrations.
- *
  * @name Register Script
  * @route {POST} /register
  */
@@ -78,6 +75,11 @@ router.post('/register', koaBody, async ctx => {
 	}
 })
 
+/**
+ * The user login page.
+ * @name Login page
+ * @route {GET} /login
+ */
 router.get('/login', async ctx => {
 	const data = {}
 	if(ctx.query.msg) data.msg = ctx.query.msg
@@ -85,6 +87,11 @@ router.get('/login', async ctx => {
 	await ctx.render('login', data)
 })
 
+/**
+ * The script to process user logging in.
+ * @name Login script
+ * @route {POST} /login
+ */
 router.post('/login', async ctx => {
 	try {
 		const body = ctx.request.body
@@ -98,12 +105,22 @@ router.post('/login', async ctx => {
 	}
 })
 
+/**
+ * The songs page.
+ * @name Songs page
+ * @route {GET} /songs
+ */
 router.get('/songs', async ctx => {
 	const song = await new Song(dbName)
 	const data = await song.getAll()
 	await ctx.render('songs', {songs: data})
 })
 
+/**
+ * The playlists page.
+ * @name Playlists page
+ * @route {GET} /playlists
+ */
 router.get('/playlists', async ctx => {
 	try {
 		if(ctx.session.authorised === null) await ctx.redirect('/login?msg=you need to login')
@@ -114,10 +131,10 @@ router.get('/playlists', async ctx => {
 		await ctx.render('error', {message: err.message})
 	}
 })
+
 /**
  * The script to process new playlist creations.
- *
- * @name Playlist Script
+ * @name Playlist script
  * @route {POST} /playlists
  */
 router.post('/playlists', koaBody, async ctx => {
@@ -159,6 +176,11 @@ router.post('/playlists', koaBody, async ctx => {
 
 router.get('/browse', async ctx => await ctx.render('browse'))
 
+/**
+ * The upload page.
+ * @name Upload page
+ * @route {GET} /upload
+ */
 router.get('/upload', async ctx => {
 	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = {}
@@ -166,6 +188,11 @@ router.get('/upload', async ctx => {
 	await ctx.render('upload', data)
 })
 
+/**
+ * The script that handles uploading music.
+ * @name Upload script
+ * @route {POST} /upload
+ */
 router.post('/upload', koaBody, async ctx => {
 	try {
 		const song = await new Song(dbName)
@@ -183,6 +210,11 @@ router.post('/upload', koaBody, async ctx => {
 	}
 })
 
+/**
+ * The song details page.
+ * @name Song details page
+ * @route {GET} /upload/:id
+ */
 router.get('/songs/:id', async ctx => {
 	try {
 		const song = await new Song(dbName)
@@ -198,6 +230,32 @@ router.get('/songs/:id', async ctx => {
 	}
 })
 
+/**
+ * The song delete page.
+ * @name Delete song page
+ * @route {GET} /delete-song/:id
+ */
+router.get('/delete-song/:id', async ctx => {
+	try {
+		const userSong = await new UserSong(dbName)
+		const user = ctx.session.id
+		const owner = await userSong.check(ctx.params.id)
+		if(user !== owner) return ctx.redirect('/login?msg=you are not the owner of this file')
+		await userSong.remove(ctx.params.id)
+		const song = await new Song(dbName)
+		await song.delete(ctx.params.id)
+		ctx.redirect('/?msg=song deleted!')
+	} catch(err) {
+		console.log(err)
+		await ctx.render('err', err.message)
+	}
+})
+
+/**
+ * The upload page.
+ * @name Logout page
+ * @route {GET} /logout
+ */
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
 	ctx.session.id = null
