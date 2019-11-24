@@ -2,7 +2,6 @@
 
 const sqlite = require('sqlite-async')
 const mm = require('music-metadata')
-const path = require('path')
 const check = require('./songChecks')
 
 /**
@@ -35,7 +34,8 @@ class Song {
 	/**
 	 * Extracts a song's ID3 tags.
 	 * @async
-	 * @param {string} filePath - The song file path.
+	 * @param {string} path - The song file path.
+	 * @param {stirng} type - The file type of the path passed.
 	 * @returns {Promise<Tags>} The song's ID3 tags.
 	 */
 	async extractTags(path, type) {
@@ -50,7 +50,7 @@ class Song {
 	 * Adds song file path and ID3 tags to the database.
 	 * @async
 	 * @param {Tags} tags - The song's ID3 tags.
-	 * @returns {Promise<true>} A confirmation of insertion to the database.
+	 * @returns {Promise<number>} The ID of the inserted record.
 	 */
 	async add(tags) {
 		await check.tags(tags)
