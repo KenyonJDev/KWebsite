@@ -18,6 +18,7 @@ const Song = require('./modules/song')
 const UserSong = require('./modules/userSong')
 const Playlists = require('./modules/playlists')
 const UserPlaylist = require('./modules/User_playlists')
+const PlaylistSongs = require('./modules/Playlist_songs')
 
 
 const app = new Koa()
@@ -45,7 +46,7 @@ router.get('/', async ctx => {
 	try {
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
-		await ctx.render('index')
+		await ctx.render('homepage')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
@@ -179,11 +180,9 @@ router.get('/upload', async ctx => {
 	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	//const data = []
 	//if(ctx.query.msg) data.msg = ctx.query.msg
+	//console.log(body.playlists)
 	const userPlaylist = await new UserPlaylist(dbName)
-	const playlist = await new Playlists(dbName)
-	//const playlists = await playlist.getAll()
 	const playlists = await userPlaylist.getAllPlaylists(ctx.session.id)
-	//need loop to insert every playlist a user has in order to show it
 	console.log(playlists)
 	//const data = await playlist.get(playlists)
 	//console.log(data)
@@ -194,15 +193,24 @@ router.get('/upload', async ctx => {
 
 router.post('/upload', koaBody, async ctx => {
 	try {
+		const body = ctx.request.body
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
-		const id = await song.add(await song.extractTags(path, type))
-		console.log(`[upload] id: ${id}`)
-		await fs.copySync(path, `public/music/${id}.mp3`)
-		const userSong = await new UserSong(dbName)
-		console.log(`[upload] ctx.session.id: ${ctx.session.id}`)
-		await userSong.link(ctx.session.id, id)
-		await ctx.redirect(`/songs/${id}`)
+		if(body.Playlists === "0") {
+			return await ctx.redirect('/upload?msg=You need to select a playlistlist')
+		} else {
+			const id = await song.add(await song.extractTags(path, type))
+			console.log(`[upload] id: ${id}`)
+			await fs.copySync(path, `public/music/${id}.mp3`)
+			const userSong = await new UserSong(dbName)
+			const playlistSong = await new PlaylistSongs(dbName)
+			console.log(`[upload] ctx.session.id: ${ctx.session.id}`)
+			//prints id of selected playlist, can be removed before submission
+			console.log(body.Playlists)
+			await userSong.link(ctx.session.id, id)
+			await playlistSong.create(body.Playlists, id)
+			await ctx.redirect(`/songs/${id}`)
+		}
 	} catch(err) {
 		console.log(err)
 		await ctx.render('upload', {msg: err.message})
