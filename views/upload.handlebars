@@ -8,6 +8,7 @@
 	<meta name="description" content="The upload page for Sense.">
 	<meta name="author" content="Bartek Wlodarski">
     <link href="css/global.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
@@ -34,8 +35,16 @@
             <p>Please upload an MP3 file.</p>
             <input type="hidden" name ="upload" value="file">
             <p>File:<br><input type="file" name="song"></p>
+            <p>Album Art:<br><input type="file" name="albumArt"></p>
             <p><input type="submit" value="Upload"></p>
+            <select name="Playlists">
+                <option value="0">Please select a playlist</option>
+                {{#each playlists}}
+                <option value="{{id}}">{{playlistName}}</option>
+                {{/each}}
+            </select>
         </form>
+            <p></p>
     </section>
 
     <hr>
