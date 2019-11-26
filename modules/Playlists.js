@@ -9,6 +9,7 @@ const user = require('./user')
  * @fileoverview The file where the Playlist class resides.
  * @author Joshua Kenyon <KenyonJ@uni.coventry.ac.uk>
  * @author Bartlomiej Wlodarski
+ * @author Tiago Ferreira
 
 /**
  * Interacts with the database.
@@ -29,8 +30,8 @@ class Playlists {
 			this.db = await sqlite.open(dbName)
 			// Creation of Playlists table
 			const sql = 'CREATE TABLE IF NOT EXISTS playlists' +
-						'(playlist_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
-						'name TEXT NOT NULL, description TEXT NOT NULL);'
+						'(id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+						'playlistName TEXT NOT NULL, description TEXT NOT NULL);'
 			await this.db.run(sql)
 			return this
 		})()
@@ -47,35 +48,54 @@ class Playlists {
 			if(name.length === 0) throw new Error('missing name')
 			if(description.length === 0) throw new Error('missing description')
 			//let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			const sql = `INSERT INTO playlists(name, description) VALUES("${name}", "${description}");`
+			let sql = `INSERT INTO playlists(playlistName, description) VALUES("${name}", "${description}");`
 			await this.db.run(sql)
-			return true
+			sql = 'SELECT last_insert_rowid() AS id'
+			let playlist = await this.db.get(sql)
+			playlist = playlist.id
+			return playlist
 		} catch(err) {
 			throw err
 		}
 	}
 
-	async getplaylistID(name) {
-		const sql = `SELECT playlist_id FROM playlists WHERE name="${name}"`
-		const playlistID = await this.db.run(sql)
-		return playlistID
-	}
 	/**
-	 * Deletes playlist record.
+	 * Gets a playlist record.
 	 * @async
-	 * @param {string} filePath - The playlistfile path.
-	 * @returns {null} Deletion of record.
+	 * @param {playlistID} ID - ID of selected playlist.
+	 * @returns {ID} - Selected Playlist.
 	 * @memberof Playlists
 	 */
-	async delete(name, description) {
-		try {
-			let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			sql = `DELETE FROM playlists(name, description) VALUES("${name}", "${description}")`
-			await this.db.run(sql)
-			return true
-		} catch(err) {
-			throw err
-		}
+	async get(playlistID) {
+		const sql = `SELECT * FROM playlists WHERE id="${playlistID}"`
+		const data = await this.db.all(sql)
+		return data
+	}
+
+	/**
+	 * Gets all playlist records.
+	 * @async
+	 * @returns {records} - All playlists in database.
+	 * @memberof Playlists
+	 */
+	async getAll() {
+		const sql = 'SELECT * FROM playlists'
+		const data = await this.db.all(sql)
+		return data
+	}
+
+	/**
+	 * Deletes a playlist record.
+	 * @async
+	 * @param {playlistID} id - ID of selected playlist.
+	 * @returns {Promise<True>} - Confirms deletion of Playlist.
+	 * @memberof Playlists
+	 */
+	async delete(id) {
+		let sql = `SELECT COUNT(id) as records FROM playlists WHERE id="${id}";`
+		sql = `DELETE FROM playlists(id) VALUES("${id}")`
+		await this.db.run(sql)
+		return true
 	}
 }
 
