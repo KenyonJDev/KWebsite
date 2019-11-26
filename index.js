@@ -218,12 +218,13 @@ router.get('/upload', async ctx => {
  * @name Upload script
  * @route {POST} /upload
  */
+// eslint-disable-next-line max-lines-per-function
 router.post('/upload', koaBody, async ctx => {
 	try {
 		const body = ctx.request.body
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
-		if(body.Playlists === "0") {
+		if(body.Playlists === '0') {
 			return await ctx.redirect('/upload?msg=You need to select a playlistlist')
 		} else {
 			const id = await song.add(await song.extractTags(path, type))
