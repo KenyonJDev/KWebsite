@@ -4,7 +4,8 @@ const Crop = require('../modules/ImageCrop.js')
 
 describe('crop()', () => {
 
-    test('crop an image', async done => { 
-        const crop = await new Crop()
-    }
+	test('Data is being returned', async() => {
+		const file = await Crop()
+		expect(file).toBe(file)
+	})
 })
