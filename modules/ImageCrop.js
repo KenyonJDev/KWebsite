@@ -14,7 +14,7 @@ const width = 255
 	 * @param {filePath} image - The original image.
 	 * @returns {filePath} - Resized image.
 	 */
-const crop = async filePath => {
+const Crop = async filePath => {
 	const file = fs.readFileSync(filePath)
 	sharp(file)
 		.resize(width, height, {
@@ -25,4 +25,4 @@ const crop = async filePath => {
 		.catch(console.error)
 }
 
-module.exports = crop
+module.exports = Crop
