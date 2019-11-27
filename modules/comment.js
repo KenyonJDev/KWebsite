@@ -53,7 +53,7 @@ class Comment {
 	 */
 	async get(id) {
 		if(id === undefined) throw new Error('no comment ID passed')
-		if(isNaN(id)) throw new Error('the ID must be a number')
+		if(isNaN(id)) throw new Error('comment ID must be a number')
 		if(id < 1) throw new Error('comment IDs start at 1')
 		const sql = `SELECT comment FROM comments WHERE id=${id}`
 		let comment = await this.db.get(sql)
@@ -69,7 +69,7 @@ class Comment {
 	 */
 	async delete(id) {
 		if(id === undefined) throw new Error('no ID passed')
-		if(isNaN(id)) throw new Error('the ID must be a number')
+		if(isNaN(id)) throw new Error('comment ID must be a number')
 		if(id < 1) throw new Error('comment IDs start at 1')
 		const sql = `DELETE FROM comments WHERE id=${id}`
 		await this.db.run(sql)

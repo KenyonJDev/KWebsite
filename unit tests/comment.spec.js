@@ -35,11 +35,18 @@ describe('delete()', () => {
 		await expect(confirm).toEqual(true)
 		done()
 	})
+	test('deletinng invalid comment', async done => {
+		expect.assertions(1)
+		const comment = await new Comment()
+		await expect(comment.delete(-1))
+			.rejects.toEqual(Error('comment IDs start at 1'))
+		done()
+	})
 	test('passing a non-number', async done => {
 		expect.assertions(1)
 		const comment = await new Comment()
 		await expect(comment.delete('Potato'))
-			.rejects.toEqual(Error('the ID must be a number'))
+			.rejects.toEqual(Error('comment ID must be a number'))
 		done()
 	})
 	test('passing no parameter', async done => {
@@ -61,7 +68,6 @@ describe('get()', () => {
 		await expect(data).toEqual(text)
 		done()
 	})
-
 	test('getting invalid comment', async done => {
 		expect.assertions(1)
 		const comment = await new Comment()
@@ -69,7 +75,13 @@ describe('get()', () => {
 			.rejects.toEqual(Error('comment IDs start at 1'))
 		done()
 	})
-
+	test('passing not a number', async done => {
+		expect.assertions(1)
+		const comment = await new Comment()
+		await expect(comment.get('potato'))
+			.rejects.toEqual(Error('comment ID must be a number'))
+		done()
+	})
 	test('passing no ID', async done => {
 		expect.assertions(1)
 		const comment = await new Comment()
