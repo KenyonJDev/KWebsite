@@ -17,6 +17,12 @@ const width = 255
 const Crop = async filePath => {
 	const file = fs.readFileSync(filePath)
 	sharp(file)
+	/**
+		 * Write output image data to a file.
+		 * @param fileOut — The path to write the image data to.
+		 * @throws {Error} - Invalid parameters
+		 * @returns {promise} — A promise that fulfills with an object containing informations on the resulting file
+		 */
 		.resize(width, height, {
 			fit: 'cover'
 		})
