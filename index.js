@@ -183,7 +183,7 @@ router.get('/upload', async ctx => {
 	//console.log(body.playlists)
 	const userPlaylist = await new UserPlaylist(dbName)
 	const playlist = await new Playlists(dbName)
-	const playlists = await userPlaylist.getUserPlaylists(ctx.session.id)
+	const playlists = await userPlaylist.getUserPlaylist(ctx.session.id)
 	const lists = []
 	console.log(playlists)
 	for(const id of playlists) lists.push(await playlist.getPlaylists(id))
