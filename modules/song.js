@@ -2,7 +2,7 @@
 
 const sqlite = require('sqlite-async')
 const mm = require('music-metadata')
-const check = require('./songChecks')
+const check = require('./checks')
 
 /**
  * @fileoverview The file where the Song class resides.
@@ -66,14 +66,14 @@ class Song {
 	/**
 	 * Retrieves a song's data from the database.
 	 * @async
-	 * @param {number} key - The song's ID in the database.
+	 * @param {number} songID - The song's ID in the database.
 	 * @returns {Promise<dbData>} The song's data from the database.
 	 */
-	async get(key) {
-		await check.key(key)
-		const sql = `SELECT * FROM songs WHERE id="${key}"`
+	async get(songID) {
+		await check.song(songID)
+		const sql = `SELECT * FROM songs WHERE id="${songID}"`
 		const data = await this.db.get(sql)
-		if(data === undefined) throw new Error(`record for key ${key} does not exist`)
+		if(data === undefined) throw new Error(`record for key ${songID} does not exist`)
 		return data
 	}
 
@@ -91,15 +91,15 @@ class Song {
 	/**
 	 * Deletes a song record from the database.
 	 * @async
-	 * @param {number} key - The ID of the record in the database.
+	 * @param {number} songID - The ID of the record in the database.
 	 * @returns {Promise<true>} A confirmation of deletion.
 	 */
-	async delete(key) {
-		await check.key(key)
-		let sql = `SELECT COUNT(id) AS num FROM songs WHERE id=${key}`
+	async delete(songID) {
+		await check.song(songID)
+		let sql = `SELECT COUNT(id) AS num FROM songs WHERE id=${songID}`
 		const count = await this.db.get(sql)
-		if(count.num === 0) throw new Error(`record for key ${key} does not exist`)
-		sql = `DELETE FROM songs WHERE id=${key}`
+		if(count.num === 0) throw new Error(`record for key ${songID} does not exist`)
+		sql = `DELETE FROM songs WHERE id=${songID}`
 		await this.db.run(sql)
 		return true
 	}
