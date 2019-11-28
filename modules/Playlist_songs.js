@@ -45,7 +45,32 @@ module.exports = class PlaylistSong {
 	 * @returns {Promise<True>} - A confirmation of insertion.
 	 */
 	async create(playlistID, songID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		if(songID === undefined) throw new Error('Song ID undefined')
 		const sql = `INSERT INTO playlistSongs(playlistID, songID) VALUES("${playlistID}", "${songID}")`
+		await this.db.run(sql)
+		return true
+	}
+
+	async getPlaylistSongs(playlistID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		if(isNaN(playlistID)) throw new Error('Playlist ID has to be integer')
+		if(playlistID < 1) throw new Error('Playlist ID starts at 1')
+		const sql = `SELECT songID FROM playlistSongs WHERE playlistID=${playlistID}`
+		const playlist = await this.db.all(sql)
+		const list = []
+		for(const s of playlist) list.push(s.songID)
+		return list
+	}
+
+	async remove(songID) {
+		if(songID === undefined) throw new Error('Song ID undefined')
+		if(isNaN(songID)) throw new Error('Song ID has to be integer')
+		if(songID < 1) throw new Error('Song ID starts at 1')
+		let sql = `SELECT songID FROM playlistSongs WHERE songID=${songID}`
+		const data = await this.db.get(sql)
+		if(data === undefined) throw new Error('Song ID does not exist')
+		sql = `DELETE FROM playlistSongs WHERE songID=${songID}`
 		await this.db.run(sql)
 		return true
 	}
