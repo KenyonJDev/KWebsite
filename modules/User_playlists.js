@@ -53,7 +53,7 @@ module.exports = class UserPlaylist {
 		return total
 	}
 
-	async getAllPlaylists(userID) {
+	async getUserPlaylists(userID) {
 		const sql = `SELECT * FROM playlists WHERE id IN (\
 						SELECT playlistID FROM userPlaylists WHERE userID=${userID})`
 		const playlists = await this.db.all(sql)

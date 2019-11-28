@@ -178,25 +178,26 @@ router.get('/browse', async ctx => await ctx.render('browse'))
 
 router.get('/upload', async ctx => {
 	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
-	//const data = []
-	//if(ctx.query.msg) data.msg = ctx.query.msg
+	const data = []
+	if(ctx.query.msg) data.msg = ctx.query.msg
 	//console.log(body.playlists)
 	const userPlaylist = await new UserPlaylist(dbName)
-	const playlists = await userPlaylist.getAllPlaylists(ctx.session.id)
+	const playlists = await userPlaylist.getUserPlaylists(ctx.session.id)
 	console.log(playlists)
 	//const data = await playlist.get(playlists)
 	//console.log(data)
-	//data = data.playlists
+	data.playlists = playlists
 	//console.log({userPlaylist: playlists})
-	await ctx.render('upload', {playlists: playlists})
+	await ctx.render('upload', data)
 })
 
+// eslint-disable-next-line max-lines-per-function
 router.post('/upload', koaBody, async ctx => {
 	try {
 		const body = ctx.request.body
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
-		if(body.Playlists === "0") {
+		if(body.Playlists === '0') {
 			return await ctx.redirect('/upload?msg=You need to select a playlistlist')
 		} else {
 			const id = await song.add(await song.extractTags(path, type))
@@ -213,7 +214,7 @@ router.post('/upload', koaBody, async ctx => {
 		}
 	} catch(err) {
 		console.log(err)
-		await ctx.render('upload', {msg: err.message})
+		await ctx.render('error', {msg: err.message})
 	}
 })
 

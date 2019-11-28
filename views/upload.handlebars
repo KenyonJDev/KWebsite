@@ -40,7 +40,7 @@
             <select name="Playlists">
                 <option value="0">Please select a playlist</option>
                 {{#each playlists}}
-                <option value="{{id}}">{{playlistName}}</option>
+                    <option value="{{this.id}}">{{this.playlistName}}</option>
                 {{/each}}
             </select>
         </form>
