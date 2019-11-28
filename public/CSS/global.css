@@ -1,12 +1,11 @@
 *{
 	font-family:		Arial, Helvetica, sans-serif;
-    color:				#b9b9d0;
-    
+    color:				#232628;
 }
 
 body{
-    background-color:	rgba(38,38,38,1);
-    background-image:   linear-gradient(black, rgba(38,38,38,1));
+    background-color:	#a39175;
+    background-image:   linear-gradient(#ccc2b3, #a39175);
     background-repeat:  no-repeat;
 	margin:				0px;
 }
@@ -24,14 +23,14 @@ ul.nav {
     margin-bottom:      30px;
     padding:            0;
     overflow:           hidden;
-    background-color:   #262626;
+    background-color:   #a38c75;
 }
 
 ul.nav li {
     float:              left;
     font-size:          20px;
-    border-left:       	1px solid #b9b9d0;
-    width:              calc(100% / 6);
+    border-left:       	1px solid #6D5E46;
+    width:              calc(95% / 6);
 }
 
 ul.nav li:first-child {
@@ -40,7 +39,7 @@ ul.nav li:first-child {
 
 ul.nav li a {
     display:            block;
-    color:              #b9b9d0;
+    color:              #1F1B14;
     text-align:         center;
 	height:				19px;
     padding:            14px 16px;
@@ -76,4 +75,17 @@ section {
 
 h2 {
     padding-bottom:     15px;
+}
+
+form.infoInput input[type=text], input[type=password] {
+    background:         none;
+    height:             30px;
+    min-width:          250px;
+    border:           	0.5px;
+    border-style:       groove;
+    border-color:       rgba(38,38,38,0.75);
+    padding-left:       5px;
+    padding-right:      5px;
+    padding-top:        10px;
+    padding-bottom:     10px;
 }

@@ -41,7 +41,7 @@ table caption {
     width:              200px;
 }
 
-.colSongLength, .colSongCount {
+.colSongLength, .colSongCount, .colAlbumYear {
     width:              40px;
 }
 

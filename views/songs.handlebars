@@ -1,32 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang ="en">
-    <head>
-        <meta charset="utf-8">
-		<title>Sense</title>
-		<meta name="description" content="form to add and search songs">
-		<meta name="author" content="Tiago Ferreira">
-		<link href="css/style.css" type="text/css" rel="stylesheet" />
-    </head>
-    <body>
+    
+<head>
+    <meta charset="utf-8">
+    <title>Sense</title>
+	<meta name="description" content="form to add and search songs">
+	<meta name="author" content="Tiago Ferreira">
+    <link href="css/global.css" type="text/css" rel="stylesheet">
+    <link href="css/index.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    <h1 class="webTitle"><a href="/">Sense</a></h1>
+    <nav>
+        <ul class="nav">
+            <li><a href="#">Home</a></li>
+            <li><a href="songs">Songs</a></li>
+            <li><a href="playlists">Playlists</a></li>
+            <li><a href="upload">Upload</a></li>
+            <li><a href="login">Login/Signup</a></li>
+			<li><a href="logout">Logout</a></li>
+            <!--<form>
+                <input type="text" placeholder="Search...">
+				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
+            </form>-->
+        </ul>
+    </nav>
+
+    <section>
         <h1>Songs</h1>
-        <table>
+        <table class="featMusic">
+            <colgroup>
+				<col class="colAlbumArt">
+				<col class="colSongName">
+				<col class="colArtistName">
+				<col class="colAlbumYear">
+			</colgroup>
             <tr>
-                <th>File</th>
+                <th></th>
                 <th>Song Name</th>
                 <th>Artist</th>
                 <th>Year</th>
             </tr>
             {{#each songs}}
             <tr>
-                <td>{{this.file}}</td>
+                <td><img src="images/noPlaylistArtAvailable.png" style="width: 100px"></td>
+                <!--<td>{{this.file}}</td>-->
                 <td><a href="/songs/{{id}}">{{this.title}}</a></td>
                 <td>{{this.artist}}</td>
                 <td>{{this.year}}</td>
             </tr>
             {{/each}}
         </table>
-        <footer>
-            <p>Copyright &copy; 2019 Sense. All rights reserved</p>
-        </footer>
-    </body>
+    </section>
+
+    <hr>
+    <footer>
+        <p>Copyright &copy; 2019 Sense. All rights reserved</p>
+    </footer>
+</body>
 </html>
