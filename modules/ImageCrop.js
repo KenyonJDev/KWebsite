@@ -4,9 +4,9 @@ const fs = require('fs')
 const height = 255
 const width = 255
 /**
- * @file Image cropping script
+ * @file Asynchronous image cropping script
  * @author Joshua Kenyon <kenyonJ@uni.coventry.ac.uk>
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 /**
@@ -19,14 +19,14 @@ const Crop = async filePath => {
 	sharp(file)
 	/**
 		 * Write output image data to a file.
-		 * @param fileOut — The path to write the image data to.
+		 * @param filePath — The path to write the image data to.
 		 * @throws {Error} - Invalid parameters
 		 * @returns {promise} — A promise that fulfills with an object containing informations on the resulting file
 		 */
 		.resize(width, height, {
-			fit: 'cover'
+			fit: 'inside'
 		})
-		.toFile(filePath)
+	fs.appendFileSync(filePath)
 		.then(console.log)
 		.catch(console.error)
 }

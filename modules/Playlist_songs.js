@@ -5,6 +5,7 @@ const sqlite = require('sqlite-async')
 /**
  * @fileoverview The file where the PlaylistSong class resides.
  * @author Tiago Ferreira
+ * @author Joshua Kenyon <KenyonJ@uni.coventry.ac.uk>
  */
 
 /**
@@ -45,7 +46,7 @@ module.exports = class PlaylistSong {
 	 */
 	async create(playlistID, songID) {
 		const sql = `INSERT INTO playlistSongs(playlistID, songID) VALUES("${playlistID}", "${songID}")`
-		await this.db.run(sql) 		
+		await this.db.run(sql)
 		return true
 	}
 

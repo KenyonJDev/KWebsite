@@ -1,4 +1,8 @@
 'use strict'
+/**
+ * @fileoverview Unit test for ImageCrop.js.
+ * @author Joshua Kenyon <KenyonJ@uni.coventry.ac.uk>
+ */
 
 const Crop = require('../modules/ImageCrop.js')
 
