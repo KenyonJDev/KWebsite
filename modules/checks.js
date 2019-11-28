@@ -69,6 +69,19 @@ const comment = async commentID => {
 }
 
 /**
+ * Checks the playlist ID.
+ * @async
+ * @param {number} playlistID - The playlist ID.
+ * @memberof Checks
+ */
+const playlist = async playlistID => {
+	if(playlistID === undefined) throw new Error('playlist ID is undefined')
+	const id = await parseInt(playlistID)
+	if(isNaN(id)) throw new Error(`provided playlist ID '${playlistID}' is not a number`)
+	if(id < 1) throw new Error('playlist IDs start at 1')
+}
+
+/**
  * Checks if passed tags are formatted correctly.
  * @async
  * @param {Tags} tags - The song's ID3 tags.
@@ -115,4 +128,4 @@ const checkYear = async year => {
 }
 
 
-module.exports = {file, type, tags, comment, song, user}
+module.exports = {file, type, tags, comment, playlist, song, user}
