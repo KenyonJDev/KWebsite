@@ -104,6 +104,21 @@ router.get('/songs', async ctx => {
 	await ctx.render('songs', {songs: data})
 })
 
+router.get('/songs/:id', async ctx => {
+	try {
+		const song = await new Song(dbName)
+		const data = await song.get(ctx.params.id)
+		const userSong = await new UserSong(dbName)
+		const owner = await userSong.check(ctx.params.id)
+		console.log(`[songs][${ctx.params.id}] owner: ${owner}`)
+		if(owner === ctx.session.id) data.owner = true
+		await ctx.render('play', data)
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', err.message)
+	}
+})
+
 router.get('/playlists', async ctx => {
 	try {
 		if(ctx.session.authorised === null) await ctx.redirect('/login?msg=you need to login')
@@ -141,11 +156,20 @@ router.post('/playlists', koaBody, async ctx => {
 		await ctx.render('error', {message: err})
 	}
 })
+//display all playlists in db
+//add route to display user playlists
+//add function that retrieves certain playlist details (name, desc)
+//change routes so that you go to library 1st, then if its empty you create playlists from there
+//add function that allows to insert existing songs into different playlists
+//add documentation
+router.get('/library', async ctx => {
+
+})
 
 router.get('/library/:id', async ctx => {
 	try {
 		const playlist = await new Playlists(dbName)
-		const data = await playlist.get(ctx.params.id)
+		const data = await playlist.getPlaylist(ctx.params.id)
 		const userPlaylist = await new UserPlaylist(dbName)
 		const owner = await userPlaylist.check(ctx.params.id)
 		console.log(`[playlists][${ctx.params.id}] owner: ${owner}`)
@@ -183,10 +207,10 @@ router.get('/upload', async ctx => {
 	//console.log(body.playlists)
 	const userPlaylist = await new UserPlaylist(dbName)
 	const playlist = await new Playlists(dbName)
-	const playlists = await userPlaylist.getUserPlaylist(ctx.session.id)
+	const playlists = await userPlaylist.getUserPlaylists(ctx.session.id)
 	const lists = []
 	console.log(playlists)
-	for(const id of playlists) lists.push(await playlist.getPlaylists(id))
+	for(const id of playlists) lists.push(await playlist.getPlaylist(id))
 	//console.log(data)
 	data.playlists = lists
 	console.log(lists)
@@ -218,21 +242,6 @@ router.post('/upload', koaBody, async ctx => {
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', {msg: err.message})
-	}
-})
-
-router.get('/songs/:id', async ctx => {
-	try {
-		const song = await new Song(dbName)
-		const data = await song.get(ctx.params.id)
-		const userSong = await new UserSong(dbName)
-		const owner = await userSong.check(ctx.params.id)
-		console.log(`[songs][${ctx.params.id}] owner: ${owner}`)
-		if(owner === ctx.session.id) data.owner = true
-		await ctx.render('play', data)
-	} catch(err) {
-		console.log(err)
-		await ctx.render('error', err.message)
 	}
 })
 
