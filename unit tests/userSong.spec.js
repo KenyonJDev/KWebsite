@@ -41,6 +41,14 @@ describe('get()', () => {
 		done()
 	})
 
+	test('passing ID out of range', async done => {
+		expect.assertions(1)
+		const us = await new UserSong()
+		await expect(us.get(-1))
+			.rejects.toEqual(Error('user IDs start at 1'))
+		done()
+	})
+
 	test('passing string as ID', async done => {
 		expect.assertions(1)
 		const us = await new UserSong()

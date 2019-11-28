@@ -1,7 +1,7 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const check = require('./songChecks')
+const check = require('./checks')
 
 /**
  * @fileoverview The file where the UserSong class resides.
