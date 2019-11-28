@@ -8,9 +8,25 @@
     <link href="css/style.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
+    <h1>{{playlistName}}</h2>
+    <h2>{{description}}</h3>
     <section>
-        <h1>{{playlistName}}</h2>
-        <h2>{{description}}</h3>
+        <form action="/comment" enctype="multipart/form-data" method="POST">
+            <p><input type="text" name="comment"></p>
+            <p><input type="submit" value="Post comment"></p>
+        </form>
+    </section>
+
+    <section>
+        <table>
+            {{#each comments}}
+                <td>{{this.user}}</td>
+                <td>{{this.comment}}</td>
+                {{#if this.commentOwner}}
+                    <td><a href="/del-comment/{{this.id}}">Delete</a></td>
+                {{/if}}
+            {{/each}}
+        </table>
     </section>
     </table>
 </body>

@@ -19,6 +19,9 @@ const UserSong = require('./modules/userSong')
 const Playlists = require('./modules/playlists')
 const UserPlaylist = require('./modules/User_playlists')
 const PlaylistSongs = require('./modules/Playlist_songs')
+const PlaylistComment = require('./modules/playlistComment')
+const UserComment = require('./modules/userComment')
+const Comment = require('./modules/comment')
 
 
 const app = new Koa()
@@ -159,14 +162,27 @@ router.post('/playlists', koaBody, async ctx => {
 	}
 })
 
+// eslint-disable-next-line max-lines-per-function
 router.get('/library/:id', async ctx => {
 	try {
+		// Getting all the necessary objects ready
 		const playlist = await new Playlists(dbName)
+		const playlistComment = await new PlaylistComment(dbName)
+		const userComment = await new UserComment(dbName)
+		const comment = await new Comment(dbName)
+		// Getting the playlist details (name, description)
 		const data = await playlist.get(ctx.params.id)
-		const userPlaylist = await new UserPlaylist(dbName)
-		const owner = await userPlaylist.check(ctx.params.id)
-		console.log(`[playlists][${ctx.params.id}] owner: ${owner}`)
-		if(owner === ctx.session.id) data.owner = true
+		// Getting the comment IDs for the playlist that's being viewed
+		const commentIDs = await playlistComment.get(ctx.params.id)
+		// Getting the comment details
+		const comments = []
+		for(const id of commentIDs) {
+			const details = comment.get(id)
+			const commentOwner = await userComment.getOwner(id)
+			if(ctx.session.id === commentOwner) details.commentOwner = true
+			await comments.push(details)
+		}
+		data.comments = comments
 		await ctx.render('library', data)
 		//await ctx.render(`library/${ctx.params.id}`)
 	} catch(err) {
@@ -225,7 +241,7 @@ router.post('/upload', koaBody, async ctx => {
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
 		if(body.Playlists === '0') {
-			return await ctx.redirect('/upload?msg=You need to select a playlistlist')
+			return await ctx.redirect('/upload?msg=You need to select a playlist')
 		} else {
 			const id = await song.add(await song.extractTags(path, type))
 			console.log(`[upload] id: ${id}`)
@@ -243,6 +259,18 @@ router.post('/upload', koaBody, async ctx => {
 		console.log(err)
 		await ctx.render('upload', {msg: err.message})
 	}
+})
+
+router.post('/comment', async ctx => {
+	const body = ctx.request.body
+	if(body.comment.length === 0) await ctx.redirect('/upload?msg=please type a comment')
+	const playlistID = ctx.params.id, userID = ctx.session.id
+	const comment = await new Comment(dbName)
+	const userComment = await new UserComment(dbName)
+	const playlistComment = await new PlaylistComment(dbName)
+	const commentID = await comment.add(body.comment)
+	await userComment.link(userID, commentID)
+	await playlistComment.link(playlistID, commentID)
 })
 
 /**
