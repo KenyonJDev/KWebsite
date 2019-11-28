@@ -182,11 +182,14 @@ router.get('/upload', async ctx => {
 	if(ctx.query.msg) data.msg = ctx.query.msg
 	//console.log(body.playlists)
 	const userPlaylist = await new UserPlaylist(dbName)
+	const playlist = await new Playlists(dbName)
 	const playlists = await userPlaylist.getUserPlaylists(ctx.session.id)
+	const lists = []
 	console.log(playlists)
-	//const data = await playlist.get(playlists)
+	for(const id of playlists) lists.push(await playlist.getPlaylists(id))
 	//console.log(data)
-	data.playlists = playlists
+	data.playlists = lists
+	console.log(lists)
 	//console.log({userPlaylist: playlists})
 	await ctx.render('upload', data)
 })
