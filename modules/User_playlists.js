@@ -26,37 +26,56 @@ module.exports = class UserPlaylist {
 	}
 
 	async create(userID, playlistID) {
-		try {
-			//let sql = `SELECT COUNT(id) as records FROM playlists WHERE name="${name}";`
-			const sql = `INSERT INTO userPlaylists(userID, playlistID) VALUES("${userID}", "${playlistID}");`
-			await this.db.run(sql)
-			return true
-		} catch(err) {
-			throw err
-		}
+		if(userID === undefined) throw new Error('User ID undefined')
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		const sql = `INSERT INTO userPlaylists(userID, playlistID) VALUES("${userID}", "${playlistID}");`
+		await this.db.run(sql)
+		return true
 	}
 
 	async check(playlist) {
+		if(playlist === undefined) throw new Error('Playlist is undefined')
 		const sql = `SELECT userID AS id FROM userPlaylists WHERE playlistID=${playlist}`
 		let user = await this.db.get(sql)
 		if(user === undefined) throw new Error(`playlist ID ${playlist} does not exist`)
 		user = user.id
 		return user
 	}
-
+/*
 	async getPlaylists(userID) {
+		if(userID === undefined) throw new Error('User ID undefined')
+		if(isNaN(userID)) throw new Error('User ID has to be an integer')
+		if(userID < 1) throw new Error('User ID starts at 1')
 		const sql = `SELECT * FROM userPlaylists WHERE userID=${userID}`
 		const playlists = await this.db.all(sql)
 		const total = []
 		playlists.forEach(playlist => total.push(playlist.playlistID))
 		//playlists = playlists.playlistID
 		return total
-	}
+	}*/
 
 	async getUserPlaylists(userID) {
-		const sql = `SELECT * FROM playlists WHERE id IN (\
-						SELECT playlistID FROM userPlaylists WHERE userID=${userID})`
+		if(userID === undefined) throw new Error('User ID undefined')
+		if(isNaN(userID)) throw new Error('User ID has to be integer')
+		if(userID < 1) throw new Error('User ID starts at 1')
+		const sql = `SELECT playlistID FROM userPlaylists WHERE userID=${userID}`
 		const playlists = await this.db.all(sql)
-		return playlists
+		const list = []
+		for(const pl of playlists) list.push(pl.playlistID)
+		/*const sql = `SELECT * FROM playlists WHERE id IN (\
+						SELECT playlistID FROM userPlaylists WHERE userID=${userID})`
+		const playlists = await this.db.all(sql)*/
+		return list
+	}
+
+	async remove(playlistID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		if(playlistID < 1) throw new Error('Playlist ID starts at 1')
+		let sql = `SELECT playlistID FROM userPlaylists WHERE playlistID=${playlistID}`
+		const data = await this.db.get(sql)
+		if(data === undefined) throw new Error('Playlist ID does not exist')
+		sql = `DELETE FROM userPlaylists WHERE playlistID=${playlistID}`
+		await this.db.run(sql)
+		return true
 	}
 }
