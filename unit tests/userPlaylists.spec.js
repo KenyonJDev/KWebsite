@@ -50,7 +50,7 @@ describe('check()', () => {
 	})
 })
 
-describe('getUserPlaylists()', () => {
+describe('getUserPlaylist()', () => {
 
 	test('getting valid user playlists', async done => {
 		expect.assertions(2)

@@ -35,7 +35,7 @@ describe('get()', () => {
 		const playlist = await new Playlist()
 		//const create = playlist.create('Playlist', 'Description')
 		await playlist.create('test name', 'test desc')
-		const list = await playlist.getPlaylists(1)
+		const list = await playlist.getPlaylist(1)
 		await expect(list.playlistName).toEqual('test name')
 		done()
 	})
@@ -43,7 +43,7 @@ describe('get()', () => {
 	test('passing no id', async done => {
 		expect.assertions(1)
 		const playlist = await new Playlist()
-		await expect(playlist.getPlaylists()).rejects.toEqual(Error('Playlist ID undefined'))
+		await expect(playlist.getPlaylist()).rejects.toEqual(Error('Playlist ID undefined'))
 		done()
 	})
 })

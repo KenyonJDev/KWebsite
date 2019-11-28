@@ -66,7 +66,7 @@ class Playlists {
 	 * @returns {ID} - Selected Playlist.
 	 * @memberof Playlists
 	 */
-	async getPlaylists(playlistID) {
+	async getPlaylist(playlistID) {
 		if(playlistID === undefined) throw new Error('Playlist ID undefined')
 		const sql = `SELECT * FROM playlists WHERE id=${playlistID}`
 		const data = await this.db.get(sql)
