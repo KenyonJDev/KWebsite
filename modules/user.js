@@ -47,4 +47,10 @@ module.exports = class User {
 		}
 	}
 
+	async get(id) {
+		const sql = `SELECT user FROM users WHERE id=${id}`
+		const data = await this.db.run(sql)
+		return data.user
+	}
+
 }

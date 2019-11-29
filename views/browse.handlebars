@@ -5,23 +5,32 @@
     <title>Sense</title>
     <meta name="Browse" content="Browse page">
     <meta name="author" content="Tiago Ferreira">
-    <link rel="stylesheet" type="text/css" href="CSS/browse.css" />
+    <link href="css/global.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-    
-    <ul class="menu">
-        <li><a>Home</a></li>
-        <li><a>Search</a></li>
-        <li><a>Playlists</a></li>
-    </ul>
-
-    <ul class="play_bar">
-
-        <li><a>Play me</a></li>
-        <li><a>Play me</a></li>
-        <li><a>Play me</a></li>
-
-    </ul>
+    <h1 class="webTitle"><a href="/">Sense</a></h1>
+    <nav>
+        <ul class="nav">
+            <li><a href="#">Home</a></li>
+            <li><a href="songs">Songs</a></li>
+            <li><a href="playlists">Playlists</a></li>
+            <li><a href="/library">Library</a></li>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="upload">Upload</a></li>
+            <li><a href="login">Login/Signup</a></li>
+            <form>
+                <input type="text" placeholder="Search...">
+				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
+            </form>
+        </ul>
+    </nav>
+    <section>
+        {{#each playlists}}
+            <p><a href="library/{{this.id}}">{{this.playlistName}}</a></p>
+            <p>{{this.description}}</p>
+        {{/each}}
+    </section>
 
 </body>
 </html>

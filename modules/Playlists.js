@@ -1,8 +1,6 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const userPlaylists = require('./User_playlists')
-const user = require('./user')
 //const playlistSong = require('./Playlist_songs')
 
 /**
@@ -37,11 +35,9 @@ class Playlists {
 		})()
 	}
 	/**
-	 * Creates playlist record.
-	 * @async
-	 * @param {name, description} filePath - new filepath .
-	 * @returns {Promise} new playlist entry.
-	 * @memberof Playlists
+	 * Creates a playlist.
+	 * @param {string} name - The playlist name.
+	 * @param {string} description - The playlist description.
 	 */
 	async create(name, description) {
 		try {
@@ -62,21 +58,29 @@ class Playlists {
 	/**
 	 * Gets a playlist record.
 	 * @async
-	 * @param {playlistID} ID - ID of selected playlist.
-	 * @returns {ID} - Selected Playlist.
-	 * @memberof Playlists
+	 * @param {number} ID - ID of selected playlist.
+	 * @returns {Promise<number>} - Selected Playlist.
 	 */
-	async get(playlistID) {
-		const sql = `SELECT * FROM playlists WHERE id="${playlistID}"`
-		const data = await this.db.all(sql)
+	async getPlaylist(playlistID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		const sql = `SELECT * FROM playlists WHERE id=${playlistID}`
+		const data = await this.db.get(sql)
 		return data
 	}
+	/*
+	async getPlaylistDetails(playlistID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		const sql = `SELECT id FROM playlists WHERE id=${playlistID}`
+		const playlists = await this.db.run(sql)
+		const list = []
+		for(const pl of playlists) list.push(pl.playlistName)
+		return list
+	}*/
 
 	/**
 	 * Gets all playlist records.
 	 * @async
-	 * @returns {records} - All playlists in database.
-	 * @memberof Playlists
+	 * @returns {Promise<Array<number>>} - All playlists in database.
 	 */
 	async getAll() {
 		const sql = 'SELECT * FROM playlists'
@@ -87,13 +91,14 @@ class Playlists {
 	/**
 	 * Deletes a playlist record.
 	 * @async
-	 * @param {playlistID} id - ID of selected playlist.
+	 * @param {number} id - ID of selected playlist.
 	 * @returns {Promise<True>} - Confirms deletion of Playlist.
-	 * @memberof Playlists
 	 */
 	async delete(id) {
-		let sql = `SELECT COUNT(id) as records FROM playlists WHERE id="${id}";`
-		sql = `DELETE FROM playlists(id) VALUES("${id}")`
+		if(id === undefined) throw new Error('Playlist ID undefined')
+		if(isNaN(id)) throw new Error(`Playlist ID ${id} must be a number`)
+		if(id < 1) throw new Error(`Playlist ID ${id} has to be 1 or bigger`)
+		const sql = `DELETE FROM playlists WHERE id=${id}`
 		await this.db.run(sql)
 		return true
 	}

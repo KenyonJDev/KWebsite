@@ -1,6 +1,6 @@
 'use strict'
 
-const UserSong = require('../modules/userSong')
+const UserSong = require('../modules/userSong.js')
 
 describe('linkSong()', () => {
 	test('adding valid user and song', async done => {
@@ -38,6 +38,14 @@ describe('get()', () => {
 		const invalidID = 1
 		await expect(us.get(invalidID))
 			.rejects.toEqual(Error(`user ID ${invalidID} does not exist`))
+		done()
+	})
+
+	test('passing ID out of range', async done => {
+		expect.assertions(1)
+		const us = await new UserSong()
+		await expect(us.get(-1))
+			.rejects.toEqual(Error('user IDs start at 1'))
 		done()
 	})
 
