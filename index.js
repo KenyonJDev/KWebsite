@@ -1,3 +1,5 @@
+/* eslint-disable max-statements */
+/* eslint-disable max-lines-per-function */
 //Routes File
 
 'use strict'
@@ -48,7 +50,7 @@ router.get('/', async ctx => {
 	try {
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
-		await ctx.render('homepage')
+		await ctx.render('index')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
@@ -149,7 +151,7 @@ router.get('/songs/:id', async ctx => {
  */
 router.get('/playlists', async ctx => {
 	try {
-		if(ctx.session.authorised === null) await ctx.redirect('/login?msg=you need to login')
+		if(ctx.session.authorised !== true) await ctx.redirect('/login?msg=you need to login')
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
 		await ctx.render('playlists')
@@ -165,6 +167,7 @@ router.get('/playlists', async ctx => {
  */
 router.post('/playlists', koaBody, async ctx => {
 	try{
+		if(!ctx.session.authorised) await ctx.redirect('/login?msg=You need to log in')
 		const body = ctx.request.body
 		console.log(body)
 		//creates new instance of class Playlist
@@ -218,49 +221,45 @@ router.get('/library', async ctx => {
 
 /**
  * The individual playlist page.
- *
  * @name Library/id Page
  * @route {Get} /library
  */
 router.get('/library/:id', async ctx => {
 	try {
 		// Getting all the necessary objects ready
-		const playlist = await new Playlists(dbName)
-		const song = await new Song(dbName)
-		const playlistsong = await new PlaylistSongs(dbName)
-		const userPlaylist = await new UserPlaylist(dbName)
+		const user = await new User(dbName) // User details
+		const song = await new Song(dbName) // Song details
+		const playlist = await new Playlists(dbName) // Playlist details
+		const comment = await new Comment(dbName) // Comment details
+		const playlistsong = await new PlaylistSongs(dbName) // List of playlist songs
+		const userComment = await new UserComment(dbName) // List of user comments
+		const playlisComment = await new PlaylistComment(dbName) // List of playlist comments
+		// Retrieving data from the database to display on the page
 		const data = await playlist.getPlaylist(ctx.params.id)
-		const owner = await userPlaylist.check(ctx.params.id)
 		const songs = await playlistsong.getPlaylistSongs(ctx.params.id)
-		console.log(songs)
-		const list = []
-		for(const id of songs) list.push(await song.get(id))
-		//console.log(list)
-		//console.log(`[playlists][${ctx.params.id}] owner: ${owner}`)
-		if(owner === ctx.session.id) data.owner = true
-		data.songs = list
+		const songsList = [], commentList = []
+		// Putting song data into a list
+		for(const id of songs) songsList.push(await song.get(id))
+		data.songs = songsList
+		// Putting ccomments into a list
+		const commentIDs = await playlisComment.get(ctx.params.id)
+		for(const id of commentIDs) {
+			const detail = {}
+			const owner = await userComment.getOwner(id)
+			detail.id = id
+			detail.user = await user.get(owner)
+			detail.comment = await comment.get(id)
+			if(ctx.session.id === owner) detail.owner = true
+			commentList.push(detail)
+		}
+		data.comments = commentList
+		data.id = ctx.params.id
 		await ctx.render('collection', data)
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', err.message)
 	}
 })
-
-/*router.post('/upload', koaBody, async ctx => {
-	try {
-		const song = await new Song(dbName)
-		const {path, type} = ctx.request.files.song
-		if(type !== 'audio/mp3') throw new Error('incorrect extension')
-		const newPath = `${path}.mp3`
-		await fs.renameSync(path, newPath)
-		const id = await song.add(await song.extractTags(newPath))
-		await fs.copySync(newPath, `public/music/${id}.mp3`)
-		await ctx.redirect(`/song/${id}`)
-	} catch(err) {
-		console.log(err)
-		await ctx.render('upload', {msg: err.message})
-	}
-})*/
 
 /**
  * The page that displays all the playlists in the database.
@@ -269,7 +268,6 @@ router.get('/library/:id', async ctx => {
  * @route {Get} /browse
  */
 router.get('/browse', async ctx => {
-	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = []
 	if(ctx.query.msg) data.msg = ctx.query.msg
 	const playlists = await new Playlists(dbName)
@@ -314,6 +312,7 @@ router.get('/upload', async ctx => {
 // eslint-disable-next-line max-lines-per-function
 router.post('/upload', koaBody, async ctx => {
 	try {
+		if(!ctx.session.authorised) await ctx.redirect('/login?msg=You need to log in')
 		const body = ctx.request.body
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
@@ -338,21 +337,26 @@ router.post('/upload', koaBody, async ctx => {
 	}
 })
 
-router.post('/comment', async ctx => {
-	if(ctx.session.authorised === undefined) await ctx.redirect()
-	const body = ctx.request.body
-	const id = body.id
-	if(body.comment.length === 0) {
-		await ctx.redirect(`/library/${id}?msg=please type a comment`)
+router.post('/comment', koaBody, async ctx => {
+	try {
+		if(!ctx.session.authorised) await ctx.redirect('/login?msg=You need to log in')
+		const body = ctx.request.body
+		console.log(body)
+		const id = body.id
+		if(body.comment === '')
+			await ctx.redirect(`/library/${id}?msg=please type a comment`)
+		const playlistID = body.id, userID = ctx.session.id
+		const comment = await new Comment(dbName)
+		const userComment = await new UserComment(dbName)
+		const playlistComment = await new PlaylistComment(dbName)
+		const commentID = await comment.add(body.comment)
+		await userComment.link(userID, commentID)
+		await playlistComment.link(playlistID, commentID)
+		await ctx.redirect(`/library/${id}`)
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', err.message)
 	}
-	const playlistID = ctx.params.id, userID = ctx.session.id
-	const comment = await new Comment(dbName)
-	const userComment = await new UserComment(dbName)
-	const playlistComment = await new PlaylistComment(dbName)
-	const commentID = await comment.add(body.comment)
-	await userComment.link(userID, commentID)
-	await playlistComment.link(playlistID, commentID)
-	await ctx.redirect(`/library/${id}`)
 })
 
 /**
@@ -383,16 +387,33 @@ router.get('/songs/:id', async ctx => {
 router.get('/delete-song/:id', async ctx => {
 	try {
 		const userSong = await new UserSong(dbName)
+		const playlistSong = await new PlaylistSongs(dbName)
 		const user = ctx.session.id
 		const owner = await userSong.check(ctx.params.id)
 		if(user !== owner) return ctx.redirect('/login?msg=you are not the owner of this file')
 		await userSong.remove(ctx.params.id)
+		await playlistSong.remove(ctx.params.id)
 		const song = await new Song(dbName)
 		await song.delete(ctx.params.id)
 		ctx.redirect('/?msg=song deleted!')
 	} catch(err) {
 		console.log(err)
-		await ctx.render('err', err.message)
+		await ctx.render('error', err.message)
+	}
+})
+
+router.get('/delete-com/:id', async ctx => {
+	try {
+		const userComment = await new UserComment(dbName)
+		const comment = await new Comment(dbName)
+		const playlistComment = await new PlaylistComment(dbName)
+		await playlistComment.delete(ctx.params.id)
+		await userComment.delete(ctx.params.id)
+		await comment.delete(ctx.params.id)
+		await ctx.redirect('back')
+	} catch(err) {
+		console.log(err)
+		await ctx.redirect('error', err.message)
 	}
 })
 
