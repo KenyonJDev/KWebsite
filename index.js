@@ -183,6 +183,7 @@ router.get('/library/:id', async ctx => {
 			await comments.push(details)
 		}
 		data.comments = comments
+		data.id = ctx.params.id
 		await ctx.render('library', data)
 		//await ctx.render(`library/${ctx.params.id}`)
 	} catch(err) {
@@ -190,22 +191,6 @@ router.get('/library/:id', async ctx => {
 		await ctx.render('error', err.message)
 	}
 })
-
-/*router.post('/upload', koaBody, async ctx => {
-	try {
-		const song = await new Song(dbName)
-		const {path, type} = ctx.request.files.song
-		if(type !== 'audio/mp3') throw new Error('incorrect extension')
-		const newPath = `${path}.mp3`
-		await fs.renameSync(path, newPath)
-		const id = await song.add(await song.extractTags(newPath))
-		await fs.copySync(newPath, `public/music/${id}.mp3`)
-		await ctx.redirect(`/song/${id}`)
-	} catch(err) {
-		console.log(err)
-		await ctx.render('upload', {msg: err.message})
-	}
-})*/
 
 router.get('/browse', async ctx => await ctx.render('browse'))
 
@@ -262,8 +247,12 @@ router.post('/upload', koaBody, async ctx => {
 })
 
 router.post('/comment', async ctx => {
+	if(ctx.session.authorised === undefined) await ctx.redirect()
 	const body = ctx.request.body
-	if(body.comment.length === 0) await ctx.redirect('/upload?msg=please type a comment')
+	const id = body.id
+	if(body.comment.length === 0) {
+		await ctx.redirect(`/library/${id}?msg=please type a comment`)
+	}
 	const playlistID = ctx.params.id, userID = ctx.session.id
 	const comment = await new Comment(dbName)
 	const userComment = await new UserComment(dbName)
@@ -271,6 +260,7 @@ router.post('/comment', async ctx => {
 	const commentID = await comment.add(body.comment)
 	await userComment.link(userID, commentID)
 	await playlistComment.link(playlistID, commentID)
+	await ctx.redirect(`/library/${id}`)
 })
 
 /**
