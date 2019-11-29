@@ -35,9 +35,8 @@ describe('get()', () => {
 	test('passing invalid user ID', async done => {
 		expect.assertions(1)
 		const us = await new UserSong()
-		const invalidID = 1
-		await expect(us.get(invalidID))
-			.rejects.toEqual(Error(`user ID ${invalidID} does not exist`))
+		const data = await us.get(1)
+		await expect(data).toEqual([])
 		done()
 	})
 
