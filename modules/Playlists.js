@@ -1,8 +1,6 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const userPlaylists = require('./User_playlists')
-const user = require('./user')
 //const playlistSong = require('./Playlist_songs')
 
 /**

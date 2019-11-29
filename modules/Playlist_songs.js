@@ -5,7 +5,6 @@ const sqlite = require('sqlite-async')
 /**
  * @fileoverview The file where the PlaylistSong class resides.
  * @author Tiago Ferreira
- * @author Joshua Kenyon <KenyonJ@uni.coventry.ac.uk>
  */
 
 /**
@@ -13,8 +12,7 @@ const sqlite = require('sqlite-async')
  * Interacts with the database.
  * @namespace
  */
-module.exports = class PlaylistSong {
-
+class PlaylistSong {
 	/**
 	 * PlaylistSong class constructor.
 	 * Leave parameter empty to create db in memory.
@@ -43,6 +41,7 @@ module.exports = class PlaylistSong {
 	 * @param {integer} playlistID  - The ID of the playlist inserted.
 	 * @param {integer} songID - The ID of the song inserted
 	 * @returns {Promise<True>} - A confirmation of insertion.
+	 * @memberof PlaylistSong
 	 */
 	async create(playlistID, songID) {
 		if(playlistID === undefined) throw new Error('Playlist ID undefined')
@@ -52,6 +51,13 @@ module.exports = class PlaylistSong {
 		return true
 	}
 
+	/**
+	 * Gets all the songs linked to a certain playlist
+	 * @async
+	 * @param {integer} playlistID - The ID of the playlist
+	 * @returns {list} - Returns a list containing all song ids
+	 * @memberof PlaylistSong
+	 */
 	async getPlaylistSongs(playlistID) {
 		if(playlistID === undefined) throw new Error('Playlist ID undefined')
 		if(isNaN(playlistID)) throw new Error('Playlist ID has to be integer')
@@ -63,6 +69,13 @@ module.exports = class PlaylistSong {
 		return list
 	}
 
+	/**
+	 * Removes a song from the database
+	 * @async
+	 * @param {integer} songID - A song's ID
+	 * @returns {Promise<true>} - A confirmation of deletion
+	 * @memberof PlaylistSong
+	 */
 	async remove(songID) {
 		if(songID === undefined) throw new Error('Song ID undefined')
 		if(isNaN(songID)) throw new Error('Song ID has to be integer')
@@ -76,3 +89,5 @@ module.exports = class PlaylistSong {
 	}
 
 }
+
+module.exports = PlaylistSong
