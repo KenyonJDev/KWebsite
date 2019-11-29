@@ -41,7 +41,7 @@ class UserPlaylist {
 	}
 
 	/**
-	 * 
+	 *
 	 * @async
 	 * @param {integer} playlist - The ID of the playlist
 	 * @returns {int} - Returns the ID of the user of a playlist
