@@ -12,6 +12,7 @@
 <body>
     <nav>
         <ul class="nav">
+<<<<<<< HEAD
 			<li class="siteName"><a href="/">Sense</a></li>
             <li><a href="logout">Logout</a></li>
 			<li><a href="login">Login/Signup</a></li>
@@ -20,6 +21,15 @@
 			<li><a href="songs">Songs</a></li>
             <li><a href="/">Home</a></li>
             <!--<form>
+=======
+            <li><a href="#">Home</a></li>
+            <li><a href="songs">Songs</a></li>
+            <li><a href="playlists">Playlists</a></li>
+            <li><a href="/library">Library</a></li>
+            <li><a href="upload">Upload</a></li>
+            <li><a href="login">Login/Signup</a></li>
+            <form>
+>>>>>>> 96237d6dd7d6db0d6556bea283f8ddd1469fb235
                 <input type="text" placeholder="Search...">
 				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
             </form>-->
@@ -35,15 +45,14 @@
             <input type="hidden" name ="upload" value="file">
             <p>File:<br><input type="file" name="song"></p>
             <p>Album Art:<br><input type="file" name="albumArt"></p>
-            <p><input type="submit" value="Upload"></p>
             <select name="Playlists">
                 <option value="0">Please select a playlist</option>
                 {{#each playlists}}
-                <option value="{{id}}">{{playlistName}}</option>
+                    <option value="{{this.id}}">{{this.playlistName}}</option>
                 {{/each}}
             </select>
+            <p><input type="submit" value="Upload"></p>
         </form>
-            <p></p>
     </section>
 
 	<footer>

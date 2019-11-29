@@ -2,7 +2,6 @@
 
 const sqlite = require('sqlite-async')
 const mm = require('music-metadata')
-const path = require('path')
 const check = require('./songChecks')
 
 /**
