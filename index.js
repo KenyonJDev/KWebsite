@@ -78,6 +78,13 @@ router.post('/register', koaBody, async ctx => {
 	}
 })
 
+/**
+ * The secure login page.
+ *
+ * @name Login Page
+ * @route {GET} /
+ * @authentication This route requires cookie-based authentication.
+ */
 router.get('/login', async ctx => {
 	const data = {}
 	if(ctx.query.msg) data.msg = ctx.query.msg
@@ -85,6 +92,12 @@ router.get('/login', async ctx => {
 	await ctx.render('login', data)
 })
 
+/**
+ * The script to process login.
+ *
+ * @name Login Script
+ * @route {POST} /register
+ */
 router.post('/login', async ctx => {
 	try {
 		const body = ctx.request.body
@@ -98,12 +111,24 @@ router.post('/login', async ctx => {
 	}
 })
 
+/**
+ * The songs page.
+ *
+ * @name Songs Page
+ * @route {Get} /songs
+ */
 router.get('/songs', async ctx => {
 	const song = await new Song(dbName)
 	const data = await song.getAll()
 	await ctx.render('songs', {songs: data})
 })
 
+/**
+ * The individual song page.
+ *
+ * @name Songs/id Page
+ * @route {Get} /songs
+ */
 router.get('/songs/:id', async ctx => {
 	try {
 		const song = await new Song(dbName)
@@ -119,6 +144,12 @@ router.get('/songs/:id', async ctx => {
 	}
 })
 
+/**
+ * The playlist creation page.
+ *
+ * @name Playlists Page
+ * @route {Get} /playlists
+ */
 router.get('/playlists', async ctx => {
 	try {
 		if(ctx.session.authorised === null) await ctx.redirect('/login?msg=you need to login')
@@ -162,6 +193,13 @@ router.post('/playlists', koaBody, async ctx => {
 //change routes so that you go to library 1st, then if its empty you create playlists from there
 //add function that allows to insert existing songs into different playlists: dont think ill have time
 //add documentation
+
+/**
+ * The user playlists page AKA Library.
+ *
+ * @name Library Page
+ * @route {Get} /library
+ */
 router.get('/library', async ctx => {
 	const data = []
 	const playlists = await new Playlists(dbName)
@@ -181,7 +219,12 @@ router.get('/library', async ctx => {
 	await ctx.render('library', data)
 })
 
-
+/**
+ * The individual playlist page.
+ *
+ * @name Library/id Page
+ * @route {Get} /library
+ */
 router.get('/library/:id', async ctx => {
 	try {
 		const playlist = await new Playlists(dbName)
@@ -221,6 +264,12 @@ router.get('/library/:id', async ctx => {
 	}
 })*/
 
+/**
+ * The page that displays all the playlists in the database.
+ *
+ * @name Browse Page
+ * @route {Get} /browse
+ */
 router.get('/browse', async ctx => {
 	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = []
@@ -232,6 +281,12 @@ router.get('/browse', async ctx => {
 	await ctx.render('browse', data)
 })
 
+/**
+ * The page responsible for uploading songs.
+ *
+ * @name Upload Page
+ * @route {GET} /upload
+ */
 router.get('/upload', async ctx => {
 	if(ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = []
@@ -253,6 +308,12 @@ router.get('/upload', async ctx => {
 	await ctx.render('upload', data)
 })
 
+/**
+ * The script to process song uploads.
+ *
+ * @name Upload Script
+ * @route {POST} /upload
+ */
 // eslint-disable-next-line max-lines-per-function
 router.post('/upload', koaBody, async ctx => {
 	try {
@@ -280,6 +341,12 @@ router.post('/upload', koaBody, async ctx => {
 	}
 })
 
+/**
+ * The logout route, has no page.
+ *
+ * @name Logout Script
+ * @route {GET} /logout
+ */
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
 	ctx.session.id = null
