@@ -1,8 +1,6 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const userPlaylists = require('./User_playlists')
-const user = require('./user')
 //const playlistSong = require('./Playlist_songs')
 
 /**
@@ -66,11 +64,21 @@ class Playlists {
 	 * @returns {ID} - Selected Playlist.
 	 * @memberof Playlists
 	 */
-	async get(playlistID) {
-		const sql = `SELECT * FROM playlists WHERE id="${playlistID}"`
-		const data = await this.db.all(sql)
+	async getPlaylist(playlistID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		const sql = `SELECT * FROM playlists WHERE id=${playlistID}`
+		const data = await this.db.get(sql)
 		return data
 	}
+	/*
+	async getPlaylistDetails(playlistID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		const sql = `SELECT id FROM playlists WHERE id=${playlistID}`
+		const playlists = await this.db.run(sql)
+		const list = []
+		for(const pl of playlists) list.push(pl.playlistName)
+		return list
+	}*/
 
 	/**
 	 * Gets all playlist records.
@@ -92,8 +100,10 @@ class Playlists {
 	 * @memberof Playlists
 	 */
 	async delete(id) {
-		let sql = `SELECT COUNT(id) as records FROM playlists WHERE id="${id}";`
-		sql = `DELETE FROM playlists(id) VALUES("${id}")`
+		if(id === undefined) throw new Error('Playlist ID undefined')
+		if(isNaN(id)) throw new Error(`Playlist ID ${id} must be a number`)
+		if(id < 1) throw new Error(`Playlist ID ${id} has to be 1 or bigger`)
+		const sql = `DELETE FROM playlists WHERE id=${id}`
 		await this.db.run(sql)
 		return true
 	}

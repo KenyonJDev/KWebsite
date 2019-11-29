@@ -18,6 +18,7 @@
             <li><a href="#">Home</a></li>
             <li><a href="songs">Songs</a></li>
             <li><a href="playlists">Playlists</a></li>
+            <li><a href="/library">Library</a></li>
             <li><a href="upload">Upload</a></li>
             <li><a href="login">Login/Signup</a></li>
             <form>
@@ -36,15 +37,14 @@
             <input type="hidden" name ="upload" value="file">
             <p>File:<br><input type="file" name="song"></p>
             <p>Album Art:<br><input type="file" name="albumArt"></p>
-            <p><input type="submit" value="Upload"></p>
             <select name="Playlists">
                 <option value="0">Please select a playlist</option>
                 {{#each playlists}}
-                <option value="{{id}}">{{playlistName}}</option>
+                    <option value="{{this.id}}">{{this.playlistName}}</option>
                 {{/each}}
             </select>
+            <p><input type="submit" value="Upload"></p>
         </form>
-            <p></p>
     </section>
 
     <hr>
