@@ -32,22 +32,15 @@ describe('check()', () => {
 		done()
 	})
 
-	test('checking invalid playlist ID', async done => {
-		expect.assertions(1)
-		const userplaylist = await new UserPlaylist()
-		await userplaylist.create(1,2)
-		const playlist = 3
-		await expect(await userplaylist.check(playlist))
-			.rejects.toEqual(Error(`playlist ID ${playlist} does not exist`))
-		done()
-	})
-
 	test('passing no playlist ID', async done => {
 		expect.assertions(1)
 		const userplaylist = await new UserPlaylist()
 		await userplaylist.create(1,2)
 		await expect(userplaylist.check()).rejects.toEqual(Error('Playlist is undefined'))
+		done()
 	})
+
+
 })
 
 describe('getUserPlaylist()', () => {

@@ -75,7 +75,7 @@ describe('remove()', () => {
 		await expect(playlistsongs.remove(3)).rejects.toEqual(Error('Song ID does not exist'))
 		done()
 	})
-    
+
 	test('passing no arguments', async done => {
 		expect.assertions(1)
 		const playlistsongs = await new PlaylistSongs()

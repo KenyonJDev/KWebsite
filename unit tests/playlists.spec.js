@@ -73,7 +73,6 @@ describe('delete()', () => {
 	test('deleting non existing paylist', async done => {
 		expect.assertions(1)
 		const playlist = await new Playlist()
-		const id = 1
 		await expect(playlist.delete()).rejects.toEqual(Error('Playlist ID undefined'))
 		done()
 	})
