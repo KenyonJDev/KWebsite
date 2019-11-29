@@ -31,14 +31,42 @@
     <section>
         <h2>Create Playlist</h2>
         {{#if msg}}
-            <p class="msg">Error: {{msg}}</p>
+            <p class="msg">{{msg}}</p>
+        {{/if}}
+        {{#if err}}
+            <p>Error: {{err}}</p>
         {{/if}}
         <form action="/playlists" enctype="multipart/form-data" method="post">
             <p>Please name your playlist.</p>
-            <input type="text" name="name" placeholder="Name of playlist" value="">
+            <input type="text" name="name" placeholder="Name of playlist" value="" required>
             <p>Description.</p>
-            <input type="text" name="description" placeholder="Description of playlist" value="">
+            <input type="text" name="description" placeholder="Description of playlist" value="" required>
             <p><input type="submit" value="Create"></p>
+        </form>
+    </section>
+
+    <section>
+        <h2>Add to Playlist</h2>
+        <form action="/playlistAdd" enctype="multipart/form-data" method="POST">
+            <p>
+                Select song: <br>
+                <select name="song" required>
+                    <option value="">Please select a song</option>
+                    {{#each songs}}
+                        <option value={{this.id}}>{{this.title}}</option>
+                    {{/each}}
+                </select>
+            </p>
+            <p>
+                Select playlist: <br>
+                <select name="playlist" required>
+                    <option value="">Please select a playlist</option>
+                    {{#each playlists}}
+                    <option value="{{this.id}}">{{this.playlistName}}</option>
+                    {{/each}}
+                </select>
+            </p>
+            <p><input type="submit" value="Add to playlist"></p>
         </form>
     </section>
 

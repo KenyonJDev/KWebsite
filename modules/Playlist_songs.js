@@ -46,7 +46,10 @@ class PlaylistSong {
 	async create(playlistID, songID) {
 		if(playlistID === undefined) throw new Error('Playlist ID undefined')
 		if(songID === undefined) throw new Error('Song ID undefined')
-		const sql = `INSERT INTO playlistSongs(playlistID, songID) VALUES("${playlistID}", "${songID}")`
+		let sql = `SELECT * FROM playlistSongs WHERE playlistID=${playlistID} AND songID=${songID}`
+		const data = await this.db.all(sql)
+		if(data.length !== 0) throw new Error('The song is already in this playlist')
+		sql = `INSERT INTO playlistSongs(playlistID, songID) VALUES("${playlistID}", "${songID}")`
 		await this.db.run(sql)
 		return true
 	}

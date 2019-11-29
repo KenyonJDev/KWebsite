@@ -56,7 +56,6 @@ class UserSong {
 		await check.user(user)
 		const sql = `SELECT songID FROM userSongs WHERE userID=${user}`
 		const data = await this.db.all(sql)
-		if(data.length === 0) throw new Error(`user ID ${user} does not exist`)
 		return data
 	}
 
