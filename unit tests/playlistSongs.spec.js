@@ -20,6 +20,15 @@ describe('create()', () => {
 			.rejects.toEqual(Error('Song ID undefined'))
 		done()
 	})
+
+	test('adding song already in playlist', async done => {
+		expect.assertions(1)
+		const playlistSongs = await new PlaylistSongs()
+		await playlistSongs.create(1,2)
+		await expect(playlistSongs.create(1,2))
+			.rejects.toEqual(Error('The song is already in this playlist'))
+		done()
+	})
 })
 
 describe('getPlaylistSongs()', () => {
