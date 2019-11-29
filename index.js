@@ -16,14 +16,14 @@ const fs = require('fs-extra')
 
 /* IMPORT CUSTOM MODULES */
 const User = require('./modules/user')
-const Song = require('./modules/song')
 const UserSong = require('./modules/userSong')
-const Playlists = require('./modules/playlists')
 const UserPlaylist = require('./modules/User_playlists')
+const UserComment = require('./modules/userComment')
+const Song = require('./modules/song')
+const Comment = require('./modules/comment')
+const Playlists = require('./modules/playlists')
 const PlaylistSongs = require('./modules/Playlist_songs')
 const PlaylistComment = require('./modules/playlistComment')
-const UserComment = require('./modules/userComment')
-const Comment = require('./modules/comment')
 
 
 const app = new Koa()
@@ -74,7 +74,7 @@ router.post('/register', koaBody, async ctx => {
 		console.log(`[register] body: ${body.user}`)
 		const user = await new User(dbName)
 		await user.register(body.user, body.pass)
-		ctx.redirect(`/?msg=new user "${body.user}" added`)
+		await ctx.redirect('login/?msg=You are now registered!')
 	} catch(err) {
 		await ctx.render('error', {message: err.message})
 	}
@@ -87,6 +87,7 @@ router.post('/register', koaBody, async ctx => {
  * @authentication This route requires cookie-based authentication.
  */
 router.get('/login', async ctx => {
+	if(ctx.session.authorised === true) await ctx.redirect('/?msg=You are already logged in')
 	const data = {}
 	if(ctx.query.msg) data.msg = ctx.query.msg
 	if(ctx.query.user) data.user = ctx.query.user
@@ -100,6 +101,7 @@ router.get('/login', async ctx => {
  */
 router.post('/login', async ctx => {
 	try {
+		if(ctx.session.authorised === true) ctx.redirect('/?msg=You are already logged in')
 		const body = ctx.request.body
 		const user = await new User(dbName)
 		const id = await user.login(body.user, body.pass)
@@ -149,13 +151,34 @@ router.get('/songs/:id', async ctx => {
  * @name Playlists Page
  * @route {Get} /playlists
  */
+// eslint-disable-next-line complexity
 router.get('/playlists', async ctx => {
 	try {
 		if(ctx.session.authorised !== true) await ctx.redirect('/login?msg=you need to login')
 		const data = {}
 		if(ctx.query.msg) data.msg = ctx.query.msg
-		await ctx.render('playlists')
+		// Making necessary objects
+		const userPlaylist = await new UserPlaylist(dbName)
+		const userSong = await new UserSong(dbName)
+		const song = await new Song(dbName)
+		const playlist = await new Playlists(dbName)
+		const songs = [], playlists = []
+		// Getting song names
+		const songIDs = await userSong.get(ctx.session.id)
+		for(const id of songIDs) {
+			const details = await song.get(id.songID)
+			songs.push(details)
+		}
+		// Getting playlist names
+		const playlistIDs = await userPlaylist.getUserPlaylists(ctx.session.id)
+		for(const id of playlistIDs) {
+			const details = await playlist.getPlaylist(id)
+			playlists.push(details)
+		}
+		data.songs = songs, data.playlists = playlists
+		await ctx.render('playlists', data)
 	} catch(err) {
+		console.log(err)
 		await ctx.render('error', {message: err.message})
 	}
 })
@@ -167,7 +190,8 @@ router.get('/playlists', async ctx => {
  */
 router.post('/playlists', koaBody, async ctx => {
 	try{
-		if(!ctx.session.authorised) await ctx.redirect('/login?msg=You need to log in')
+		if(ctx.session.authorised !== true)
+			await ctx.redirect('/login?msg=You need to log in')
 		const body = ctx.request.body
 		console.log(body)
 		//creates new instance of class Playlist
@@ -180,13 +204,26 @@ router.post('/playlists', koaBody, async ctx => {
 		console.log(playlistID)
 		//prints id of user who created the playlist
 		console.log(ctx.session.id)
-		await ctx.redirect(`/library/${playlistID}`)
-		//ctx.redirect(`/playlists?msg=new playlist "${body.name}" created`)
+		//await ctx.redirect(`/library/${playlistID}`)
+		await ctx.redirect(`/playlists?msg=new playlist "${body.name}" created`)
 	}catch(err) {
 		console.log(err)
-		await ctx.render('error', {message: err})
+		await ctx.render('playlists', {err: err.message})
 	}
 })
+
+router.post('/playlistAdd', koaBody, async ctx => {
+	try {
+		const {song, playlist} = ctx.request.body
+		const playlistSong = await new PlaylistSongs(dbName)
+		await playlistSong.create(playlist, song)
+		await ctx.redirect(`/library/${playlist}?msg=Song added!`)
+	} catch(err) {
+		console.log(err)
+		await ctx.redirect(`/playlists?msg=${err.message}`)
+	}
+})
+
 //display all playlists in db: done
 //add route to display user playlists: done
 //add function that retrieves certain playlist details (name, desc): not necessary but done
@@ -224,6 +261,7 @@ router.get('/library', async ctx => {
  * @name Library/id Page
  * @route {Get} /library
  */
+// eslint-disable-next-line complexity
 router.get('/library/:id', async ctx => {
 	try {
 		// Getting all the necessary objects ready
@@ -254,6 +292,7 @@ router.get('/library/:id', async ctx => {
 		}
 		data.comments = commentList
 		data.id = ctx.params.id
+		if(ctx.query.msg) data.msg = ctx.query.msg
 		await ctx.render('collection', data)
 	} catch(err) {
 		console.log(err)
@@ -316,21 +355,14 @@ router.post('/upload', koaBody, async ctx => {
 		const body = ctx.request.body
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
-		if(body.Playlists === '0') {
-			return await ctx.redirect('/upload?msg=You need to select a playlist')
-		} else {
-			const id = await song.add(await song.extractTags(path, type))
-			console.log(`[upload] id: ${id}`)
-			await fs.copySync(path, `public/music/${id}.mp3`)
-			const userSong = await new UserSong(dbName)
-			const playlistSong = await new PlaylistSongs(dbName)
-			console.log(`[upload] ctx.session.id: ${ctx.session.id}`)
-			//prints id of selected playlist, can be removed before submission
-			console.log(body.Playlists)
-			await userSong.link(ctx.session.id, id)
-			await playlistSong.create(body.Playlists, id)
-			await ctx.redirect(`/songs/${id}`)
-		}
+		const id = await song.add(await song.extractTags(path, type))
+		await fs.copySync(path, `public/music/${id}.mp3`)
+		const userSong = await new UserSong(dbName)
+		const playlistSong = await new PlaylistSongs(dbName)
+		//prints id of selected playlist, can be removed before submission
+		await userSong.link(ctx.session.id, id)
+		await playlistSong.create(body.Playlists, id)
+		await ctx.redirect(`/songs/${id}`)
 	} catch(err) {
 		console.log(err)
 		await ctx.render('upload', {msg: err.message})
@@ -343,8 +375,6 @@ router.post('/comment', koaBody, async ctx => {
 		const body = ctx.request.body
 		console.log(body)
 		const id = body.id
-		if(body.comment === '')
-			await ctx.redirect(`/library/${id}?msg=please type a comment`)
 		const playlistID = body.id, userID = ctx.session.id
 		const comment = await new Comment(dbName)
 		const userComment = await new UserComment(dbName)
