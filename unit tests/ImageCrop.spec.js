@@ -1,15 +1,15 @@
 'use strict'
-/**
- * @fileoverview Unit test for ImageCrop.js.
- * @author Joshua Kenyon <KenyonJ@uni.coventry.ac.uk>
- */
 
-const Crop = require('../modules/ImageCrop.js')
+//const crop = require('../modules/ImageCrop')
+const mock = require('mock-fs')
+const fs = require('fs')
 
-describe('crop()', () => {
-
-	test('Data is being returned', async() => {
-		const file = await Crop()
-		expect(file).toBe(file)
-	})
+beforeAll( () => {
+	const imageBuffer = fs.readFileSync()
+	mock({'image.png': imageBuffer})
 })
+
+//test('passing all valid arguments', async done => {
+//	expect.assertions(1)
+//	await
+//})

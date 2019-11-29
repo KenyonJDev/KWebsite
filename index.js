@@ -15,6 +15,7 @@ const session = require('koa-session')
 const fs = require('fs-extra')
 
 /* IMPORT CUSTOM MODULES */
+const crop = require('./modules/ImageCrop')
 const User = require('./modules/user')
 const Song = require('./modules/song')
 const UserSong = require('./modules/userSong')
@@ -317,8 +318,10 @@ router.post('/upload', koaBody, async ctx => {
 		const song = await new Song(dbName)
 		const {path, type} = ctx.request.files.song
 		if(body.Playlists === '0') {
-			return await ctx.redirect('/upload?msg=You need to select a playlist')
+		  await ctx.redirect('/upload?msg=You need to select a playlist')
 		} else {
+			const path = ctx.request.files.albumArt.path
+			await crop(path)
 			const id = await song.add(await song.extractTags(path, type))
 			console.log(`[upload] id: ${id}`)
 			await fs.copySync(path, `public/music/${id}.mp3`)
