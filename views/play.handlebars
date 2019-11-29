@@ -11,15 +11,15 @@
 </head>
 
 <body>
-    <h1 class="webTitle"><a href="/">Sense</a></h1>
     <nav>
         <ul class="nav">
-            <li><a href="/../#">Home</a></li>
-            <li><a href="/../songs">Songs</a></li>
-            <li><a href="/../playlists">Playlists</a></li>
-            <li><a href="/../upload">Upload</a></li>
-            <li><a href="/../login">Login/Signup</a></li>
-			<li><a href="/../logout">Logout</a></li>
+			<li class="siteName"><a href="/">Sense</a></li>
+            <li><a href="../logout">Logout</a></li>
+			<li><a href="../login">Login/Signup</a></li>
+			<li><a href="../upload">Upload</a></li>
+			<li><a href="../playlists">Playlists</a></li>
+			<li><a href="../songs">Songs</a></li>
+            <li><a href="/">Home</a></li>
             <!--<form>
                 <input type="text" placeholder="Search...">
 				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
@@ -28,19 +28,29 @@
     </nav>
 
     <section>
-        <h2>{{title}}</h2>
-        <h3>{{artist}} | {{year}}</h3>
-        <audio controls>
-            <source src="/music/{{id}}.mp3" type ="audio/mpeg">
-            Your browser does not support the MP3 file type.
-        </audio>
-        {{#if owner}}
-            <a href="/delete/{{id}}">Delete</a>
-        {{/if}}
+        <aside>
+            <img src="../images/noPlaylistArtAvailable.png">
+        </aside>
+        <article>
+            <h2>{{title}}</h2>
+            <h3>{{artist}} | {{year}}</h3>
+            </article>
+            <audio controls>
+                <source src="/music/{{id}}.mp3" type ="audio/mpeg">
+                Your browser does not support the MP3 file type.
+            </audio>
+            <p>
+            {{#if owner}}
+                <form action="/delete/{{id}}">
+                    <button type="submit">Click me</button>
+                </form>
+                <!--<a href="/delete/{{id}}">Delete</a>-->
+            {{/if}}
+            </p>
     </section>
 
+	<footer>
     <hr>
-    <footer>
         <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
     </footer>
 </body>
