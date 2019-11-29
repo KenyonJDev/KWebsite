@@ -15,7 +15,6 @@ const session = require('koa-session')
 const fs = require('fs-extra')
 
 /* IMPORT CUSTOM MODULES */
-const crop = require('./modules/ImageCrop')
 const User = require('./modules/user')
 const UserSong = require('./modules/userSong')
 const UserPlaylist = require('./modules/User_playlists')
