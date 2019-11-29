@@ -35,11 +35,9 @@ class Playlists {
 		})()
 	}
 	/**
-	 * Creates playlist record.
-	 * @async
-	 * @param {name, description} filePath - new filepath .
-	 * @returns {Promise} new playlist entry.
-	 * @memberof Playlists
+	 * Creates a playlist.
+	 * @param {string} name - The playlist name.
+	 * @param {string} description - The playlist description.
 	 */
 	async create(name, description) {
 		try {
@@ -60,9 +58,8 @@ class Playlists {
 	/**
 	 * Gets a playlist record.
 	 * @async
-	 * @param {playlistID} ID - ID of selected playlist.
-	 * @returns {ID} - Selected Playlist.
-	 * @memberof Playlists
+	 * @param {number} ID - ID of selected playlist.
+	 * @returns {Promise<number>} - Selected Playlist.
 	 */
 	async getPlaylist(playlistID) {
 		if(playlistID === undefined) throw new Error('Playlist ID undefined')
@@ -83,8 +80,7 @@ class Playlists {
 	/**
 	 * Gets all playlist records.
 	 * @async
-	 * @returns {records} - All playlists in database.
-	 * @memberof Playlists
+	 * @returns {Promise<Array<number>>} - All playlists in database.
 	 */
 	async getAll() {
 		const sql = 'SELECT * FROM playlists'
@@ -95,9 +91,8 @@ class Playlists {
 	/**
 	 * Deletes a playlist record.
 	 * @async
-	 * @param {playlistID} id - ID of selected playlist.
+	 * @param {number} id - ID of selected playlist.
 	 * @returns {Promise<True>} - Confirms deletion of Playlist.
-	 * @memberof Playlists
 	 */
 	async delete(id) {
 		if(id === undefined) throw new Error('Playlist ID undefined')

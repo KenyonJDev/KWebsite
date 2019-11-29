@@ -28,9 +28,9 @@ class UserPlaylist {
 	/**
 	 * Populates the table with information regarding the user and the playlist ID.
 	 * @async
-	 * @param {integer} userID - The ID of the user
-	 * @param {integer} playlistID - The ID of the playlist
-	 * @memberof UserPlaylist
+	 * @param {number} userID - The ID of the user
+	 * @param {number} playlistID - The ID of the playlist
+	 * @returns {Promise<true>} - A confirmation of creation.
 	 */
 	async create(userID, playlistID) {
 		if(userID === undefined) throw new Error('User ID undefined')
@@ -43,9 +43,8 @@ class UserPlaylist {
 	/**
 	 *
 	 * @async
-	 * @param {integer} playlist - The ID of the playlist
-	 * @returns {int} - Returns the ID of the user of a playlist
-	 * @memberof UserPlaylist
+	 * @param {number} playlist - The ID of the playlist
+	 * @returns {Promise<number>} - Returns the ID of the user of a playlist
 	 */
 	async check(playlist) {
 		if(playlist === undefined) throw new Error('Playlist is undefined')
@@ -70,9 +69,8 @@ class UserPlaylist {
 	/**
 	 * Gets all the playlists belonging to a user
 	 * @async
-	 * @param {integer} userID - The user ID
-	 * @returns {list} - Returns a list containing all the playlists a user has
-	 * @memberof UserPlaylist
+	 * @param {number} userID - The user ID
+	 * @returns {number} - A list containing all the playlists a user has
 	 */
 	async getUserPlaylists(userID) {
 		if(userID === undefined) throw new Error('User ID undefined')
