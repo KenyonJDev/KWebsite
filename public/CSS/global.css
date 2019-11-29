@@ -1,80 +1,86 @@
 *{
 	font-family:		Arial, Helvetica, sans-serif;
-    color:				#232628;
+    color:				#242924;
+}
+
+html{ 
+    height:             100%; 
 }
 
 body{
-    background-color:	#a39175;
-    background-image:   linear-gradient(#ccc2b3, #a39175);
+    /*background-color:	#595959;
+    background-image:   linear-gradient(#bfbfbf, #595959);*/
     background-repeat:  no-repeat;
-	margin:				0px;
+    margin:				0px;
+    min-height:         100%;
+    padding:            0; 
+    margin:             0; 
+    position:           relative;
 }
 
-h1.webTitle { 
-	width:				120px;
-	margin-left:		auto;
-    margin-right:		auto;
-    text-decoration:    none;
+nav {
+    background-color:   #75a375;
+    height:             auto;
+    padding:            auto 0px;
+    display:            block;
+    position:           fixed;
+    top:                0;
+    width:              100%;
 }
 
 ul.nav {
     list-style-type:    none;
     margin:             0;
-    margin-bottom:      30px;
     padding:            0;
+    height:             60px;
+    text-align:         center;
     overflow:           hidden;
-    background-color:   #a38c75;
 }
 
 ul.nav li {
-    float:              left;
-    font-size:          20px;
-    border-left:       	1px solid #6D5E46;
-    width:              calc(95% / 6);
+    float:              right;
+    font-size:          19px;
+    height:             60px;
+    border-right:       1px solid #466d46;
+    width:              calc(95% / 7);
+    padding-top:        19px;
 }
 
 ul.nav li:first-child {
-	border-left:		none;
+	border-right:		none;
+}
+
+ul.nav li.siteName {
+    float:              left;
+    font-size:          39px;
+    padding-top:        8px;
 }
 
 ul.nav li a {
     display:            block;
-    color:              #1F1B14;
-    text-align:         center;
-	height:				19px;
-    padding:            14px 16px;
+    color:              #141f14;
+
+	height:				auto;
+    padding:            auto 16px;
     text-decoration:    none;
 }
 
-ul.nav form {
-    float:              left;
-    text-align:         center;
-	border-left:		1px solid #b9b9d0;
-}
-
-ul.nav input[type=text], input[type=image] {
-    background:         none;
-    height:             100%;
-    border:           	none;
-	float:				left;
-}
-
-ul.nav input[type=image] {
-	padding:			6px;
-}
-
-ul.nav input[type=text] {
-    padding:			16px;
-}
-
 section {
-    max-width:          85%;
+    max-width:          60%;
     margin:             auto;
     margin-bottom:      50px;
+    padding-top:        20px;
+    padding-bottom:     0px;
+    border:             1px;
+    height:             100%;
+    text-align:         center;
+    margin-top:         60px;   
 }
 
 h2 {
     padding-bottom:     15px;
+    margin-top:         0px;
+    margin-bottom:      20px;
 }
 
 form.infoInput input[type=text], input[type=password] {
@@ -88,4 +94,22 @@ form.infoInput input[type=text], input[type=password] {
     padding-right:      5px;
     padding-top:        10px;
     padding-bottom:     10px;
+}
+
+form.infoInput {
+    display:            inline-block;
+}
+
+body::after{ 
+    content:            ''; 
+    display:            block; 
+    height:             100px; 
+}
+
+footer {
+    position:           absolute; 
+    bottom:             0; 
+    width:              99%; 
+    height:             100px; 
+    padding:            0px 5px;
 }
