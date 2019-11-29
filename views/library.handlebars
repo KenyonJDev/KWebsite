@@ -5,29 +5,35 @@
 	<title>Sense</title>
 	<meta name="description" content="Playlist library">
 	<meta name="author" content="Tiago Ferreira">
-    <link href="css/style.css" type="text/css" rel="stylesheet" />
+    <link href="css/global.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-    <h1>{{playlistName}}</h2>
-    <h2>{{description}}</h3>
+    <h1 class="webTitle"><a href="/">Sense</a></h1>
+    <nav>
+        <ul class="nav">
+            <li><a href="#">Home</a></li>
+            <li><a href="songs">Songs</a></li>
+            <li><a href="playlists">Playlists</a></li>
+            <li><a href="/library">Library</a></li>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="upload">Upload</a></li>
+            <li><a href="login">Login/Signup</a></li>
+            <form>
+                <input type="text" placeholder="Search...">
+				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
+            </form>
+        </ul>
+    </nav>
     <section>
-        <form action="/comment" enctype="multipart/form-data" method="POST">
-            <p><input type="text" name="comment"></p>
-            <p><input type="hidden" name="id" value="{{id}}"></p>
-            <p><input type="submit" value="Post comment"></p>
-        </form>
-    </section>
-
-    <section>
-        <table>
-            {{#each comments}}
-                <td>{{this.user}}</td>
-                <td>{{this.comment}}</td>
-                {{#if this.commentOwner}}
-                    <td><a href="/del-comment/{{this.id}}">Delete</a></td>
-                {{/if}}
-            {{/each}}
-        </table>
+        {{#if empty}}
+            <h1>It's a little empty in here...</h1>
+            <p><a href="playlists">Click here to add some wood to the fire</a></p>
+        {{/if}}
+        {{#each playlists}}
+            <p><a href="library/{{this.id}}">{{this.playlistName}}</a></p>
+            <p>{{this.description}}</p>
+        {{/each}}
     </section>
     </table>
 </body>
