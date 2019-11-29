@@ -72,6 +72,15 @@ class Playlists {
 		const data = await this.db.get(sql)
 		return data
 	}
+	/*
+	async getPlaylistDetails(playlistID) {
+		if(playlistID === undefined) throw new Error('Playlist ID undefined')
+		const sql = `SELECT id FROM playlists WHERE id=${playlistID}`
+		const playlists = await this.db.run(sql)
+		const list = []
+		for(const pl of playlists) list.push(pl.playlistName)
+		return list
+	}*/
 
 	/**
 	 * Gets all playlist records.
