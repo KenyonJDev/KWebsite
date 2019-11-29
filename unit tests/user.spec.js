@@ -69,3 +69,22 @@ describe('login()', () => {
 	})
 
 })
+
+describe('get()', () => {
+	test('getting valid user ID', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await account.register('doej', 'password')
+		const username = await account.get(1)
+		await expect(username).toEqual('doej')
+		done()
+	})
+
+	test('getting invalid ID', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await expect(account.get(1))
+			.rejects.toEqual(Error('user does not exist'))
+		done()
+	})
+})

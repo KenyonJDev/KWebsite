@@ -2,6 +2,15 @@
 {
   "version": "0.2.0",
   "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/index.js",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
   
     {
       "type": "chrome",
@@ -38,6 +47,12 @@
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full-stack",
+      "configurations": ["Launch Program", "Launch Chrome"]
     }
   ]
 }

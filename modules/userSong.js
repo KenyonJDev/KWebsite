@@ -1,9 +1,23 @@
 'use strict'
 
 const sqlite = require('sqlite-async')
-const check = require('./songChecks')
+const check = require('./checks')
 
+/**
+ * @fileoverview The file where the UserSong class resides.
+ * @author Bartlomiej Wlodarski
+ */
+
+/**
+ * The UserSong class: a link table for User and Song.
+ */
 class UserSong {
+	/**
+	 * UserSong class constructor.
+	 * Links the User and Song tables.
+	 * @constructor
+	 * @param {string} [dbName=:memory:] - The database filename.
+	 */
 	constructor(dbName = ':memory:') {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
@@ -17,6 +31,13 @@ class UserSong {
 		})()
 	}
 
+	/**
+	 * Links a user to a song in the database.
+	 * @async
+	 * @param {number} user - The user's ID.
+	 * @param {number} song - The song's ID.
+	 * @returns {Promise<true>} A confirmation of link creation.
+	 */
 	async link(user, song) {
 		await check.user(user)
 		await check.song(song)
@@ -25,14 +46,25 @@ class UserSong {
 		return true
 	}
 
+	/**
+	 * Retrieves a list of a user's uploaded songs.
+	 * @async
+	 * @param {number} user - The user's ID.
+	 * @returns {Promise<Array<number>>} An array of the user's song IDs.
+	 */
 	async get(user) {
 		await check.user(user)
 		const sql = `SELECT songID FROM userSongs WHERE userID=${user}`
 		const data = await this.db.all(sql)
-		if(data.length === 0) throw new Error(`user ID ${user} does not exist`)
 		return data
 	}
 
+	/**
+	 * Checks the owner of a song.
+	 * @async
+	 * @param {number} song - The ID of the song.
+	 * @returns {Promise<number>} The ID of the song owner.
+	 */
 	async check(song) {
 		await check.song(song)
 		const sql = `SELECT userID FROM userSongs WHERE songID=${song}`
@@ -42,6 +74,12 @@ class UserSong {
 		return user
 	}
 
+	/**
+	 * Removes a link between a song and user.
+	 * @async
+	 * @param {id} song - The song ID.
+	 * @returns {Promise<true>} A confirmation of deletion.
+	 */
 	async remove(song) {
 		await check.song(song)
 		let sql = `SELECT songID FROM userSongs WHERE songID=${song}`

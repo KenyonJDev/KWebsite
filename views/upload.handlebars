@@ -28,11 +28,10 @@
         {{/if}}
         <form action="/upload" enctype="multipart/form-data" method="POST" class="fileUpload">
             <p>Please upload an MP3 file.</p>
-            <input type="hidden" name ="upload" value="file">
-            <p>File:<br><input type="file" name="song"></p>
-            <p>Album Art:<br><input type="file" name="albumArt"></p>
-            <select name="Playlists">
-                <option value="0">Please select a playlist</option>
+            <p>File:<br><input type="file" name="song" accept="audio/mp3" required></p>
+            <p>Album Art:<br><input type="file" name="albumArt" accept="image/*"></p>
+            <select name="Playlists" required>
+                <option value="">Please select a playlist</option>
                 {{#each playlists}}
                     <option value="{{this.id}}">{{this.playlistName}}</option>
                 {{/each}}

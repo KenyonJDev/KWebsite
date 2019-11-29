@@ -47,4 +47,11 @@ module.exports = class User {
 		}
 	}
 
+	async get(id) {
+		const sql = `SELECT user FROM users WHERE id=${id}`
+		const data = await this.db.get(sql)
+		if(data === undefined) throw new Error('user does not exist')
+		return data.user
+	}
+
 }

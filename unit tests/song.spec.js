@@ -1,12 +1,11 @@
 'use strict'
 
-const Song = require('../modules/song')
+const Song = require('../modules/song.js')
 const mock = require('mock-fs')
 const fs = require('fs')
 
 // Constants used in tests
 const validFile = 'music/song.mp3'
-const invalidFile = 'files/text.txt'
 const invalidPath = 'music/invalid.mp3'
 
 beforeAll( () => {
@@ -148,7 +147,7 @@ describe('get()', () => {
 		expect.assertions(1)
 		const song = await new Song()
 		await expect(song.get())
-			.rejects.toEqual(Error('key is undefined'))
+			.rejects.toEqual(Error('song ID is undefined'))
 		done()
 	})
 
@@ -156,7 +155,7 @@ describe('get()', () => {
 		expect.assertions(2)
 		const song = await new Song()
 		await expect(song.get(0))
-			.rejects.toEqual(Error('key must be greater than zero'))
+			.rejects.toEqual(Error('song IDs start at 1'))
 		const invalidKey = 1
 		await expect(song.get(invalidKey))
 			.rejects.toEqual(Error(`record for key ${invalidKey} does not exist`))
@@ -168,7 +167,7 @@ describe('get()', () => {
 		const song = await new Song()
 		const key = ''
 		await expect(song.get(key))
-			.rejects.toEqual(Error(`'${key}' is not a number`))
+			.rejects.toEqual(Error(`provided song ID '${key}' is not a number`))
 		done()
 	})
 })

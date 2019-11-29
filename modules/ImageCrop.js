@@ -1,34 +1,34 @@
 'use strict'
 const sharp = require('sharp')
 const fs = require('fs')
-const height = 255
-const width = 255
+const check = require('./songChecks')
+const mime = require('mime-types')
+
+const size = 1024
+
 /**
  * @file Asynchronous image cropping script
  * @author Joshua Kenyon <kenyonJ@uni.coventry.ac.uk>
- * @version 1.0.2
+ * @version 1.0.3
  */
 
 /**
-	 * @description Resizes image to 255,255 while maintaining aspect ratio.
-	 * @param {filePath} image - The original image.
-	 * @returns {filePath} - Resized image.
-	 */
-const Crop = async filePath => {
-	const file = fs.readFileSync(filePath)
-	sharp(file)
-	/**
-		 * Write output image data to a file.
-		 * @param filePath — The path to write the image data to.
-		 * @throws {Error} - Invalid parameters
-		 * @returns {promise} — A promise that fulfills with an object containing informations on the resulting file
-		 */
-		.resize(width, height, {
-			fit: 'inside'
+ * Resizes image to 255,255 while maintaining aspect ratio.
+ * @param {filePath} image - The original image path.
+ * @returns {Promise<true>} - Confirmation of resize
+ */
+const crop = async(filePath, fileType) => {
+	await check.file(filePath)
+	const type = mime.extension(fileType)
+	if(!(type in ['png','jpg','gif','svg']))
+		throw new Error('Unsupported file type')
+	const file = await fs.readFileSync(filePath)
+	await sharp(file)
+		.resize(size, size, {
+			fit: 'cover'
 		})
-	fs.appendFileSync(filePath)
-		.then(console.log)
-		.catch(console.error)
+		.toFile(filePath)
+	return true
 }
 
-module.exports = Crop
+module.exports = crop
