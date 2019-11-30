@@ -26,6 +26,14 @@ const PlaylistSongs = require('./modules/Playlist_songs')
 const PlaylistComment = require('./modules/playlistComment')
 
 
+/* IMPORT ROUTE MODULES */
+const getHome = require('./routes/home.get')
+const postRegister = require('./routes/register.post')
+const getLogin = require('./routes/login.get')
+const postLogin = require('./routes/login.post')
+const getSongs = require('./routes/songs.get')
+const getSongDetails = require('./routes/songDetails.get')
+
 const app = new Koa()
 const router = new Router()
 
@@ -44,17 +52,8 @@ const dbName = 'website.db'
  * The secure home page.
  * @name Home Page
  * @route {GET} /
- * @authentication This route requires cookie-based authentication.
  */
-router.get('/', async ctx => {
-	try {
-		const data = {}
-		if(ctx.query.msg) data.msg = ctx.query.msg
-		await ctx.render('index')
-	} catch(err) {
-		await ctx.render('error', {message: err.message})
-	}
-})
+router.get('/', async ctx => await getHome(ctx))
 
 /**
  * The user registration page.
@@ -68,17 +67,7 @@ router.get('/register', async ctx => await ctx.render('register'))
  * @name Register Script
  * @route {POST} /register
  */
-router.post('/register', koaBody, async ctx => {
-	try {
-		const body = ctx.request.body
-		console.log(`[register] body: ${body.user}`)
-		const user = await new User(dbName)
-		await user.register(body.user, body.pass)
-		await ctx.redirect('login/?msg=You are now registered!')
-	} catch(err) {
-		await ctx.render('error', {message: err.message})
-	}
-})
+router.post('/register', koaBody, async ctx => await postRegister(ctx, dbName))
 
 /**
  * The secure login page.
@@ -86,43 +75,21 @@ router.post('/register', koaBody, async ctx => {
  * @route {GET} /
  * @authentication This route requires cookie-based authentication.
  */
-router.get('/login', async ctx => {
-	if(ctx.session.authorised === true) await ctx.redirect('/?msg=You are already logged in')
-	const data = {}
-	if(ctx.query.msg) data.msg = ctx.query.msg
-	if(ctx.query.user) data.user = ctx.query.user
-	await ctx.render('login', data)
-})
+router.get('/login', async ctx => await getLogin(ctx))
 
 /**
  * The script to process user logging in.
  * @name Login script
  * @route {POST} /login
  */
-router.post('/login', async ctx => {
-	try {
-		if(ctx.session.authorised === true) ctx.redirect('/?msg=You are already logged in')
-		const body = ctx.request.body
-		const user = await new User(dbName)
-		const id = await user.login(body.user, body.pass)
-		ctx.session.authorised = true
-		ctx.session.id = id
-		return await ctx.redirect('/?msg=you are now logged in...')
-	} catch(err) {
-		await ctx.render('error', {message: err.message})
-	}
-})
+router.post('/login', async ctx => await postLogin(ctx, dbName))
 
 /**
  * The songs page.
  * @name Songs page
  * @route {GET} /songs
  */
-router.get('/songs', async ctx => {
-	const song = await new Song(dbName)
-	const data = await song.getAll()
-	await ctx.render('songs', {songs: data})
-})
+router.get('/songs', async ctx => await getSongs(ctx, dbName))
 
 /**
  * The individual song page.
@@ -130,20 +97,7 @@ router.get('/songs', async ctx => {
  * @name Songs/id Page
  * @route {Get} /songs
  */
-router.get('/songs/:id', async ctx => {
-	try {
-		const song = await new Song(dbName)
-		const data = await song.get(ctx.params.id)
-		const userSong = await new UserSong(dbName)
-		const owner = await userSong.check(ctx.params.id)
-		console.log(`[songs][${ctx.params.id}] owner: ${owner}`)
-		if(owner === ctx.session.id) data.owner = true
-		await ctx.render('play', data)
-	} catch(err) {
-		console.log(err)
-		await ctx.render('error', err.message)
-	}
-})
+router.get('/songs/:id', async ctx => await getSongDetails(ctx, dbName))
 
 /**
  * The playlist creation page.
