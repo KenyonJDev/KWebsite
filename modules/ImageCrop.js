@@ -1,7 +1,7 @@
 'use strict'
 const sharp = require('sharp')
 const fs = require('fs')
-const check = require('./songChecks')
+const check = require('./checks')
 const mime = require('mime-types')
 
 const size = 1024
@@ -22,11 +22,9 @@ const crop = async(filePath, fileType) => {
 	const type = mime.extension(fileType)
 	if(!(type in ['png','jpg','gif','svg']))
 		throw new Error('Unsupported file type')
-	const file = await fs.readFileSync(filePath)
+	const file = fs.readFileSync(filePath)
 	await sharp(file)
-		.resize(size, size, {
-			fit: 'cover'
-		})
+		.resize(size, size)
 		.toFile(filePath)
 	return true
 }
