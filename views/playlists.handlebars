@@ -31,17 +31,17 @@
     <section>
         <h2>Create Playlist</h2>
         {{#if msg}}
-            <p class="msg">{{msg}}</p>
+            <p class="msg" id="msg">{{msg}}</p>
         {{/if}}
         {{#if err}}
             <p>Error: {{err}}</p>
         {{/if}}
         <form action="/playlists" enctype="multipart/form-data" method="post">
             <p>Please name your playlist.</p>
-            <input type="text" name="name" placeholder="Name of playlist" value="" required>
+            <input type="text" name="name" id="newName" placeholder="Name of playlist" value="" required>
             <p>Description.</p>
-            <input type="text" name="description" placeholder="Description of playlist" value="" required>
-            <p><input type="submit" value="Create"></p>
+            <input type="text" name="description" id="newDesc" placeholder="Description of playlist" value="" required>
+            <p><input type="submit" id="create" value="Create"></p>
         </form>
     </section>
 

@@ -30,6 +30,9 @@
     </nav>
     <section>
         <h2>Featured Music</h2>
+		{{#if msg}}
+			<p class="msg" id="msg">{{msg}}</p>
+		{{/if}}
         <table class="featMusic">
 			<caption><a href="songs">More songs...</a></caption>
 			<colgroup>
