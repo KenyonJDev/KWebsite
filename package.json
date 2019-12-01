@@ -50,6 +50,8 @@
   },
   "devDependencies": {
     "acorn": "^7.1.0",
+    "core-js": "^3.4.5",
+    "cucumber": "^6.0.5",
     "eslint": "^5.16.0",
     "handlebars-validate": "^0.1.2",
     "http-status-codes": "^1.4.0",
