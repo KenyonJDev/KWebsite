@@ -157,7 +157,7 @@ router.get('/upload', async ctx => await getUpload(ctx, dbName))
  * @name Upload script
  * @route {POST} /upload
  */
-router.post('/upload', koaBody, async ctx => await postUpload(ctx, dbName))
+router.post('/upload', koaBody, async ctx => await postUpload(ctx, dbName, __dirname))
 
 /**
  * The script responsible for adding playlist comments.
