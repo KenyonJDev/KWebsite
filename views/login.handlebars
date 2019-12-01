@@ -27,12 +27,12 @@
 		<section>
 			<h2>Log In</h2>
 			{{#if msg}}
-				<p class="msg">{{msg}}</p>
+				<p class="msg" id="msg">{{msg}}</p>
 			{{/if}}
 			<form action="/login" method="post" class="loginRegister">
-				<p>Username:<br /><input type="text" name="user" placeholder="Your username..." value="{{user}}" autofocus></p>
-				<p>Password:<br /><input type="password" name="pass" placeholder="Your password..." value=""></p>
-				<p><input type="submit" value="Log in"></p>
+				<p>Username:<br /><input type="text" name="user" id="user" placeholder="Your username..." value="{{user}}" autofocus></p>
+				<p>Password:<br /><input type="password" name="pass" id="pass" placeholder="Your password..." value=""></p>
+				<p><input type="submit" id="login" value="Log in"></p>
 			</form>
 			<p><a href="/register">Don't have an account? Register here!</a></p>
 		</section>

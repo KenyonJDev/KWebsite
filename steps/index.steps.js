@@ -4,8 +4,8 @@ const { Given, When, Then } = require('cucumber')
 const assert = require('assert')
 const Page = require('./page.js')
 
-let width = 800
-let height = 600
+const width = 800
+const height = 600
 
 let page
 

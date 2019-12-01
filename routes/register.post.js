@@ -10,7 +10,7 @@ const postRegister = async(ctx, dbName) => {
 		await user.register(body.user, body.pass)
 		await ctx.redirect('login/?msg=You are now registered!')
 	} catch(err) {
-		await ctx.render('error', {message: err.message})
+		await ctx.render('register', {msg: err.message})
 	}
 }
 

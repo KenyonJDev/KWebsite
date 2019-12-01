@@ -22,15 +22,17 @@
 					<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
 				</form>
 			</ul>
-			
 		</nav>
 		<section>
 			<h2>Create an Account</h2>
+			{{#if msg}}
+				<p class="msg" id="msg">{{msg}}</p>
+			{{/if}}
 			<form action="/register" enctype="multipart/form-data" method="post" class="loginRegister">
-				<p>Username:<br /><input type="text" name="user" placeholder="Your preferred username (No Spaces)" value=""></p>
-				<p>Password:<br /><input type="password" name="pass" placeholder="Your chosen password" value=""></p>
+				<p>Username:<br /><input type="text" name="user" id="user" placeholder="Your preferred username (No Spaces)" value=""></p>
+				<p>Password:<br /><input type="password" name="pass" id="pass" placeholder="Your chosen password" value=""></p>
 				<p>Profile Picture:<br /><input type="file" name="avatar"></p>
-				<p><input type="submit" value="Create"></p>
+				<p><input type="submit" id="register" value="Create"></p>
 			</form>
 		</section>
 	</body>
