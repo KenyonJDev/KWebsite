@@ -3,6 +3,7 @@
 const Song = require('../modules/song')
 const UserComment = require('../modules/userComment')
 const User = require('../modules/user')
+const Comment = require('../modules/comment')
 const Playlists = require('../modules/Playlists')
 const PlaylistSongs = require('../modules/Playlist_songs')
 const PlaylistComment = require('../modules/playlistComment')
@@ -10,7 +11,7 @@ const PlaylistComment = require('../modules/playlistComment')
 const songIDsToDetails = async(songIDs, dbName) => {
 	const song = await new Song(dbName), songs = []
 	for (const id of songIDs) {
-		const details = await song.get(id.songID)
+		const details = await song.get(id)
 		songs.push(details)
 	}
 	return songs
