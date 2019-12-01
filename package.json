@@ -8,15 +8,14 @@
   },
   "scripts": {
     "start": "node index.js",
-    "acceptance": "jest --coverage --detectOpenHandles",
+    "acceptance": "bash cucumberTest.sh",
     "jsdoc": "node_modules/.bin/jsdoc -c jsdoc.conf",
     "linter": "node_modules/.bin/eslint --fix .",
-    "test": "jest --coverage --detectOpenHandles",
-    "unit": "node_modules/.bin/jest --coverage --runInBand tests/unit/"
+    "unit": "jest --coverage --detectOpenHandles"
   },
   "jest": {
     "projects": [
-      "<rootDir>/jest-test.config.js"
+      "<rootDir>/jest-unit.config.js"
     ]
   },
   "author": "",
@@ -56,9 +55,11 @@
     "handlebars-validate": "^0.1.2",
     "http-status-codes": "^1.4.0",
     "jest": "^24.9.0",
+    "jest-puppeteer": "^4.3.0",
     "jsdoc": "^3.6.3",
     "jsdoc-route-plugin": "^0.1.0",
     "markdownlint": "^0.17.2",
-    "mock-fs": "^4.10.3"
+    "mock-fs": "^4.10.3",
+    "puppeteer": "^2.0.0"
   }
 }
