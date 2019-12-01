@@ -1,4 +1,4 @@
-Feature: Cropping an image
+Feature: Posting a comment
     The comment should be posted after running Scenario Outline: Post a comment
 
     Scenario: Post a comment
@@ -26,7 +26,7 @@ Feature: Cropping an image
 
         When I select the "Test Playlist" playlist
         Then take a screenshot called "before-exist-comment"
-        When I enter "test" in the "comment" field
-        When I click on the "post" button
+        When I enter "test" in the "-comment" field
+        When I click on the "-submit" button
         Then take a screenshot called "after-exist-comment"
         Then the message box should say "test"
