@@ -42,7 +42,7 @@
             </colgroup>
             {{#each playlists}}
                 <tr>
-                    <td><a href="library/{{this.id}}">{{this.playlistName}}</a></td>
+                    <td><a id="id{{this.id}}" href="library/{{this.id}}">{{this.playlistName}}</a></td>
                     <td>{{this.description}}</td>
                 </tr>
             {{/each}}

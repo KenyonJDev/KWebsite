@@ -18,7 +18,7 @@ rm -rf public/art/*
 node index.js&
 
 # run the test suite in background mode
-node_modules/.bin/cucumber-js --order defined ./features -r ./steps &
+node_modules/.bin/cucumber-js --order defined --fail-fast ./features -r ./steps &
 
 # wait for the tests to complete
 sleep 40
