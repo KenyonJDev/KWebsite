@@ -3,38 +3,38 @@
 
 <head>
     <meta charset="utf-8">
-
     <title>Sense</title>
 	<meta name="description" content="{{playlistName}}">
 	<meta name="author" content="Tiago Ferreira">
-    <link href="css/global.css" type="text/css" rel="stylesheet">
-	<link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="../css/global.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
-    <h1 class="webTitle"><a href="/">Sense</a></h1>
     <nav>
-        <ul class="nav">
+        <ul>
+			<li class="siteName"><a href="/">Sense</a></li>
+            <li><a href="../logout">Logout</a></li>
+			<li><a href="../login">Login/Signup</a></li>
+			<li><a href="../upload">Upload</a></li>
+			<li class="dropdownList">
+				<a href="javascript:void(0)">Playlists</a>
+                <ul class="dropdownListContent">
+                    <li><a href="../playlists">Create or add to a Playlist</a></li>
+                    <li><a href="../library">View your Playlists</a></li>
+                    <li><a href="../browse">View all Playlists</li>
+                </ul>
+			</li>
+			<li><a href="../songs">Songs</a></li>
             <li><a href="/">Home</a></li>
-            <li><a href="/songs">Songs</a></li>
-            <li><a href="/playlists">Playlists</a></li>
-            <li><a href="/library">Library</a></li>
-            <li><a href="/browse">Browse</a></li>
-            <li><a href="/upload">Upload</a></li>
-            <li><a href="/login">Login/Signup</a></li>
-            <form>
-                <input type="text" placeholder="Search...">
-				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
-            </form>
         </ul>
-        
     </nav>
 
-    {{#if msg}}
-        <p id="msg" class="msg">{{msg}}</p>
-    {{/if}}
 
     <section>
+        {{#if msg}}
+            <p class="msg">{{msg}}</p>
+        {{/if}}
+
         <h2>{{playlistName}}</h2>
         <h3>{{description}}</h3>
         <table id="songs">
@@ -43,7 +43,7 @@
                 <td><a href="../songs/{{this.id}}">{{this.title}}</a></td>
                 <td>
                     <audio controls>
-                    <source src="/music/{{id}}.mp3" type ="audio/mpeg">
+                        <source src="/music/{{id}}.mp3" type ="audio/mpeg">
                         Your browser does not support the MP3 file type.
                     </audio>
                 </td>
@@ -51,14 +51,18 @@
             {{/each}}
         </table>
 
-
         <form action="/comment" enctype="multipart/form-data" method="POST">
             <input type="hidden" name="id" value="{{id}}">
             <p>Comment:<br><input type="text" id="-comment" name="comment" required>
             <input type="submit" id="-submit" value="Post comment"></p>
         </form>
 
-        <table id="comments">
+        <table id="comments" class="commentTable">
+            <colgroup>
+                <col class="colUserName">
+                <col class="commentContent">
+                <col class="commentDelete">
+            </colgroup>
             {{#each comments}}
                 <tr>
                     <td><b>{{this.user}}</b></td>
@@ -71,11 +75,9 @@
         </table>
     </section>
 
-    <hr>
     <footer>
+    	<hr>
         <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
     </footer>
 </body>
-
-
 </html>

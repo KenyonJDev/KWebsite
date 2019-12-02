@@ -3,96 +3,81 @@
 
 <head>
     <meta charset="utf-8">
-
     <title>Sense</title>
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
-	<link href="css/index.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
-    <h1 class="webTitle"><a href="/">Sense</a></h1>
     <nav>
-        <ul class="nav">
-            <li><a href="#">Home</a></li>
-            <li><a href="songs">Songs</a></li>
-            <li><a href="playlists">Playlists</a></li>
-            <li><a href="upload">Upload</a></li>
-            <li><a href="login">Login/Signup</a></li>
-			<li><a href="logout">Logout</a></li>
-            <form>
-                <input type="text" placeholder="Search...">
-				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
-            </form>
+        <ul>
+			<li class="siteName"><a href="/">Sense</a></li>
+            <li><a href="logout">Logout</a></li>
+			<li><a href="login">Login/Signup</a></li>
+			<li><a href="upload">Upload</a></li>
+			<li class="dropdownList">
+				<a href="javascript:void(0)">Playlists</a>
+                <ul class="dropdownListContent">
+                    <li><a href="playlists">Create or add to a Playlist</a></li>
+                    <li><a href="library">View your Playlists</a></li>
+                    <li><a href="browse">View all Playlists</li>
+                </ul>
+			</li>
+			<li><a href="songs">Songs</a></li>
+            <li><a href="/">Home</a></li>
         </ul>
-        
     </nav>
+
     <section>
+        {{#if msg}}
+            <p id="msg" class="msg">{{msg}}</p>
+        {{/if}}
+
         <h2>Featured Music</h2>
-		{{#if msg}}
-			<p class="msg" id="msg">{{msg}}</p>
-		{{/if}}
-        <table class="featMusic">
-			<caption><a href="songs">More songs...</a></caption>
-			<colgroup>
-				<col class="colAlbumArt">
-				<col class="colSongName">
-				<col class="colArtistName">
-				<col class="colYear">
-			</colgroup>
-			<tbody>
-				{{#each songs}}
-				<tr>
-					<td><img src="art/{{this.id}}" style="width: 100px"></td>
-					<td><a href="/songs/{{this.id}}">{{this.title}}</a></td>
-					<td>{{this.artist}}</td>
-					<td>{{this.year}}</td>
-				</tr>
-				{{/each}}
-			</tbody>
+		<table class="featMusic">
+            <caption><a href="songs">More songs...</a></caption>
+            <colgroup>
+                <col class="colAlbumArt">
+                <col class="colSongName">
+                <col class="colArtistName">
+                <col class="colYear">
+            </colgroup>
+            <tbody>
+                {{#each songs}}
+                <tr>
+                    <td><img src="art/{{this.id}}" style="width: 100px"></td>
+                    <td><a href="/songs/{{this.id}}">{{this.title}}</a></td>
+                    <td>{{this.artist}}</td>
+                    <td>{{this.year}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
         </table>
         <br>
 
         <h2>Featured Playlists</h2>
         <table class="featList">
-			<caption><a href="playlists">More playlists...</a></caption>
+            <caption><a href="playlists">More playlists...</a></caption>
             <colgroup>
-				<col class="colPlaylistName">
-				<col class="colSongCount">
-			</colgroup>
-			<tbody>
-				{{#each playlists}}
-				<tr>
-					<td><a href='/collection/{{this.id}}'>{{this.playlistName}}</a></td>
-					<td>{{this.description}}</td>
-				</tr>
-				{{/each}}
-			</tbody>
+                <col class="colPlaylistName">
+                <col class="colPlaylistDesc">
+            </colgroup>
+            <tbody>
+                {{#each playlists}}
+                <tr>
+                    <td><a href='/collection/{{this.id}}'>{{this.playlistName}}</a></td>
+                    <td>{{this.description}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
         </table>
         <br>
     </section>
 
-    <hr>
-    <footer>
+	<footer>
+    	<hr>
         <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
     </footer>
 </body>
-
-
 </html>
-
-<!--<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Home Page</title>
-		<meta name="description" content="form to add new books">
-		<meta name="author" content="Mark Tyers">
-		<link href="style.css" type="text/css" rel="stylesheet" />
-	</head>
-	<body>
-		<h1>Home</h1>
-		<p>This is a secure page. Users need to have a valid account and be logged in to see it.</p>
-		<p><a href="/logout">log out</a></p>
-</html>-->
