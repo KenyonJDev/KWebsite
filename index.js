@@ -52,7 +52,7 @@ const dbName = 'website.db'
  * @name Home Page
  * @route {GET} /
  */
-router.get('/', async ctx => await getHome(ctx))
+router.get('/', async ctx => await getHome(ctx, dbName))
 
 /**
  * The user registration page.
