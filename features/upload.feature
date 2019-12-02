@@ -9,7 +9,6 @@ Feature: Uploading a song
         When I enter "password" in the "pass" field
         When I click on the "register" button
 
-        Then take a screenshot called "1"
         Then the title should be "Login"
         When I enter "testName4" in the "user" field 
         When I enter "password" in the "pass" field
@@ -30,10 +29,11 @@ Feature: Uploading a song
         When I click on the "upload" button
         Then take a screenshot called "after-upload"
         Then the title should be "test title"
+        When I navigate to the "songs" page
+        Then the songs table should contain "1" rows
 
     Scenario: deleting an uploaded song
         When I navigate to the "upload" page
-        Then take a screenshot called "2"
         When I select an mp3 file called "sample"
         When I select a photo in the album art field
         When I select the "Test Playlist" playlist

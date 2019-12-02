@@ -53,7 +53,9 @@ When('I select the {string} song', async name => {
 })
 
 When('I click on the {string} link', async name => {
-	await page.click(`#${name}`)
+	const link = (await page.$x(`//a[text()="${name}"]`))[0]
+	const id = await (await link.getProperty('id')).jsonValue()
+	await page.click(`#${id}`)
 })
 
 Then('take a screenshot called {string}', async filename => {
@@ -80,6 +82,16 @@ Then('the songs table should contain {string} rows', async rows => {
 	rows = Number(rows)
 	const items = await page.evaluate( () => {
 		const dom = document.querySelectorAll('table#songs tr:first-child')
+		const arr = Array.from(dom)
+		return arr.map(td => td.innerText)
+	})
+	assert.equal(items.length, rows)
+})
+
+Then('the comments table should contain {string} rows', async rows => {
+	rows = Number(rows)
+	const items = await page.evaluate( () => {
+		const dom = document.querySelectorAll('table#comments tr:first-child')
 		const arr = Array.from(dom)
 		return arr.map(td => td.innerText)
 	})

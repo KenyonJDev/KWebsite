@@ -23,9 +23,21 @@ Feature: Posting a comment
         When I select the "Test 3" playlist
         When I click on the "upload" button
 
-        When I navigate to the "library/1" page
+        When I navigate to the "browse" page
+        When I click on the "Test 3" link
+        Then the title should be "Test 3"
         Then take a screenshot called "before-add-comment"
-        When I enter "test" in the "comment" field
+        When I enter "Test comment" in the "comment" field
         When I click on the "submit" button
         Then take a screenshot called "after-add-comment"
         Then the title should be "Test 3"
+
+    Scenario: Deleting a comment
+        When I navigate to the "browse" page
+        When I click on the "Test 3" link
+        Then the comments table should contain "1" rows
+        Then take a screenshot called "before-delete-comment"
+        When I click on the "Delete" link
+        Then take a screenshot called "after-delete comment"
+        Then the title should be "Test 3"
+        Then the comments table should contain "0" rows
