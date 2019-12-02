@@ -52,6 +52,10 @@ When('I select the {string} song', async name => {
 	await page.select('#song', id)
 })
 
+When('I click on the {string} link', async name => {
+	await page.click(`#${name}`)
+})
+
 Then('take a screenshot called {string}', async filename => {
 	await page.screenshot({path: `screenshots/${filename}.png`})
 })
@@ -75,7 +79,7 @@ Then('the title should be {string}', async title => {
 Then('the songs table should contain {string} rows', async rows => {
 	rows = Number(rows)
 	const items = await page.evaluate( () => {
-		const dom = document.querySelectorAll('table#songs tr td:first-child')
+		const dom = document.querySelectorAll('table#songs tr:first-child')
 		const arr = Array.from(dom)
 		return arr.map(td => td.innerText)
 	})
