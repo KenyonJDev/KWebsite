@@ -6,8 +6,10 @@ set -e
 # create any directories needed by the test script
 mkdir -p screenshots
 
-# delete any local databases (if you are using them)
+# delete any local files
 rm -rf *.db
+rm -rf public/music/*
+rm -rf public/art/*
 
 # install packages if none found
 # [ ! -d "node_modules" ] && echo "INSTALLING MODULES" && npm install
@@ -19,7 +21,7 @@ node index.js&
 node_modules/.bin/cucumber-js --order defined ./features -r ./steps &
 
 # wait for the tests to complete
-sleep 500
+sleep 40
 
 # kill the web server
 taskkill -f -im node.exe
