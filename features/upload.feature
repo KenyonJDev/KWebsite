@@ -30,3 +30,15 @@ Feature: Uploading a song
         Then take a screenshot called "after-upload"
         Then the title should be "test title"
 
+    Scenario: deleting an uploaded song
+        When I navigate to the "upload" page
+        When I select an mp3 file called "sample"
+        When I select a photo in the album art field
+        When I select the "Test Playlist" playlist
+        Then take a screenshot called "after-selections"
+        When I click on the "upload" button
+        When I click on the "delete" button
+        Then the title should be "Sense"
+        Then the message box should say "song deleted!"
+
+

@@ -22,3 +22,23 @@ Feature: Creating playlists
         Then take a screenshot called "after-playlist-create"
         Then the title should be "Create Playlist | Sense"
         Then the message box should say 'new playlist "Test Playlist" created'
+
+    Scenario: adding a song to a playlist
+        When I navigate to the "upload" page
+        When I select an mp3 file called "sample"
+        When I select a photo in the album art field
+        When I select the "Test Playlist" playlist
+        When I click on the "upload" button
+
+        When I navigate to the "playlists" page
+        When I enter "Test 2" in the "newName" field
+        When I enter "sdfsdfsdf" in the "newDesc" field
+        When I click on the "create" button
+        Then the message box should say 'new playlist "Test 2" created'
+
+        When I select the "Test 2" playlist
+        When I select the "test title" song
+        When I click on the "link" button
+        Then take a screenshot called "after-link"
+        Then the message box should say "Song added!"
+        Then the songs table should contain "1" rows
