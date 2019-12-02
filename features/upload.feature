@@ -5,12 +5,13 @@ Feature: Uploading a song
     Scenario: Uploading a song and image
         Given the browser is open on the home page
         When I navigate to the "register" page
-        When I enter "testName3" in the "user" field
+        When I enter "testName4" in the "user" field
         When I enter "password" in the "pass" field
         When I click on the "register" button
 
-        Then the title should be "Log In"
-        When I enter "testName3" in the "user" field 
+        Then take a screenshot called "1"
+        Then the title should be "Login"
+        When I enter "testName4" in the "user" field 
         When I enter "password" in the "pass" field
         When I click on the "login" button
 
@@ -32,6 +33,7 @@ Feature: Uploading a song
 
     Scenario: deleting an uploaded song
         When I navigate to the "upload" page
+        Then take a screenshot called "2"
         When I select an mp3 file called "sample"
         When I select a photo in the album art field
         When I select the "Test Playlist" playlist

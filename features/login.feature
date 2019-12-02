@@ -9,7 +9,7 @@ Feature: Logging into an account
         When I enter "password" in the "pass" field
         When I click on the "register" button
         Then take a screenshot called "after-new-register"
-        Then the title should be "Log In"
+        Then the title should be "Login"
 
     Scenario: registering as an existing username
         When I navigate to the "register" page
@@ -18,7 +18,7 @@ Feature: Logging into an account
         When I enter "password" in the "pass" field
         When I click on the "register" button
         Then take a screenshot called "after-exist-register"
-        Then the title should be "Create an Account"
+        Then the title should be "Register"
         Then the message box should say 'username "testName" already in use'
 
     Scenario: logging into existing account

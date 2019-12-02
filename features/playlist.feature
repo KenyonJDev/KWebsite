@@ -8,7 +8,7 @@ Feature: Creating playlists
         When I enter "password" in the "pass" field
         When I click on the "register" button
 
-        Then the title should be "Log In"
+        Then the title should be "Login"
         When I enter "testName2" in the "user" field
         When I enter "password" in the "pass" field
         When I click on the "login" button
@@ -20,7 +20,7 @@ Feature: Creating playlists
         When I enter "This is a description" in the "newDesc" field
         When I click on the "create" button
         Then take a screenshot called "after-playlist-create"
-        Then the title should be "Create Playlist | Sense"
+        Then the title should be "Playlists"
         Then the message box should say 'new playlist "Test Playlist" created'
 
     Scenario: adding a song to a playlist

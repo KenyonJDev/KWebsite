@@ -13,20 +13,19 @@ Feature: Posting a comment
         When I click on the "login" button
 
         When I navigate to the "playlists" page
-        When I enter "Test Playlist" in the "newName" field
+        When I enter "Test 3" in the "newName" field
         When I enter "This is a description" in the "newDesc" field
         When I click on the "create" button
 
         When I navigate to the "upload" page
         When I select an mp3 file called "sample"
         When I select a photo in the album art field
-        When I select the "Test Playlist" playlist
+        When I select the "Test 3" playlist
         When I click on the "upload" button
 
-
-        When I select the "Test Playlist" playlist
-        Then take a screenshot called "before-exist-comment"
-        When I enter "test" in the "-comment" field
-        When I click on the "-submit" button
-        Then take a screenshot called "after-exist-comment"
-        Then the message box should say "test"
+        When I navigate to the "library/1" page
+        Then take a screenshot called "before-add-comment"
+        When I enter "test" in the "comment" field
+        When I click on the "submit" button
+        Then take a screenshot called "after-add-comment"
+        Then the title should be "Test 3"
