@@ -7,10 +7,10 @@ module.exports = class Page {
 
 	constructor(width, height) {
 		return (async() => {
-			this.delayMS = 50
+			this.delayMS = 5
 			this.browser = await puppeteer.launch(
 				{
-					headless: false,
+					headless: true,
 					slowMo: this.delayMS,
 					args: ['--disable-gpu', '--no-sandbox',	 '--disable-dev-shm-usage']
 				})

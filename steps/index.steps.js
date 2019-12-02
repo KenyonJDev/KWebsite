@@ -72,13 +72,12 @@ Then('the title should be {string}', async title => {
 	assert.equal(title, text)
 })
 
-Then('the list should contain {string} rows', async rows => {
+Then('the songs table should contain {string} rows', async rows => {
 	rows = Number(rows)
 	const items = await page.evaluate( () => {
-		const dom = document.querySelectorAll('table tr td:first-child')
+		const dom = document.querySelectorAll('table#songs tr td:first-child')
 		const arr = Array.from(dom)
 		return arr.map(td => td.innerText)
 	})
 	assert.equal(items.length, rows)
 })
-
