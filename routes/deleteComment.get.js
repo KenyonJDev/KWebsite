@@ -4,6 +4,12 @@ const UserComment = require('../modules/userComment')
 const Comment = require('../modules/comment')
 const PlaylistComment = require('../modules/playlistComment')
 
+/**
+ * The script that handles the get.delete-com route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const getDeleteComment = async(ctx, dbName) => {
 	try {
 		const userComment = await new UserComment(dbName)

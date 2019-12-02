@@ -3,6 +3,12 @@
 const UserPlaylist = require('../modules/User_playlists')
 const Playlists = require('../modules/Playlists')
 
+/**
+ * The script that handles the get.upload route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const getUpload = async(ctx, dbName) => {
 	if (ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = [], lists = []

@@ -4,6 +4,12 @@ const UserSong = require('../modules/userSong')
 const PlaylistSongs = require('../modules/Playlist_songs')
 const Song = require('../modules/song')
 
+/**
+ * The script that handes the get.delete-song route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const getDeleteSong = async(ctx, dbName) => {
 	try {
 		const userSong = await new UserSong(dbName)

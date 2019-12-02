@@ -4,6 +4,12 @@ const Comment = require('../modules/comment')
 const UserComment = require('../modules/userComment')
 const PlaylistComment = require('../modules/playlistComment')
 
+/**
+ * The script that handles the post.comment route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const postComment = async(ctx, dbName) => {
 	try {
 		if (!ctx.session.authorised) await ctx.redirect('/login?msg=You need to log in')

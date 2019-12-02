@@ -3,6 +3,12 @@
 const Song = require('../modules/song')
 const UserSong = require('../modules/userSong')
 
+/**
+ * The script that handles the get.songs/:id route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const getSongDetails = async(ctx, dbName) => {
 	try {
 		const song = await new Song(dbName)

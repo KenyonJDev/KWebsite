@@ -3,6 +3,12 @@
 const Playlists = require('../modules/Playlists')
 const UserPlaylist = require('../modules/User_playlists')
 
+/**
+ * The script that handles the get.library route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const getLibrary = async(ctx, dbName) => {
 	try {
 		if (ctx.session.authorised !== true) await ctx.redirect('/login?msg=you need to login')

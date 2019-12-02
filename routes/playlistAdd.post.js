@@ -2,6 +2,12 @@
 
 const PlaylistSongs = require('../modules/Playlist_songs')
 
+/**
+ * The script that handles the post.playlistAdd route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const postPlaylistAdd = async(ctx, dbName) => {
 	try {
 		const { song, playlist } = ctx.request.body

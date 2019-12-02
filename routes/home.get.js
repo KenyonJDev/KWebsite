@@ -5,6 +5,12 @@ const Playlist = require('../modules/Playlists')
 
 const start = 0, count = 3
 
+/**
+ * The script that handles the
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const getHome = async(ctx, dbName) => {
 	try {
 		const data = {}

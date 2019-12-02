@@ -2,6 +2,12 @@
 
 const User = require('../modules/user')
 
+/**
+ * The script that handles the get.register route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const postRegister = async(ctx, dbName) => {
 	try {
 		const body = ctx.request.body

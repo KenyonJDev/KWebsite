@@ -5,6 +5,12 @@ const UserPlaylist = require('../modules/User_playlists')
 const Song = require('../modules/song')
 const Playlists = require('../modules/playlists')
 
+/**
+ * Converts song IDs to a list of details.
+ * @param {Array<number>} songIDs - A list of comment IDs
+ * @param {string} dbName - The database name
+ * @returns {Promise<Array<dbData>>} An array of details.
+ */
 const songIDsToDetails = async(songIDs, dbName) => {
 	const song = await new Song(dbName), songs = []
 	for (const id of songIDs) {
@@ -14,6 +20,14 @@ const songIDsToDetails = async(songIDs, dbName) => {
 	return songs
 }
 
+/**
+ * Converts comment IDs to a list of details.
+ * @param {Array<number>} commentIDs - A list of comment IDs
+ * @param {ctx} ctx - The context passed from the route
+ * @param {string} dbName - The database name
+ * @returns {Promise<Array<{number, string}>>} An array of details.
+ * @memberof routes
+ */
 const playlistIDsToDetails = async(playlistIDs, dbName) => {
 	const playlist = await new Playlists(dbName), playlists = []
 	for (const id of playlistIDs) {
@@ -23,6 +37,11 @@ const playlistIDsToDetails = async(playlistIDs, dbName) => {
 	return playlists
 }
 
+/**
+ * The script that handles the get.playlists route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ */
 const getPlaylists = async(ctx, dbName) => {
 	try {
 		if (ctx.session.authorised !== true) await ctx.redirect('/login?msg=you need to login')
