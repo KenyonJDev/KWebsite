@@ -5,8 +5,17 @@ const bcrypt = require('bcrypt-promise')
 const sqlite = require('sqlite-async')
 const saltRounds = 10
 
+/**
+ * Class representing a song.
+ * Interacts with the database.
+ */
 module.exports = class User {
-
+	/**
+	 * User class constructor.
+	 * Leave parameter empty to create db in memory.
+	 * @constructor
+	 * @param {string} [dbName=:memory:] - The database filename.
+	 */
 	constructor(dbName = ':memory:') {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
@@ -16,6 +25,12 @@ module.exports = class User {
 		})()
 	}
 
+	/**
+	 * Registers a user.
+	 * @param {string} user - The username
+	 * @param {string} pass - The password
+	 * @returns {Promise<true>} A confirmation of registration.
+	 */
 	async register(user, pass) {
 		try {
 			if(user.length === 0) throw new Error('missing username')
@@ -32,6 +47,12 @@ module.exports = class User {
 		}
 	}
 
+	/**
+	 * Logs in a user if username and password are correct.
+	 * @param {string} username - The username
+	 * @param {string} password - The password
+	 * @returns {Promise<number>} The user's ID
+	 */
 	async login(username, password) {
 		try {
 			let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
@@ -47,6 +68,11 @@ module.exports = class User {
 		}
 	}
 
+	/**
+	 * Gets a username based on an ID.
+	 * @param {string} id - The user's ID
+	 * @returns {Promise<string>} The ID username
+	 */
 	async get(id) {
 		const sql = `SELECT user FROM users WHERE id=${id}`
 		const data = await this.db.get(sql)

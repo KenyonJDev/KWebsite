@@ -2,6 +2,12 @@
 
 const User = require('../modules/user')
 
+/**
+ * The script that handles the post.login route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const postLogin = async(ctx, dbName) => {
 	try {
 		if(ctx.session.authorised === true) ctx.redirect('/?msg=You are already logged in')

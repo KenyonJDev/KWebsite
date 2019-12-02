@@ -2,6 +2,12 @@
 
 const Playlists = require('../modules/Playlists')
 
+/**
+ * The script that handles the get.browse route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @memberof routes
+ */
 const getBrowse = async(ctx, dbName) => {
 	const data = []
 	if (ctx.query.msg) data.msg = ctx.query.msg

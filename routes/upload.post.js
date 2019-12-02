@@ -8,6 +8,13 @@ const sharp = require('sharp')
 
 const size = 1024
 
+/**
+ * The script that handles the post.upload route.
+ * @param {ctx} ctx - Context from route
+ * @param {string} dbName - Database name
+ * @param {string} dirname - The route directory, relative to index.js
+ * @memberof routes
+ */
 const postUpload = async(ctx, dbName, dirname) => {
 	try {
 		if (!ctx.session.authorised) await ctx.redirect('/login?msg=You need to log in')
