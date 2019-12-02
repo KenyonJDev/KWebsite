@@ -3,36 +3,42 @@
 
 <head>
     <meta charset="utf-8">
-
-    <title>Upload | Sense</title>
-	<meta name="description" content="The upload page for Sense.">
-	<meta name="author" content="Bartek Wlodarski">
+    <title>Sense</title>
+	<meta name="description" content="Main page for the Sense Webpage">
+	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
-    <link href="css/style.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
-    <h1 class="webTitle"><a href="/">Sense</a></h1>
     <nav>
-        <ul class="nav">
-            <li><a href="#">Home</a></li>
-            <li><a href="songs">Songs</a></li>
-            <li><a href="playlists">Playlists</a></li>
-            <li><a href="/library">Library</a></li>
-            <li><a href="upload">Upload</a></li>
-            <li><a href="login">Login/Signup</a></li>
-            <form>
-                <input type="text" placeholder="Search...">
-				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
-            </form>
+        <ul>
+			<li class="siteName"><a href="/">Sense</a></li>
+            <li><a href="logout">Logout</a></li>
+			<li><a href="login">Login/Signup</a></li>
+			<li><a href="upload">Upload</a></li>
+			<li class="dropdownList">
+				<a href="javascript:void(0)">Playlists</a>
+                <ul class="dropdownListContent">
+                    <li><a href="playlists">Create or add to a Playlist</a></li>
+                    <li><a href="library">View your Playlists</a></li>
+                    <li><a href="browse">View all Playlists</li>
+                </ul>
+			</li>
+			<li><a href="songs">Songs</a></li>
+            <li><a href="/">Home</a></li>
         </ul>
     </nav>
+    
     <section>
+        {{#if msg}}
+            <p class="msg">{{msg}}</p>
+        {{/if}}
+
         <h2>Upload</h2>
         {{#if msg}}
             <p class="msg">Error: {{msg}}</p>
         {{/if}}
-        <form action="/upload" enctype="multipart/form-data" method="POST">
+        <form action="/upload" enctype="multipart/form-data" method="POST" class="fileUpload">
             <p>Please upload an MP3 file.</p>
             <p>File:<br><input type="file" name="song" accept="audio/mp3" required></p>
             <p>Album Art:<br><input type="file" name="albumArt" accept="image/*"></p>
@@ -46,11 +52,9 @@
         </form>
     </section>
 
-    <hr>
-    <footer>
+	<footer>
+    	<hr>
         <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
     </footer>
 </body>
-
-
 </html>

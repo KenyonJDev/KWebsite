@@ -3,50 +3,62 @@
 
 <head>
     <meta charset="utf-8">
-
     <title>Sense</title>
-	<meta name="description" content="{{title}} by {{artist}}">
+	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
-    <link href="css/global.css" type="text/css" rel="stylesheet">
-	<link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="../css/global.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
-    <h1 class="webTitle"><a href="/">Sense</a></h1>
     <nav>
-        <ul class="nav">
+        <ul>
+			<li class="siteName"><a href="/">Sense</a></li>
+            <li><a href="../logout">Logout</a></li>
+			<li><a href="../login">Login/Signup</a></li>
+			<li><a href="../upload">Upload</a></li>
+			<li class="dropdownList">
+				<a href="javascript:void(0)">Playlists</a>
+                <ul class="dropdownListContent">
+                    <li><a href="../playlists">Create or add to a Playlist</a></li>
+                    <li><a href="../library">View your Playlists</a></li>
+                    <li><a href="../browse">View all Playlists</li>
+                </ul>
+			</li>
+			<li><a href="../songs">Songs</a></li>
             <li><a href="/">Home</a></li>
-            <li><a href="/songs">Songs</a></li>
-            <li><a href="/playlists">Playlists</a></li>
-            <li><a href="/library">Library</a></li>
-            <li><a href="/browse">Browse</a></li>
-            <li><a href="/upload">Upload</a></li>
-            <li><a href="/login">Login/Signup</a></li>
-            <form>
-                <input type="text" placeholder="Search...">
-				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
-            </form>
         </ul>
-        
     </nav>
 
     <section>
-        <h2>{{title}}</h2>
-        <h3>{{artist}} | {{year}}</h3>
-        <audio controls>
+        {{#if msg}}
+            <p class="msg">{{msg}}</p>
+        {{/if}}
+
+        <section class="playbackContain">
+            <section class="playbackArt">
+                <img src="../images/noPlaylistArtAvailable.png">
+            </section>
+            <section class="playbackInfo">
+                <h2>{{title}}</h2>
+                <h3>{{artist}} | {{year}}</h3>
+            </section>
+        </section>
+        <audio controls class="playbackControls">
             <source src="/music/{{id}}.mp3" type ="audio/mpeg">
             Your browser does not support the MP3 file type.
         </audio>
-        {{#if owner}}
-            <a href="/delete-song/{{id}}">Delete</a>
-        {{/if}}
+        <p>
+            {{#if owner}}
+            <form action="/delete-song/{{id}}">
+                <button type="submit">Delete</button>
+            </form>
+            {{/if}}
+        </p>
     </section>
 
-    <hr>
-    <footer>
+	<footer>
+    	<hr>
         <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
     </footer>
 </body>
-
-
 </html>
