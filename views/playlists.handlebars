@@ -50,7 +50,7 @@
         <form action="/playlistAdd" enctype="multipart/form-data" method="POST">
             <p>
                 Select song: <br>
-                <select name="song" required>
+                <select id="song" name="song" required>
                     <option value="">Please select a song</option>
                     {{#each songs}}
                         <option value={{this.id}}>{{this.title}}</option>
@@ -59,14 +59,14 @@
             </p>
             <p>
                 Select playlist: <br>
-                <select name="playlist" required>
+                <select id="playlist" name="playlist" required>
                     <option value="">Please select a playlist</option>
                     {{#each playlists}}
                     <option value="{{this.id}}">{{this.playlistName}}</option>
                     {{/each}}
                 </select>
             </p>
-            <p><input type="submit" value="Add to playlist"></p>
+            <p><input type="submit" id="link" value="Add to playlist"></p>
         </form>
     </section>
 

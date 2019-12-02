@@ -31,19 +31,26 @@
     </nav>
 
     {{#if msg}}
-        <p>{{msg}}</p>
+        <p id="msg" class="msg">{{msg}}</p>
     {{/if}}
 
     <section>
         <h2>{{playlistName}}</h2>
         <h3>{{description}}</h3>
-        {{#each songs}}
-            <p><a href="../songs/{{this.id}}">{{this.title}}</a></p>
-            <audio controls>
-            <source src="/music/{{id}}.mp3" type ="audio/mpeg">
-                Your browser does not support the MP3 file type.
-            </audio>
-        {{/each}}
+        <table id="songs">
+            {{#each songs}}
+            <tr>
+                <td><a href="../songs/{{this.id}}">{{this.title}}</a></td>
+                <td>
+                    <audio controls>
+                    <source src="/music/{{id}}.mp3" type ="audio/mpeg">
+                        Your browser does not support the MP3 file type.
+                    </audio>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+
 
         <form action="/comment" enctype="multipart/form-data" method="POST">
             <input type="hidden" name="id" value="{{id}}">
@@ -51,7 +58,7 @@
             <input type="submit" value="Post comment"></p>
         </form>
 
-        <table>
+        <table id="comments">
             {{#each comments}}
                 <tr>
                     <td><b>{{this.user}}</b></td>

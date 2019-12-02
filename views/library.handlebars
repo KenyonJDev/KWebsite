@@ -26,6 +26,9 @@
         </ul>
     </nav>
     <section>
+        {{#if msg}}
+            <p id="msg" class="msg">{{msg}}</p>
+        {{/if}}
         {{#if empty}}
             <h1>It's a little empty in here...</h1>
             <p><a href="playlists">Click here to add some wood to the fire</a></p>
