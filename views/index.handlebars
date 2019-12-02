@@ -7,26 +7,37 @@
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
-	<link href="css/index.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
     <nav>
-        <ul class="nav">
+        <ul>
 			<li class="siteName"><a href="/">Sense</a></li>
             <li><a href="logout">Logout</a></li>
 			<li><a href="login">Login/Signup</a></li>
 			<li><a href="upload">Upload</a></li>
-			<li><a href="playlists">Playlists</a></li>
+			<li class="dropdownList">
+				<a href="javascript:void(0)">Playlists</a>
+                <ul class="dropdownListContent">
+                    <li><a href="playlists">Create or add to a Playlist</a></li>
+                    <li><a href="library">View your Playlists</a></li>
+                    <li><a href="browse">View all Playlists</li>
+                </ul>
+			</li>
 			<li><a href="songs">Songs</a></li>
             <li><a href="/">Home</a></li>
         </ul>
     </nav>
+
     <section>
+        {{#if msg}}
+            <p class="msg">{{msg}}</p>
+        {{/if}}
+
         <h2>Featured Music</h2>
-        <table class="featMusic">
+        <!--<table class="featMusic">
 			<caption><a href="songs">More songs...</a></caption>
-			<colgroup>
+			<!<colgroup>
 				<col class="colAlbumArt">
 				<col class="colSongName">
 				<col class="colArtistName">
@@ -65,35 +76,72 @@
             <colgroup>
 				<col class="colAlbumArt">
 				<col class="colPlaylistName">
-				<col class="colSongCount">
+				<col class="colPlaylistDesc">
 				<col class="colUserName">
 			</colgroup>
 			<tbody>
 				<tr>
 					<td><img src="images/noPlaylistArtAvailable.png"></td>
 					<td><a href='#'>YeeHaw</a></td>
-					<td>260</td>
+					<td>Yeehaw Cowboy Tunes to Yee and Haw to</td>
 					<td>Jake Ward-Kear</td>
 				</tr>
 				<tr>
 					<td><img src="images/noPlaylistArtAvailable.png"></td>
 					<td><a href='#'>My favourite songs</a></td>
-					<td>32</td>
+					<td>Music</td>
 					<td>Bartek Wlodarski</td>
 				</tr>
 				<tr>
 					<td><img src="images/noPlaylistArtAvailable.png"></td>
 					<td><a href='#'>Best songs of all time</a></td>
-					<td>12</td>
+					<td>Music</td>
 					<td>Bartek Wlodarski</td>
 				</tr>
 			</tbody>
+        </table>-->
+		<table class="featMusic">
+            <caption><a href="songs">More songs...</a></caption>
+            <colgroup>
+                <col class="colAlbumArt">
+                <col class="colSongName">
+                <col class="colArtistName">
+                <col class="colYear">
+            </colgroup>
+            <tbody>
+                {{#each songs}}
+                <tr>
+                    <td><img src="art/{{this.id}}" style="width: 100px"></td>
+                    <td><a href="/songs/{{this.id}}">{{this.title}}</a></td>
+                    <td>{{this.artist}}</td>
+                    <td>{{this.year}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <br>
+
+        <h2>Featured Playlists</h2>
+        <table class="featList">
+            <caption><a href="playlists">More playlists...</a></caption>
+            <colgroup>
+                <col class="colPlaylistName">
+                <col class="colPlaylistDesc">
+            </colgroup>
+            <tbody>
+                {{#each playlists}}
+                <tr>
+                    <td><a href='/collection/{{this.id}}'>{{this.playlistName}}</a></td>
+                    <td>{{this.description}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
         </table>
         <br>
     </section>
 
 	<footer>
-    <hr>
+    	<hr>
         <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
     </footer>
 </body>

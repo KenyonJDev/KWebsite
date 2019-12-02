@@ -1,36 +1,56 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Sense</title>
     <meta name="Browse" content="Browse page">
     <meta name="author" content="Tiago Ferreira">
     <link href="css/global.css" type="text/css" rel="stylesheet">
-    <link href="css/style.css" type="text/css" rel="stylesheet">
 </head>
+
 <body>
-    <h1 class="webTitle"><a href="/">Sense</a></h1>
     <nav>
-        <ul class="nav">
-            <li><a href="#">Home</a></li>
-            <li><a href="songs">Songs</a></li>
-            <li><a href="playlists">Playlists</a></li>
-            <li><a href="/library">Library</a></li>
-            <li><a href="/browse">Browse</a></li>
-            <li><a href="upload">Upload</a></li>
-            <li><a href="login">Login/Signup</a></li>
-            <form>
-                <input type="text" placeholder="Search...">
-				<input type="image" src="icons/SearchBarIcon.png" alt="search button" name="submit" />
-            </form>
+        <ul>
+			<li class="siteName"><a href="/">Sense</a></li>
+            <li><a href="logout">Logout</a></li>
+			<li><a href="login">Login/Signup</a></li>
+			<li><a href="upload">Upload</a></li>
+			<li class="dropdownList">
+				<a href="javascript:void(0)">Playlists</a>
+                <ul class="dropdownListContent">
+                    <li><a href="playlists">Create or add to a Playlist</a></li>
+                    <li><a href="library">View your Playlists</a></li>
+                    <li><a href="browse">View all Playlists</li>
+                </ul>
+			</li>
+			<li><a href="songs">Songs</a></li>
+            <li><a href="/">Home</a></li>
         </ul>
     </nav>
-    <section>
-        {{#each playlists}}
-            <p><a href="library/{{this.id}}">{{this.playlistName}}</a></p>
-            <p>{{this.description}}</p>
-        {{/each}}
-    </section>
 
+    <section>
+        {{#if msg}}
+            <p class="msg">{{msg}}</p>
+        {{/if}}
+
+        <h2>All Playlists</h2>
+        <table class="playlistsTable">
+            <colgroup>
+                <col class="colPlaylistName">
+                <col class="colPlaylistDesc">
+            </colgroup>
+            {{#each playlists}}
+                <tr>
+                    <td><a href="library/{{this.id}}">{{this.playlistName}}</a></td>
+                    <td>{{this.description}}</td>
+                </tr>
+            {{/each}}
+        </table>
+    
+    <footer>
+    	<hr>
+        <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
+    </footer>
 </body>
 </html>

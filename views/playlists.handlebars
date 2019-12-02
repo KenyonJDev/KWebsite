@@ -1,23 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-
-    <title>Create Playlist | Sense</title>
-	<meta name="description" content="The playlist page for Sense.">
-	<meta name="author" content="Tiago Ferreira">
+    <title>Senseeee</title>
+	<meta name="description" content="Main page for the Sense Webpage">
+	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
     <nav>
-        <ul class="nav">
+        <ul>
 			<li class="siteName"><a href="/">Sense</a></li>
             <li><a href="logout">Logout</a></li>
 			<li><a href="login">Login/Signup</a></li>
 			<li><a href="upload">Upload</a></li>
-			<li><a href="playlists">Playlists</a></li>
+			<li class="dropdownList">
+				<a href="javascript:void(0)">Playlists</a>
+                <ul class="dropdownListContent">
+                    <li><a href="playlists">Create or add to a Playlist</a></li>
+                    <li><a href="library">View your Playlists</a></li>
+                    <li><a href="browse">View all Playlists</li>
+                </ul>
+			</li>
 			<li><a href="songs">Songs</a></li>
             <li><a href="/">Home</a></li>
         </ul>
@@ -38,9 +44,7 @@
             <input type="text" name="description" placeholder="Description of playlist" value="" required>
             <p><input type="submit" value="Create"></p>
         </form>
-    </section>
-
-    <section>
+        <h2></h2>
         <h2>Add to Playlist</h2>
         <form action="/playlistAdd" enctype="multipart/form-data" method="POST">
             <p>
@@ -67,7 +71,7 @@
 
 
     <footer>
-        <hr>
+    	<hr>
         <p>Copyright &copy; 2019 Sense. All rights reserved.</p>
     </footer>
 </body>

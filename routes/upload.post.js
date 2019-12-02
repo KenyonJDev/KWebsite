@@ -12,7 +12,7 @@ const postUpload = async(ctx, dbName) => {
 		const song = await new Song(dbName)
 		const { path, type } = ctx.request.files.song
 		const id = await song.add(await song.extractTags(path, type))
-		await fs.copySync(path, `public/music/${id}.mp3`)
+		await fs.copyFileSync(path, `public/music/${id}.mp3`)
 		const userSong = await new UserSong(dbName)
 		const playlistSong = await new PlaylistSongs(dbName)
 		await userSong.link(ctx.session.id, id)
