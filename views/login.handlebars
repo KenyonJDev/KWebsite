@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
+    <title>Login</title>
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
@@ -35,12 +35,9 @@
         {{/if}}
 
 		<h2>Log In</h2>
-		{{#if msg}}
-			<p class="msg">{{msg}}</p>
-		{{/if}}
 		<form action="/login" method="post" class="infoInput">
-			<p>Username:<br /><input type="text" id="user" name="user" placeholder="Your username..." value="{{user}}" autofocus></p>
-			<p>Password:<br /><input type="password" id="pass" name="pass" placeholder="Your password..." value=""></p>
+			<p>Username:<br /><input type="text" id="user" name="user" placeholder="Your username..." value="{{user}}" autofocus required></p>
+			<p>Password:<br /><input type="password" id="pass" name="pass" placeholder="Your password..." value="" required></p>
 			<p><input id="login" type="submit" value="Log in"></p>
 			<p><a href="/register">Don't have an account? Register here!</a></p>
 		</form>

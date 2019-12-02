@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
+    <title>Songs</title>
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
@@ -50,9 +50,9 @@
             </tr>
             {{#each songs}}
             <tr>
-                <td><img src="images/noPlaylistArtAvailable.png" style="width: 100px"></td>
+                <td><img src="/art/{{this.id}}" style="width: 100px"></td>
                 <!--<td>{{this.file}}</td>-->
-                <td><a href="/songs/{{id}}">{{this.title}}</a></td>
+                <td><a href="/songs/{{this.id}}">{{this.title}}</a></td>
                 <td>{{this.artist}}</td>
                 <td>{{this.year}}</td>
             </tr>

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
+    <title>Upload</title>
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
@@ -38,7 +38,7 @@
         <form action="/upload" enctype="multipart/form-data" method="POST" class="fileUpload">
             <p>Please upload an MP3 file.</p>
             <p>File:<br><input type="file" id="song" name="song" accept="audio/mp3" required></p>
-            <p>Album Art:<br><input type="file" id="art" name="albumArt" accept="image/*"></p>
+            <p>Album Art:<br><input type="file" id="art" name="albumArt" accept="image/*" required></p>
             <select name="Playlists" id="playlist" required>
                 <option value="">Please select a playlist</option>
                 {{#each playlists}}

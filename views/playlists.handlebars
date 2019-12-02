@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Senseeee</title>
+    <title>Playlists</title>
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
@@ -34,9 +34,6 @@
         {{#if msg}}
             <p class="msg" id="msg">{{msg}}</p>
         {{/if}}
-        {{#if err}}
-            <p>Error: {{err}}</p>
-        {{/if}}
         <form action="/playlists" enctype="multipart/form-data" method="post" class="infoInput">
             <p>Please name your playlist.</p>
             <input type="text" name="name" id="newName" placeholder="Name of playlist" value="" required>
@@ -44,7 +41,6 @@
             <input type="text" name="description" id="newDesc" placeholder="Description of playlist" value="" required>
             <p><input type="submit" id="create" value="Create"></p>
         </form>
-        <h2></h2>
         <h2>Add to Playlist</h2>
         <form action="/playlistAdd" enctype="multipart/form-data" method="POST">
             <p>

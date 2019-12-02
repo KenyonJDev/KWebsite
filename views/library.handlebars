@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
+    <title>My Playlists</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
@@ -47,7 +47,7 @@
             </colgroup>
             {{#each playlists}}
                 <tr>
-                    <td><a href="library/{{this.id}}">{{this.playlistName}}</a></td>
+                    <td><a id="{{this.playlistName}}" href="library/{{this.id}}">{{this.playlistName}}</a></td>
                     <td>{{this.description}}</td>
                 </tr>
             {{/each}}

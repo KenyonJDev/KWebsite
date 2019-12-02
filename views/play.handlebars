@@ -37,7 +37,7 @@
 
         <section class="playbackContain">
             <section class="playbackArt">
-                <img src="../images/noPlaylistArtAvailable.png">
+                <img src="/art/{{id}}">
             </section>
             <section class="playbackInfo">
                 <h2>{{title}}</h2>
@@ -51,7 +51,7 @@
         <p>
             {{#if owner}}
             <form action="/delete-song/{{id}}">
-                <button type="submit">Delete</button>
+                <button id="delete" type="submit">Delete</button>
             </form>
             {{/if}}
         </p>
