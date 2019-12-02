@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
+    <title>Register</title>
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
@@ -31,15 +31,14 @@
 	
 	<section>
         {{#if msg}}
-            <p class="msg">{{msg}}</p>
+            <p id="msg" class="msg">{{msg}}</p>
         {{/if}}
 
 		<h2>Create an Account</h2>
 		<form action="/register" enctype="multipart/form-data" method="post" class="infoInput">
-			<p>Username:<br /><input type="text" name="user" placeholder="Your preferred username (No Spaces)" value=""></p>
-			<p>Password:<br /><input type="password" name="pass" placeholder="Your chosen password" value=""></p>
-			<p>Profile Picture:<br /><input type="file" name="avatar"></p>
-			<p><input type="submit" value="Create"></p>
+			<p>Username:<br /><input type="text" id="user" name="user" placeholder="Your preferred username (No Spaces)" value="" required></p>
+			<p>Password:<br /><input type="password" id="pass" name="pass" placeholder="Your chosen password" value="" required></p>
+			<p><input id="register" type="submit" value="Register"></p>
 		</form>
 	</section>
 

@@ -31,75 +31,10 @@
 
     <section>
         {{#if msg}}
-            <p class="msg">{{msg}}</p>
+            <p id="msg" class="msg">{{msg}}</p>
         {{/if}}
 
         <h2>Featured Music</h2>
-        <!--<table class="featMusic">
-			<caption><a href="songs">More songs...</a></caption>
-			<!<colgroup>
-				<col class="colAlbumArt">
-				<col class="colSongName">
-				<col class="colArtistName">
-				<col class="colSongLength">
-				<col class="colUserName">
-			</colgroup>
-			<tbody>
-				<tr>
-					<td><img src="images/OhWonderUltralife.png" style="width: 100px"></td>
-					<td><a href="songs/StVincentBirthInReverse.mp3">Ultralife</a></td>
-					<td>Oh Wonder</td>
-					<td>3:12</td>
-					<td>Jake Ward-Kear</td>
-				</tr>
-				<tr>
-					<td><img src="images/StVincentBirthInReverse.png" style="width: 100px"></td>
-					<td><a href="songs/StVincentBirthInReverse.mp3">St Vincent</a></td>
-					<td>St Vincent</td>
-					<td>3:15</td>
-					<td>Jake Ward-Kear</td>
-				</tr>
-				<tr>
-					<td><img src="images/KeroKeroBonitoFlamingo.png" style="width: 100px"></td>
-					<td><a href="songs/KeroKeroBonitoFlamingo.mp3">Flamingo</a></td>
-					<td>Kero Kero Bonito</td>
-					<td>3:17</td>
-					<td>Jake Ward-Kear</td>
-				</tr>
-			</tbody>
-        </table>
-        <br>
-
-        <h2>Featured Playlists</h2>
-        <table class="featList">
-			<caption><a href="playlists">More playlists...</a></caption>
-            <colgroup>
-				<col class="colAlbumArt">
-				<col class="colPlaylistName">
-				<col class="colPlaylistDesc">
-				<col class="colUserName">
-			</colgroup>
-			<tbody>
-				<tr>
-					<td><img src="images/noPlaylistArtAvailable.png"></td>
-					<td><a href='#'>YeeHaw</a></td>
-					<td>Yeehaw Cowboy Tunes to Yee and Haw to</td>
-					<td>Jake Ward-Kear</td>
-				</tr>
-				<tr>
-					<td><img src="images/noPlaylistArtAvailable.png"></td>
-					<td><a href='#'>My favourite songs</a></td>
-					<td>Music</td>
-					<td>Bartek Wlodarski</td>
-				</tr>
-				<tr>
-					<td><img src="images/noPlaylistArtAvailable.png"></td>
-					<td><a href='#'>Best songs of all time</a></td>
-					<td>Music</td>
-					<td>Bartek Wlodarski</td>
-				</tr>
-			</tbody>
-        </table>-->
 		<table class="featMusic">
             <caption><a href="songs">More songs...</a></caption>
             <colgroup>
@@ -131,7 +66,7 @@
             <tbody>
                 {{#each playlists}}
                 <tr>
-                    <td><a href='/collection/{{this.id}}'>{{this.playlistName}}</a></td>
+                    <td><a href='/library/{{this.id}}'>{{this.playlistName}}</a></td>
                     <td>{{this.description}}</td>
                 </tr>
                 {{/each}}

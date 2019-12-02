@@ -12,7 +12,7 @@ const postLogin = async(ctx, dbName) => {
 		ctx.session.id = id
 		return await ctx.redirect('/?msg=you are now logged in...')
 	} catch(err) {
-		await ctx.render('error', {message: err.message})
+		await ctx.redirect(`/login?msg=${err.message}`)
 	}
 }
 

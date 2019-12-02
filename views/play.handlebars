@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
-	<meta name="description" content="Main page for the Sense Webpage">
+
+    <title>{{title}}</title>
+	<meta name="description" content="{{title}} by {{artist}}">
 	<meta name="author" content="">
     <link href="../css/global.css" type="text/css" rel="stylesheet">
 </head>
@@ -36,7 +37,7 @@
 
         <section class="playbackContain">
             <section class="playbackArt">
-                <img src="../images/noPlaylistArtAvailable.png">
+                <img src="/art/{{id}}">
             </section>
             <section class="playbackInfo">
                 <h2>{{title}}</h2>
@@ -50,7 +51,7 @@
         <p>
             {{#if owner}}
             <form action="/delete-song/{{id}}">
-                <button type="submit">Delete</button>
+                <button id="delete" type="submit">Delete</button>
             </form>
             {{/if}}
         </p>

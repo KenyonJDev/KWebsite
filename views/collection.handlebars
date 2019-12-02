@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
+    <title>{{playlistName}}</title>
 	<meta name="description" content="{{playlistName}}">
 	<meta name="author" content="Tiago Ferreira">
     <link href="../css/global.css" type="text/css" rel="stylesheet">
@@ -32,34 +32,29 @@
 
     <section>
         {{#if msg}}
-            <p class="msg">{{msg}}</p>
+            <p id="msg" class="msg">{{msg}}</p>
         {{/if}}
 
         <h2>{{playlistName}}</h2>
         <h3>{{description}}</h3>
-        <table>
+        <table id="songs">
             {{#each songs}}
             <tr>
-                <td>
-                    <a href="../songs/{{this.id}}">{{this.title}}</a>
-                </td>
-                <td>
-                    <audio controls>
-                        <source src="/music/{{id}}.mp3" type ="audio/mpeg">
-                        Your browser does not support the MP3 file type.
-                    </audio>
-                </td>
+                <td><img src="/art/{{this.id}}" style="width: 100px"></td>
+                <td><a href="/songs/{{this.id}}">{{this.title}}</a></td>
+                <td>{{this.artist}}</td>
+                <td>{{this.year}}</td>
             </tr>
             {{/each}}
         </table>
 
         <form action="/comment" enctype="multipart/form-data" method="POST">
             <input type="hidden" name="id" value="{{id}}">
-            <p>Comment:<br><input type="text" name="comment" required>
-            <input type="submit" value="Post comment"></p>
+            <p>Comment:<br><input type="text" id="comment" name="comment" required>
+            <input type="submit" id="submit" value="Post comment"></p>
         </form>
 
-        <table class="commentTable">
+        <table id="comments" class="commentTable">
             <colgroup>
                 <col class="colUserName">
                 <col class="commentContent">
@@ -70,7 +65,7 @@
                     <td><b>{{this.user}}</b></td>
                     <td>{{this.comment}}</td>
                     {{#if this.owner}}
-                        <td><a href="/delete-com/{{this.id}}">Delete</a></td>
+                        <td><a id="id{{this.id}}" href="/delete-com/{{this.id}}">Delete</a></td>
                     {{/if}}
                 </tr>
             {{/each}}

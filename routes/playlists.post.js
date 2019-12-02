@@ -23,7 +23,7 @@ const postPlaylists = async(ctx, dbName) => {
 		await ctx.redirect(`/playlists?msg=new playlist "${body.name}" created`)
 	} catch (err) {
 		console.log(err)
-		await ctx.render('playlists', { err: err.message })
+		await ctx.redirect(`/playlists?msg=${err.message}`)
 	}
 }
 

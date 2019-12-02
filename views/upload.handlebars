@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sense</title>
+    <title>Upload</title>
 	<meta name="description" content="Main page for the Sense Webpage">
 	<meta name="author" content="">
     <link href="css/global.css" type="text/css" rel="stylesheet">
@@ -31,24 +31,21 @@
     
     <section>
         {{#if msg}}
-            <p class="msg">{{msg}}</p>
+            <p id="msg" class="msg">{{msg}}</p>
         {{/if}}
 
         <h2>Upload</h2>
-        {{#if msg}}
-            <p class="msg">Error: {{msg}}</p>
-        {{/if}}
         <form action="/upload" enctype="multipart/form-data" method="POST" class="fileUpload">
             <p>Please upload an MP3 file.</p>
-            <p>File:<br><input type="file" name="song" accept="audio/mp3" required></p>
-            <p>Album Art:<br><input type="file" name="albumArt" accept="image/*"></p>
-            <select name="Playlists" required>
+            <p>File:<br><input type="file" id="song" name="song" accept="audio/mp3" required></p>
+            <p>Album Art:<br><input type="file" id="art" name="albumArt" accept="image/*" required></p>
+            <select name="Playlists" id="playlist" required>
                 <option value="">Please select a playlist</option>
                 {{#each playlists}}
                     <option value="{{this.id}}">{{this.playlistName}}</option>
                 {{/each}}
             </select>
-            <p><input type="submit" value="Upload"></p>
+            <p><input type="submit" id="upload" value="Upload"></p>
         </form>
     </section>
 
