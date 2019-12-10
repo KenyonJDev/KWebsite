@@ -13,7 +13,7 @@ const size = 1024
  */
 
 /**
- * Resizes image to 255,255 while maintaining aspect ratio.
+ * Resizes image to 1024x1024 while maintaining aspect ratio.
  * @param {filePath} image - The original image path.
  * @returns {Promise<true>} - Confirmation of resize
  */
