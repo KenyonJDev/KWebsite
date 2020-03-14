@@ -48,7 +48,7 @@
     "tunnel-agent": "^0.6.0"
   },
   "devDependencies": {
-    "acorn": "^7.1.0",
+    "acorn": "^7.1.1",
     "core-js": "^3.4.5",
     "cucumber": "^6.0.5",
     "eslint": "^5.16.0",
