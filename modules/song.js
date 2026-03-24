@@ -1,8 +1,8 @@
 'use strict'
 
-const sqlite = require('sqlite-async')
 const mm = require('music-metadata')
 const check = require('./checks')
+const dbManager = require('./dbManager')
 
 /**
  * @fileoverview The file where the Song class resides.
@@ -17,18 +17,22 @@ const check = require('./checks')
 class Song {
 	/**
 	 * Song class constructor.
-	 * Leave parameter empty to create db in memory.
-	 * @constructor
-	 * @param {string} [dbName=:memory:] - The database filename.
+	 * @param {object} db - The database connection instance.
 	 */
-	constructor(dbName = ':memory:') {
-		return (async() => {
-			this.db = await sqlite.open(dbName)
-			const sql = 'CREATE TABLE IF NOT EXISTS songs' +
-						'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, artist TEXT, year INTEGER)'
-			await this.db.run(sql)
-			return this
-		})()
+	constructor(db) {
+		if (typeof db === 'string' || db === undefined) {
+			return this.constructor.create(db)
+		}
+		this.db = db
+	}
+
+	static async create(dbName = ':memory:') {
+		const db = await dbManager.get(dbName)
+		const instance = new Song(db)
+		const sql = 'CREATE TABLE IF NOT EXISTS songs' +
+					'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, artist TEXT, year INTEGER)'
+		await db.run(sql)
+		return instance
 	}
 
 	/**
@@ -54,9 +58,10 @@ class Song {
 	 */
 	async add(tags) {
 		await check.tags(tags)
-		let sql = `INSERT INTO songs(title, artist, year) \
-					VALUES("${tags.title}", "${tags.artist}", "${tags.year}")`
-		await this.db.run(sql)
+		const title = check.sanitize(tags.title)
+		const artist = check.sanitize(tags.artist)
+		let sql = 'INSERT INTO songs(title, artist, year) VALUES(?, ?, ?)'
+		await this.db.run(sql, [title, artist, tags.year])
 		sql = 'SELECT last_insert_rowid() AS id' // retrieves the last autoincremented ID.
 		let key = await this.db.get(sql)
 		key = key.id
@@ -71,8 +76,8 @@ class Song {
 	 */
 	async get(songID) {
 		await check.song(songID)
-		const sql = `SELECT * FROM songs WHERE id="${songID}"`
-		const data = await this.db.get(sql)
+		const sql = 'SELECT * FROM songs WHERE id = ?'
+		const data = await this.db.get(sql, [songID])
 		if(data === undefined) throw new Error(`record for key ${songID} does not exist`)
 		return data
 	}
@@ -96,11 +101,11 @@ class Song {
 	 */
 	async delete(songID) {
 		await check.song(songID)
-		let sql = `SELECT COUNT(id) AS num FROM songs WHERE id=${songID}`
-		const count = await this.db.get(sql)
+		let sql = 'SELECT COUNT(id) AS num FROM songs WHERE id = ?'
+		const count = await this.db.get(sql, [songID])
 		if(count.num === 0) throw new Error(`record for key ${songID} does not exist`)
-		sql = `DELETE FROM songs WHERE id=${songID}`
-		await this.db.run(sql)
+		sql = 'DELETE FROM songs WHERE id = ?'
+		await this.db.run(sql, [songID])
 		return true
 	}
 

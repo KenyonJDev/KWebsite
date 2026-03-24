@@ -37,7 +37,7 @@ const type = async fileType => {
  */
 const user = async userID => {
 	if(userID === undefined) throw new Error('user ID is undefined')
-	const id = await parseInt(userID)
+	const id = parseInt(userID)
 	if(isNaN(id)) throw new Error(`provided user ID '${userID}' is not a number`)
 	if(id < 1) throw new Error('user IDs start at 1')
 }
@@ -50,7 +50,7 @@ const user = async userID => {
  */
 const song = async songID => {
 	if(songID === undefined) throw new Error('song ID is undefined')
-	const id = await parseInt(songID)
+	const id = parseInt(songID)
 	if(isNaN(id)) throw new Error(`provided song ID '${songID}' is not a number`)
 	if(id < 1) throw new Error('song IDs start at 1')
 }
@@ -63,7 +63,7 @@ const song = async songID => {
  */
 const comment = async commentID => {
 	if(commentID === undefined) throw new Error('comment ID is undefined')
-	const id = await parseInt(commentID)
+	const id = parseInt(commentID)
 	if(isNaN(id)) throw new Error(`provided comment ID '${commentID}' is not a number`)
 	if(id < 1) throw new Error('comment IDs start at 1')
 }
@@ -76,7 +76,7 @@ const comment = async commentID => {
  */
 const playlist = async playlistID => {
 	if(playlistID === undefined) throw new Error('playlist ID is undefined')
-	const id = await parseInt(playlistID)
+	const id = parseInt(playlistID)
 	if(isNaN(id)) throw new Error(`provided playlist ID '${playlistID}' is not a number`)
 	if(id < 1) throw new Error('playlist IDs start at 1')
 }
@@ -123,9 +123,22 @@ const checkArtist = async artist => {
  */
 const checkYear = async year => {
 	if(year === undefined) throw new Error('no year in tags object')
-	year = await parseInt(year)
+	year = parseInt(year)
 	if(isNaN(year)) throw new Error('the year in the tags object is not a number')
 }
 
+/**
+ * Sanitizes a string to prevent Cross-Site Scripting (XSS).
+ * @param {string} str - The string to sanitize.
+ * @returns {string} The sanitized string.
+ */
+const sanitize = str => {
+	if (typeof str !== 'string') return str
+	return str.replace(/&/g, '&amp;')
+			  .replace(/</g, '&lt;')
+			  .replace(/>/g, '&gt;')
+			  .replace(/"/g, '&quot;')
+			  .replace(/'/g, '&#x27;')
+}
 
-module.exports = {file, type, tags, comment, playlist, song, user}
+module.exports = {file, type, tags, comment, playlist, song, user, sanitize}

@@ -1,7 +1,7 @@
 'use strict'
 
-const sqlite = require('sqlite-async')
 const check = require('./checks')
+const dbManager = require('./dbManager')
 
 /**
  * @fileoverview The file where the UserSong class resides.
@@ -14,21 +14,25 @@ const check = require('./checks')
 class UserSong {
 	/**
 	 * UserSong class constructor.
-	 * Links the User and Song tables.
-	 * @constructor
-	 * @param {string} [dbName=:memory:] - The database filename.
+	 * @param {object} db - The database connection instance.
 	 */
-	constructor(dbName = ':memory:') {
-		return (async() => {
-			this.db = await sqlite.open(dbName)
-			const sql = 'CREATE TABLE IF NOT EXISTS userSongs' +
-						'(userID INTEGER NOT NULL, songID INTEGER NOT NULL,' +
-						'FOREIGN KEY(userID) REFERENCES users(id),' +
-						'FOREIGN KEY(songID) REFERENCES songs(id),' +
-						'PRIMARY KEY(userID, songID))'
-			await this.db.run(sql)
-			return this
-		})()
+	constructor(db) {
+		if (typeof db === 'string' || db === undefined) {
+			return this.constructor.create(db)
+		}
+		this.db = db
+	}
+
+	static async create(dbName = ':memory:') {
+		const db = await dbManager.get(dbName)
+		const instance = new UserSong(db)
+		const sql = 'CREATE TABLE IF NOT EXISTS userSongs' +
+					'(userID INTEGER NOT NULL, songID INTEGER NOT NULL,' +
+					'FOREIGN KEY(userID) REFERENCES users(id),' +
+					'FOREIGN KEY(songID) REFERENCES songs(id),' +
+					'PRIMARY KEY(userID, songID))'
+		await db.run(sql)
+		return instance
 	}
 
 	/**

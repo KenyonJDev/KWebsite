@@ -1,6 +1,7 @@
 'use strict'
 
-const sqlite = require('sqlite-async')
+const check = require('./checks')
+const dbManager = require('./dbManager')
 
 /**
  * @fileoverview The file where the Comment class resides.
@@ -14,18 +15,22 @@ const sqlite = require('sqlite-async')
 class Comment {
 	/**
 	 * Comment class constructor.
-	 * Leave parameter empty to create db in memory.
-	 * @constructor
-	 * @param {string} [dbName=:memory:] - The database filename.
+	 * @param {object} db - The database connection instance.
 	 */
-	constructor(dbName = ':memory:') {
-		return (async() => {
-			this.db = await sqlite.open(dbName)
-			const sql = `CREATE TABLE IF NOT EXISTS comments
-						(id INTEGER PRIMARY KEY AUTOINCREMENT, comment TEXT)`
-			await this.db.run(sql)
-			return this
-		})()
+	constructor(db) {
+		if (typeof db === 'string' || db === undefined) {
+			return this.constructor.create(db)
+		}
+		this.db = db
+	}
+
+	static async create(dbName = ':memory:') {
+		const db = await dbManager.get(dbName)
+		const instance = new Comment(db)
+		const sql = `CREATE TABLE IF NOT EXISTS comments
+					(id INTEGER PRIMARY KEY AUTOINCREMENT, comment TEXT)`
+		await db.run(sql)
+		return instance
 	}
 
 	/**
@@ -37,8 +42,9 @@ class Comment {
 	async add(comment) {
 		if(comment === undefined) throw new Error('no comment passed')
 		if(comment === '') throw new Error('comment cannot be empty')
-		let sql = `INSERT INTO comments(comment) VALUES("${comment}")`
-		await this.db.run(sql)
+		comment = check.sanitize(comment)
+		let sql = 'INSERT INTO comments(comment) VALUES(?)'
+		await this.db.run(sql, [comment])
 		sql = 'SELECT last_insert_rowid() AS id'
 		let id = await this.db.get(sql)
 		id = id.id

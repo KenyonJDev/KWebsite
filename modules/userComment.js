@@ -1,7 +1,7 @@
 'use strict'
 
-const sqlite = require('sqlite-async')
 const check = require('./checks')
+const dbManager = require('./dbManager')
 
 /**
  * @fileoverview The file where the Comment class resides.
@@ -15,21 +15,25 @@ const check = require('./checks')
 class UserComment {
 	/**
 	 * Comment class constructor.
-	 * Leave parameter empty to create db in memory.
-	 * @constructor
-	 * @param {string} [dbName=:memory:] - The database filename.
+	 * @param {object} db - The database connection instance.
 	 */
-	constructor(dbName = ':memory:') {
-		return (async() => {
-			this.db = await sqlite.open(dbName)
-			const sql = `CREATE TABLE IF NOT EXISTS userComments
-						(userID INTEGER NOT NULL, commentID INTEGER NOT NULL,
-						FOREIGN KEY(userID) REFERENCES users(id)
-						FOREIGN KEY(commentID) REFERENCES comments(id)
-						PRIMARY KEY(userID, commentID))`
-			await this.db.run(sql)
-			return this
-		})()
+	constructor(db) {
+		if (typeof db === 'string' || db === undefined) {
+			return this.constructor.create(db)
+		}
+		this.db = db
+	}
+
+	static async create(dbName = ':memory:') {
+		const db = await dbManager.get(dbName)
+		const instance = new UserComment(db)
+		const sql = `CREATE TABLE IF NOT EXISTS userComments
+					(userID INTEGER NOT NULL, commentID INTEGER NOT NULL,
+					FOREIGN KEY(userID) REFERENCES users(id)
+					FOREIGN KEY(commentID) REFERENCES comments(id)
+					PRIMARY KEY(userID, commentID))`
+		await db.run(sql)
+		return instance
 	}
 
 	/**

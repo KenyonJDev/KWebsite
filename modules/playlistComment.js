@@ -1,7 +1,7 @@
 'use strict'
 
-const sqlite = require('sqlite-async')
 const check = require('./checks')
+const dbManager = require('./dbManager')
 
 /**
  * @fileoverview The file where the PlaylistComment class resides.
@@ -15,21 +15,25 @@ const check = require('./checks')
 class PlaylistComment {
 	/**
 	 * Comment class constructor.
-	 * Leave parameter empty to create db in memory.
-	 * @constructor
-	 * @param {string} [dbName=:memory:] - The database filename.
+	 * @param {object} db - The database connection instance.
 	 */
-	constructor(dbName = ':memory:') {
-		return (async() => {
-			this.db = await sqlite.open(dbName)
-			const sql = `CREATE TABLE IF NOT EXISTS playlistComments
-						(playlistID INTEGER NOT NULL, commentID INTEGER NOT NULL,
-						FOREIGN KEY(playlistID) REFERENCES playlists(id)
-						FOREIGN KEY(commentID) REFERENCES comments(id)
-						PRIMARY KEY(playlistID, commentID))`
-			await this.db.run(sql)
-			return this
-		})()
+	constructor(db) {
+		if (typeof db === 'string' || db === undefined) {
+			return this.constructor.create(db)
+		}
+		this.db = db
+	}
+
+	static async create(dbName = ':memory:') {
+		const db = await dbManager.get(dbName)
+		const instance = new PlaylistComment(db)
+		const sql = `CREATE TABLE IF NOT EXISTS playlistComments
+					(playlistID INTEGER NOT NULL, commentID INTEGER NOT NULL,
+					FOREIGN KEY(playlistID) REFERENCES playlists(id)
+					FOREIGN KEY(commentID) REFERENCES comments(id)
+					PRIMARY KEY(playlistID, commentID))`
+		await db.run(sql)
+		return instance
 	}
 
 	/**

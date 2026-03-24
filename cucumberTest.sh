@@ -16,12 +16,10 @@ rm -rf public/art/*
 
 # start the web server in background mode
 node index.js&
+SERVER_PID=$!
 
-# run the test suite in background mode
-node_modules/.bin/cucumber-js --order defined --fail-fast ./features -r ./steps &
+# Ensure the server is killed when the script exits
+trap "kill $SERVER_PID" EXIT
 
-# wait for the tests to complete
-sleep 40
-
-# kill the web server
-taskkill -f -im node.exe
+# run the test suite in foreground mode
+node_modules/.bin/cucumber-js --order defined --fail-fast ./features -r ./steps

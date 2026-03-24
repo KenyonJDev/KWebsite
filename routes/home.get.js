@@ -14,8 +14,8 @@ const start = 0, count = 3
 const getHome = async(ctx, dbName) => {
 	try {
 		const data = {}
-		const song = await new Song(dbName)
-		const playlist = await new Playlist(dbName)
+		const song = await Song.create(dbName)
+		const playlist = await Playlist.create(dbName)
 		const songs = await song.getAll(), playlists = await playlist.getAll()
 		let end = songs.length > count ? count : songs.length
 		data.songs = await songs.slice(start,end)
