@@ -16,10 +16,10 @@ const postPlaylists = async(ctx, dbName) => {
 		const body = ctx.request.body
 		console.log(body)
 		//creates new instance of class Playlist
-		const playlist = await new Playlists(dbName)
+		const playlist = await Playlists.create(dbName)
 		const playlistID = await playlist.create(body.name, body.description)
 		//gets id of created playlist
-		const userPlaylist = await new UserPlaylist(dbName)
+		const userPlaylist = await UserPlaylist.create(dbName)
 		await userPlaylist.create(ctx.session.id, playlistID)
 		//prints id of created playlist
 		console.log(playlistID)

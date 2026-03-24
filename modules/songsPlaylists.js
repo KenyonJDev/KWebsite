@@ -26,8 +26,8 @@ module.exports = class PlaylistSongs {
 
 	async create(playlistID, songID) {
 		try {
-			const sql = `INSERT INTO playlistSongs(playlistID, songID) VALUES("${playlistID}", "${songID}");`
-			await this.db.run(sql)
+			const sql = 'INSERT INTO playlistSongs(playlistID, songID) VALUES(?, ?);'
+			await this.db.run(sql, [playlistID, songID])
 			return true
 		} catch(err) {
 			throw err

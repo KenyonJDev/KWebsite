@@ -11,7 +11,7 @@ const PlaylistSongs = require('../modules/Playlist_songs')
 const postPlaylistAdd = async(ctx, dbName) => {
 	try {
 		const { song, playlist } = ctx.request.body
-		const playlistSong = await new PlaylistSongs(dbName)
+		const playlistSong = await PlaylistSongs.create(dbName)
 		await playlistSong.create(playlist, song)
 		await ctx.redirect(`/library/${playlist}?msg=Song added!`)
 	} catch (err) {

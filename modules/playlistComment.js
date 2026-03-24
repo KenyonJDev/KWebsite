@@ -46,9 +46,8 @@ class PlaylistComment {
 	async link(playlistID, commentID) {
 		await check.playlist(playlistID)
 		await check.comment(commentID)
-		const sql = `INSERT INTO playlistComments(playlistID, commentID) 
-					VALUES("${playlistID}", "${commentID}")`
-		await this.db.run(sql)
+		const sql = 'INSERT INTO playlistComments(playlistID, commentID) VALUES(?, ?)'
+		await this.db.run(sql, [playlistID, commentID])
 		return true
 	}
 
@@ -60,8 +59,8 @@ class PlaylistComment {
 	 */
 	async get(playlistID) {
 		await check.playlist(playlistID)
-		const sql = `SELECT commentID FROM playlistComments WHERE playlistID=${playlistID}`
-		const data = await this.db.all(sql)
+		const sql = 'SELECT commentID FROM playlistComments WHERE playlistID = ?'
+		const data = await this.db.all(sql, [playlistID])
 		const keyList = []
 		for(const item of data) keyList.push(item.commentID)
 		return keyList
@@ -76,8 +75,8 @@ class PlaylistComment {
 	 */
 	async delete(commentID) {
 		await check.comment(commentID)
-		const sql = `DELETE FROM playlistComments WHERE commentID=${commentID}`
-		await this.db.run(sql)
+		const sql = 'DELETE FROM playlistComments WHERE commentID = ?'
+		await this.db.run(sql, [commentID])
 		return true
 	}
 }

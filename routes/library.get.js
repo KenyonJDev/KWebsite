@@ -13,8 +13,8 @@ const getLibrary = async(ctx, dbName) => {
 	try {
 		if (ctx.session.authorised !== true) await ctx.redirect('/login?msg=you need to login')
 		const data = []
-		const playlists = await new Playlists(dbName)
-		const user = await new UserPlaylist(dbName)
+		const playlists = await Playlists.create(dbName)
+		const user = await UserPlaylist.create(dbName)
 		const userplaylists = await user.getUserPlaylists(ctx.session.id)
 		const empty = await user.getUserPlaylists(ctx.session.id)
 		const list = []

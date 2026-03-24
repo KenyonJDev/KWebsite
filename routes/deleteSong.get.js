@@ -12,14 +12,14 @@ const Song = require('../modules/song')
  */
 const getDeleteSong = async(ctx, dbName) => {
 	try {
-		const userSong = await new UserSong(dbName)
-		const playlistSong = await new PlaylistSongs(dbName)
+		const userSong = await UserSong.create(dbName)
+		const playlistSong = await PlaylistSongs.create(dbName)
 		const user = ctx.session.id
 		const owner = await userSong.check(ctx.params.id)
 		if (user !== owner) return ctx.redirect('/login?msg=you are not the owner of this file')
 		await userSong.remove(ctx.params.id)
 		await playlistSong.remove(ctx.params.id)
-		const song = await new Song(dbName)
+		const song = await Song.create(dbName)
 		await song.delete(ctx.params.id)
 		ctx.redirect('/?msg=song deleted!')
 	} catch (err) {

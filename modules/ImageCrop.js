@@ -20,7 +20,7 @@ const size = 1024
 const crop = async(filePath, fileType) => {
 	await check.file(filePath)
 	const type = mime.extension(fileType)
-	if(!(type in ['png','jpg','gif','svg']))
+	if(!['png','jpg','gif','svg'].includes(type))
 		throw new Error('Unsupported file type')
 	const file = fs.readFileSync(filePath)
 	await sharp(file)

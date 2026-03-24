@@ -18,10 +18,9 @@ const getHome = async(ctx, dbName) => {
 		const playlist = await Playlist.create(dbName)
 		const songs = await song.getAll(), playlists = await playlist.getAll()
 		let end = songs.length > count ? count : songs.length
-		data.songs = await songs.slice(start,end)
-		console.log(songs)
+		data.songs = songs.slice(start,end)
 		end = playlists.length > count ? count : playlists.length
-		data.playlists = await playlists.slice(start,end)
+		data.playlists = playlists.slice(start,end)
 		if(ctx.query.msg) data.msg = ctx.query.msg
 		await ctx.render('index', data)
 	} catch(err) {

@@ -11,9 +11,9 @@ const UserSong = require('../modules/userSong')
  */
 const getSongDetails = async(ctx, dbName) => {
 	try {
-		const song = await new Song(dbName)
+		const song = await Song.create(dbName)
 		const data = await song.get(ctx.params.id)
-		const userSong = await new UserSong(dbName)
+		const userSong = await UserSong.create(dbName)
 		const owner = await userSong.check(ctx.params.id)
 		console.log(`[songs][${ctx.params.id}] owner: ${owner}`)
 		if(owner === ctx.session.id) data.owner = true

@@ -15,9 +15,9 @@ const postComment = async(ctx, dbName) => {
 		if (!ctx.session.authorised) await ctx.redirect('/login?msg=You need to log in')
 		const body = ctx.request.body, id = body.id
 		const playlistID = body.id, userID = ctx.session.id
-		const comment = await new Comment(dbName)
-		const userComment = await new UserComment(dbName)
-		const playlistComment = await new PlaylistComment(dbName)
+		const comment = await Comment.create(dbName)
+		const userComment = await UserComment.create(dbName)
+		const playlistComment = await PlaylistComment.create(dbName)
 		const commentID = await comment.add(body.comment)
 		await userComment.link(userID, commentID)
 		await playlistComment.link(playlistID, commentID)

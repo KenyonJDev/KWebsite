@@ -5,13 +5,13 @@ const PlaylistComment = require('../modules/playlistComment')
 describe('link()', () => {
 	test('passing valid data', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		const confirm = await pc.link(1,2)
 		await expect(confirm).toEqual(true)
 	})
 	test('out of range parameters', async () => {
 		expect.assertions(2)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await expect(pc.link(-1,1))
 			.rejects.toEqual(Error('playlist IDs start at 1'))
 		await expect(pc.link(1,-1))
@@ -19,7 +19,7 @@ describe('link()', () => {
 	})
 	test('using strings as parameters', async () => {
 		expect.assertions(2)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		const invalidID = 'a'
 		await expect(pc.link(invalidID,1))
 			.rejects.toEqual(Error(`provided playlist ID '${invalidID}' is not a number`))
@@ -28,7 +28,7 @@ describe('link()', () => {
 	})
 	test('missing a parameter', async () => {
 		expect.assertions(2)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await expect(pc.link())
 			.rejects.toEqual(Error('playlist ID is undefined'))
 		await expect(pc.link(1))
@@ -39,13 +39,13 @@ describe('link()', () => {
 describe('get()', () => {
 	test('getting empty list', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		const list = await pc.get(1)
 		await expect(list.length).toEqual(0)
 	})
 	test('getting list with one ID', async () => {
 		expect.assertions(2)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await pc.link(1,2)
 		const list = await pc.get(1)
 		await expect(list).toHaveLength(1)
@@ -53,7 +53,7 @@ describe('get()', () => {
 	})
 	test('getting list with multiple IDs', async () => {
 		expect.assertions(2)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await pc.link(1,1)
 		let list = await pc.get(1)
 		await expect(list).toHaveLength(1)
@@ -63,14 +63,14 @@ describe('get()', () => {
 	})
 	test('passing string as arugment', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		const text = 'a'
 		await expect(pc.get(text))
 			.rejects.toEqual(Error(`provided playlist ID '${text}' is not a number`))
 	})
 	test('passing no argument', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await expect(pc.get())
 			.rejects.toEqual(Error('playlist ID is undefined'))
 	})
@@ -79,27 +79,27 @@ describe('get()', () => {
 describe('delete()', () => {
 	test('valid ID', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await pc.link(1,2)
 		const confirm = await pc.delete(2)
 		await expect(confirm).toEqual(true)
 	})
 	test('out of range ID', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await expect(pc.delete(-1))
 			.rejects.toEqual(Error('comment IDs start at 1'))
 	})
 	test('string as ID', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		const text = 'a'
 		await expect(pc.delete(text))
 			.rejects.toEqual(Error(`provided comment ID '${text}' is not a number`))
 	})
 	test('no argument', async () => {
 		expect.assertions(1)
-		const pc = await new PlaylistComment()
+		const pc = await PlaylistComment.create()
 		await expect(pc.delete())
 			.rejects.toEqual(Error('comment ID is undefined'))
 	})

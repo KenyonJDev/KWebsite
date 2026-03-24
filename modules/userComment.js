@@ -46,9 +46,8 @@ class UserComment {
 	async link(userID, commentID) {
 		await check.user(userID)
 		await check.comment(commentID)
-		const sql = `INSERT INTO userComments(userID, commentID) 
-					VALUES("${userID}", "${commentID}")`
-		await this.db.run(sql)
+		const sql = 'INSERT INTO userComments(userID, commentID) VALUES(?, ?)'
+		await this.db.run(sql, [userID, commentID])
 		return true
 	}
 
@@ -60,8 +59,9 @@ class UserComment {
 	 */
 	async getOwner(commentID) {
 		await check.comment(commentID)
-		const sql = `SELECT userID FROM userComments WHERE commentID=${commentID}`
-		const data = await this.db.get(sql)
+		const sql = 'SELECT userID FROM userComments WHERE commentID = ?'
+		const data = await this.db.get(sql, [commentID])
+		if(data === undefined) throw new Error(`comment ID ${commentID} does not exist`)
 		const owner = data.userID
 		return owner
 	}
@@ -75,8 +75,8 @@ class UserComment {
 	 */
 	async delete(commentID) {
 		await check.comment(commentID)
-		const sql = `DELETE FROM userComments WHERE commentID=${commentID}`
-		await this.db.run(sql)
+		const sql = 'DELETE FROM userComments WHERE commentID = ?'
+		await this.db.run(sql, [commentID])
 		return true
 	}
 }

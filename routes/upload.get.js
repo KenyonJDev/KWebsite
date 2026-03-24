@@ -13,8 +13,8 @@ const getUpload = async(ctx, dbName) => {
 	if (ctx.session.authorised !== true) return ctx.redirect('/login?msg=you need to log in')
 	const data = [], lists = []
 	if (ctx.query.msg) data.msg = ctx.query.msg
-	const userPlaylist = await new UserPlaylist(dbName)
-	const playlist = await new Playlists(dbName)
+	const userPlaylist = await UserPlaylist.create(dbName)
+	const playlist = await Playlists.create(dbName)
 	const playlists = await userPlaylist.getUserPlaylists(ctx.session.id)
 	const empty = await userPlaylist.getUserPlaylists(ctx.session.id)
 	for (const id of playlists) lists.push(await playlist.getPlaylist(id))

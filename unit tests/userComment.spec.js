@@ -3,106 +3,94 @@
 const UserComment = require('../modules/userComment')
 
 describe('link()', () => {
-	test('passing valid data', async done => {
+	test('passing valid data', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		const confirm = await uc.link(1,2)
 		await expect(confirm).toEqual(true)
-		done()
 	})
-	test('out of range parameters', async done => {
+	test('out of range parameters', async () => {
 		expect.assertions(2)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		await expect(uc.link(-1,1))
 			.rejects.toEqual(Error('user IDs start at 1'))
 		await expect(uc.link(1,-1))
 			.rejects.toEqual(Error('comment IDs start at 1'))
-		done()
 	})
-	test('using strings as parameters', async done => {
+	test('using strings as parameters', async () => {
 		expect.assertions(2)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		const invalidID = 'a'
 		await expect(uc.link(invalidID,1))
 			.rejects.toEqual(Error(`provided user ID '${invalidID}' is not a number`))
 		await expect(uc.link(1,invalidID))
 			.rejects.toEqual(Error(`provided comment ID '${invalidID}' is not a number`))
-		done()
 	})
-	test('missing a parameter', async done => {
+	test('missing a parameter', async () => {
 		expect.assertions(2)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		await expect(uc.link())
 			.rejects.toEqual(Error('user ID is undefined'))
 		await expect(uc.link(1))
 			.rejects.toEqual(Error('comment ID is undefined'))
-		done()
 	})
 })
 
 describe('getOwner()', () => {
-	test('using valid ID', async done => {
+	test('using valid ID', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		const userID = 1, commentID = 2
 		await uc.link(userID,commentID)
 		const owner = await uc.getOwner(commentID)
 		await expect(owner).toEqual(userID)
-		done()
 	})
-	test('using invalid ID', async done => {
+	test('using invalid ID', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		await expect(uc.getOwner(-1))
 			.rejects.toEqual(Error('comment IDs start at 1'))
-		done()
 	})
-	test('using NaN', async done => {
+	test('using NaN', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		const text = 'a'
 		await expect(uc.getOwner(text))
 			.rejects.toEqual(Error(`provided comment ID '${text}' is not a number`))
-		done()
 	})
-	test('no argument', async done => {
+	test('no argument', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		await expect(uc.getOwner())
 			.rejects.toEqual(Error('comment ID is undefined'))
-		done()
 	})
 })
 
 describe('delete()', () => {
-	test('valid ID', async done => {
+	test('valid ID', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		await uc.link(1,2)
 		const confirm = await uc.delete(2)
 		await expect(confirm).toEqual(true)
-		done()
 	})
-	test('out of range ID', async done => {
+	test('out of range ID', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		await expect(uc.delete(-1))
 			.rejects.toEqual(Error('comment IDs start at 1'))
-		done()
 	})
-	test('string as ID', async done => {
+	test('string as ID', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		const text = 'a'
 		await expect(uc.delete(text))
 			.rejects.toEqual(Error(`provided comment ID '${text}' is not a number`))
-		done()
 	})
-	test('no argument', async done => {
+	test('no argument', async () => {
 		expect.assertions(1)
-		const uc = await new UserComment()
+		const uc = await UserComment.create()
 		await expect(uc.delete())
 			.rejects.toEqual(Error('comment ID is undefined'))
-		done()
 	})
 })

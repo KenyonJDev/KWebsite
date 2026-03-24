@@ -52,6 +52,7 @@ class UserPlaylist {
 		if(playlist === undefined) throw new Error('Playlist is undefined')
 		const sql = 'SELECT userID AS id FROM userPlaylists WHERE playlistID = ?'
 		let user = await this.db.get(sql, [playlist])
+		if (user === undefined) throw new Error('Playlist ID does not exist')
 		user = user.id
 		return user
 	}

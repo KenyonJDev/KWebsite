@@ -6,11 +6,12 @@
 
 /* MODULE IMPORTS */
 const Koa = require('koa')
-const Router = require('koa-router')
-const views = require('koa-views')
+const Router = require('@koa/router')
+const views = require('@ladjs/koa-views')
 const staticDir = require('koa-static')
 const bodyParser = require('koa-bodyparser')
-const koaBody = require('koa-body')({ multipart: true, uploadDir: '.' })
+const { koaBody } = require('koa-body')
+const handleBody = koaBody({ multipart: true, formidable: { uploadDir: '.' } })
 const session = require('koa-session')
 
 /* IMPORT ROUTE MODULES */
@@ -66,7 +67,7 @@ router.get('/register', async ctx => await ctx.render('register'))
  * @name Register Script
  * @route {POST} /register
  */
-router.post('/register', koaBody, async ctx => await postRegister(ctx, dbName))
+router.post('/register', handleBody, async ctx => await postRegister(ctx, dbName))
 
 /**
  * The secure login page.
@@ -112,14 +113,14 @@ router.get('/playlists', async ctx => await getPlaylists(ctx, dbName))
  * @name Playlist script
  * @route {POST} /playlists
  */
-router.post('/playlists', koaBody, async ctx => await postPlaylists(ctx, dbName))
+router.post('/playlists', handleBody, async ctx => await postPlaylists(ctx, dbName))
 
 /**
  * The script to process adding a song to a playlist.
  * @name PlaylistAdd script
  * @route {POST} /playlistAdd
  */
-router.post('/playlistAdd', koaBody, async ctx => await postPlaylistAdd(ctx, dbName))
+router.post('/playlistAdd', handleBody, async ctx => await postPlaylistAdd(ctx, dbName))
 
 /**
  * The user playlists page AKA Library.
@@ -157,14 +158,14 @@ router.get('/upload', async ctx => await getUpload(ctx, dbName))
  * @name Upload script
  * @route {POST} /upload
  */
-router.post('/upload', koaBody, async ctx => await postUpload(ctx, dbName, __dirname))
+router.post('/upload', handleBody, async ctx => await postUpload(ctx, dbName, __dirname))
 
 /**
  * The script responsible for adding playlist comments.
  * @name Comment script
  * @route {POST} /comment
  */
-router.post('/comment', koaBody, async ctx => await postComment(ctx, dbName))
+router.post('/comment', handleBody, async ctx => await postComment(ctx, dbName))
 
 /**
  * The song delete script.

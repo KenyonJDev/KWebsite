@@ -16,7 +16,7 @@ const PlaylistComment = require('../modules/playlistComment')
  * @memberof routes
  */
 const songIDsToDetails = async(songIDs, dbName) => {
-	const song = await new Song(dbName), songs = []
+	const song = await Song.create(dbName), songs = []
 	for (const id of songIDs) {
 		const details = await song.get(id)
 		songs.push(details)
@@ -33,9 +33,9 @@ const songIDsToDetails = async(songIDs, dbName) => {
  * @memberof routes
  */
 const commentIDsToDetails = async(commentIDs, ctx, dbName) => {
-	const userComment = await new UserComment(dbName)
-	const comment = await new Comment(dbName)
-	const user = await new User(dbName)
+	const userComment = await UserComment.create(dbName)
+	const comment = await Comment.create(dbName)
+	const user = await User.create(dbName)
 	const commentList = []
 	for (const id of commentIDs) {
 		const detail = {}
@@ -58,9 +58,9 @@ const commentIDsToDetails = async(commentIDs, ctx, dbName) => {
 const getLibraryDetails = async(ctx, dbName) => {
 	try {
 		/* Getting all the necessary objects ready */
-		const playlist = await new Playlists(dbName) // Playlist details
-		const playlistsong = await new PlaylistSongs(dbName) // List of playlist songs
-		const playlisComment = await new PlaylistComment(dbName) // List of playlist comments
+		const playlist = await Playlists.create(dbName) // Playlist details
+		const playlistsong = await PlaylistSongs.create(dbName) // List of playlist songs
+		const playlisComment = await PlaylistComment.create(dbName) // List of playlist comments
 		// Retrieving data from the database to display on the page
 		const data = await playlist.getPlaylist(ctx.params.id)
 		const songs = await playlistsong.getPlaylistSongs(ctx.params.id)

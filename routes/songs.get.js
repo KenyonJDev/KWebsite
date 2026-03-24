@@ -9,7 +9,7 @@ const Song = require('../modules/song')
  * @memberof routes
  */
 const getSongs = async(ctx, dbName) => {
-	const song = await new Song(dbName)
+	const song = await Song.create(dbName)
 	const data = await song.getAll()
 	await ctx.render('songs', {songs: data})
 }

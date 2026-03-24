@@ -3,7 +3,7 @@
 const UserSong = require('../modules/userSong')
 const UserPlaylist = require('../modules/User_playlists')
 const Song = require('../modules/song')
-const Playlists = require('../modules/playlists')
+const Playlists = require('../modules/Playlists')
 
 /**
  * Converts song IDs to a list of details.
@@ -12,7 +12,7 @@ const Playlists = require('../modules/playlists')
  * @returns {Promise<Array<dbData>>} An array of details.
  */
 const songIDsToDetails = async(songIDs, dbName) => {
-	const song = await new Song(dbName), songs = []
+	const song = await Song.create(dbName), songs = []
 	for (const id of songIDs) {
 		const details = await song.get(id.songID)
 		songs.push(details)
@@ -29,7 +29,7 @@ const songIDsToDetails = async(songIDs, dbName) => {
  * @memberof routes
  */
 const playlistIDsToDetails = async(playlistIDs, dbName) => {
-	const playlist = await new Playlists(dbName), playlists = []
+	const playlist = await Playlists.create(dbName), playlists = []
 	for (const id of playlistIDs) {
 		const details = await playlist.getPlaylist(id)
 		playlists.push(details)
@@ -48,8 +48,8 @@ const getPlaylists = async(ctx, dbName) => {
 		const data = {}
 		if (ctx.query.msg) data.msg = ctx.query.msg
 		// Making necessary objects
-		const userPlaylist = await new UserPlaylist(dbName)
-		const userSong = await new UserSong(dbName)
+		const userPlaylist = await UserPlaylist.create(dbName)
+		const userSong = await UserSong.create(dbName)
 		// Getting song names
 		const songIDs = await userSong.get(ctx.session.id)
 		const songs = await songIDsToDetails(songIDs, dbName)

@@ -12,7 +12,7 @@ const postRegister = async(ctx, dbName) => {
 	try {
 		const body = ctx.request.body
 		console.log(`[register] body: ${body.user}`)
-		const user = await new User(dbName)
+		const user = await User.create(dbName)
 		await user.register(body.user, body.pass)
 		await ctx.redirect('login?msg=You are now registered!')
 	} catch(err) {

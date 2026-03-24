@@ -45,8 +45,8 @@ class UserSong {
 	async link(user, song) {
 		await check.user(user)
 		await check.song(song)
-		const sql = `INSERT INTO userSongs(userID, songID) VALUES("${user}", "${song}")`
-		await this.db.run(sql)
+		const sql = 'INSERT INTO userSongs(userID, songID) VALUES(?, ?)'
+		await this.db.run(sql, [user, song])
 		return true
 	}
 
@@ -58,8 +58,8 @@ class UserSong {
 	 */
 	async get(user) {
 		await check.user(user)
-		const sql = `SELECT songID FROM userSongs WHERE userID=${user}`
-		const data = await this.db.all(sql)
+		const sql = 'SELECT songID FROM userSongs WHERE userID = ?'
+		const data = await this.db.all(sql, [user])
 		return data
 	}
 
@@ -71,8 +71,8 @@ class UserSong {
 	 */
 	async check(song) {
 		await check.song(song)
-		const sql = `SELECT userID FROM userSongs WHERE songID=${song}`
-		let user = await this.db.get(sql)
+		const sql = 'SELECT userID FROM userSongs WHERE songID = ?'
+		let user = await this.db.get(sql, [song])
 		if(user === undefined) throw new Error(`song ID ${song} does not exist`)
 		user = user.userID
 		return user
@@ -86,11 +86,11 @@ class UserSong {
 	 */
 	async remove(song) {
 		await check.song(song)
-		let sql = `SELECT songID FROM userSongs WHERE songID=${song}`
-		const data = await this.db.get(sql)
+		let sql = 'SELECT songID FROM userSongs WHERE songID = ?'
+		const data = await this.db.get(sql, [song])
 		if(data === undefined) throw new Error(`song ID ${song} does not exist`)
-		sql = `DELETE FROM userSongs WHERE songID=${song}`
-		await this.db.run(sql)
+		sql = 'DELETE FROM userSongs WHERE songID = ?'
+		await this.db.run(sql, [song])
 		return true
 	}
 }

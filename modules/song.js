@@ -1,6 +1,5 @@
 'use strict'
 
-const mm = require('music-metadata')
 const check = require('./checks')
 const dbManager = require('./dbManager')
 
@@ -45,6 +44,7 @@ class Song {
 	async extractTags(path, type) {
 		await check.file(path)
 		await check.type(type)
+		const mm = await import('music-metadata')
 		const data = await mm.parseFile(path)
 		const tags = data.common // 'common' contains the metadata.
 		return {title: tags.title, artist: tags.artist, year: tags.year}

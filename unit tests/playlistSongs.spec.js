@@ -3,110 +3,98 @@
 const PlaylistSongs = require('../modules/Playlist_songs.js')
 
 describe('create()', () => {
-	test('adding valid playlist and song ID', async done => {
+	test('adding valid playlist and song ID', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		const result = await playlistsongs.create(1,2)
 		await expect(result).toBeTruthy()
-		done()
 	})
 
-	test('passing no arguments', async done => {
+	test('passing no arguments', async () => {
 		expect.assertions(2)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await expect(playlistsongs.create())
 			.rejects.toEqual(Error('Playlist ID undefined'))
 		await expect(playlistsongs.create(2))
 			.rejects.toEqual(Error('Song ID undefined'))
-		done()
 	})
 
-	test('adding song already in playlist', async done => {
+	test('adding song already in playlist', async () => {
 		expect.assertions(1)
-		const playlistSongs = await new PlaylistSongs()
+		const playlistSongs = await PlaylistSongs.create()
 		await playlistSongs.create(1,2)
 		await expect(playlistSongs.create(1,2))
 			.rejects.toEqual(Error('The song is already in this playlist'))
-		done()
 	})
 })
 
 describe('getPlaylistSongs()', () => {
-	test('checking valid playlist', async done => {
+	test('checking valid playlist', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		const lists = await playlistsongs.getPlaylistSongs(1)
 		await expect(lists.length).toEqual(1)
-		done()
 	})
 
-	test('passing no arguments', async done => {
+	test('passing no arguments', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		await expect(playlistsongs.getPlaylistSongs()).rejects.toEqual(Error('Playlist ID undefined'))
-		done()
 	})
 
-	test('passing string as ID', async done => {
+	test('passing string as ID', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		const id = 'g'
 		await expect(playlistsongs.getPlaylistSongs(id)).rejects.toEqual(Error('Playlist ID has to be integer'))
-		done()
 	})
 
-	test('passing id smaller than 1', async done => {
+	test('passing id smaller than 1', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		const id = -1
 		await expect(playlistsongs.getPlaylistSongs(id)).rejects.toEqual(Error('Playlist ID starts at 1'))
-		done()
 	})
 })
 
 describe('remove()', () => {
-	test('removing valid song', async done => {
+	test('removing valid song', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		await expect(playlistsongs.remove(2)).toBeTruthy()
-		done()
 	})
 
-	test('removing non existing song', async done => {
+	test('removing non existing song', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		await expect(playlistsongs.remove(3)).rejects.toEqual(Error('Song ID does not exist'))
-		done()
 	})
 
-	test('passing no arguments', async done => {
+	test('passing no arguments', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await expect(playlistsongs.remove()).rejects.toEqual(Error('Song ID undefined'))
-		done()
 	})
 
-	test('passing string as ID', async done => {
+	test('passing string as ID', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		const id = 'g'
 		await expect(playlistsongs.remove(id)).rejects.toEqual(Error('Song ID has to be integer'))
-		done()
 	})
 
-	test('passing ID smaller than 1', async done => {
+	test('passing ID smaller than 1', async () => {
 		expect.assertions(1)
-		const playlistsongs = await new PlaylistSongs()
+		const playlistsongs = await PlaylistSongs.create()
 		await playlistsongs.create(1,2)
 		const id = -1
 		await expect(playlistsongs.remove(id)).rejects.toEqual(Error('Song ID starts at 1'))
-		done()
 	})
 })
